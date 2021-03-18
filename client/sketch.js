@@ -8,7 +8,6 @@ const darkcol = [128, 64, 0];
 const lightcol = [255, 166, 77];
 
 var position = [padding + 10, padding + 10]
-var 0
 
 function XYtoColRow(x, y) {
   col = Math.floor((x - padding)/sqs);

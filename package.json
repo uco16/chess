@@ -1,0 +1,28 @@
+{
+  "name": "chess",
+  "version": "1.0.0",
+  "description": "online chess game",
+  "main": "index.js",
+  "dependencies": {
+    "node": "^15.10.0",
+    "socket.io": "^4.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uco16/chess.git"
+  },
+  "keywords": [
+    "chess"
+  ],
+  "author": "uco16",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/uco16/chess/issues"
+  },
+  "homepage": "https://github.com/uco16/chess#readme"
+}

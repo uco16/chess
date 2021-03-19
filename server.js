@@ -1,18 +1,12 @@
-// HTTP Portion
-var http = require('http');
-// Path module
-var path = require('path');
+const path = require('path');
+const fs = require('fs');
+const server = require('http').createServer(handleRequest);
+const io = require('socket.io')(server);
 
-// Using the filesystem module
-var fs = require('fs');
-
-var server = http.createServer(handleRequest);
-server.listen(8080);
-
-console.log('Server started on port 8080');
+const hostname = '127.0.0.1';
+const port = 8080;
 
 function handleRequest(req, res) {
-
   var pathname = req.url;
   // default to index.html
   if (pathname == '/') {
@@ -44,3 +38,21 @@ function handleRequest(req, res) {
     }
   );
 }
+
+server.listen(port, hostname, () => {
+  console.log('Server running at http://'+hostname+':'+port)
+});
+
+io.on('connection', (socket) => {
+  // socket is a reference for the current client
+  console.log('user ' + socket.id + ' connected');
+
+  socket.on('move', (initial, final) => {
+    console.log(socket.id + " played [" + initial + "] to [" + final +"]");
+  });
+
+  socket.on('disconnect', () => {
+    console.log('user ' + socket.id + ' disconnected');
+  });
+});
+

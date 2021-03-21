@@ -1,12 +1,44 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Chess</title>
     <script src="client/p5.js"></script>
     <script src="client/p5.sound.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="utf-8">
 
-  </head>
-  <body>
     <script src="/socket.io/socket.io.js"></script>
     <script src="client/sketch.js"></script>
+    <!-- the script tags seem to share their namespace,
+      socket is declared in sketch.js, should probably do this more consistently -->
+    <script src="client/modules/isLegal.js"></script>
+    <script>
+      function addtoMoveList(initial, final) {
+	var moves = document.getElementById('moves');
+	var item = document.createElement('li');
+	item.textContent = 'Move ' + initial + ' to ' + final;
+	moves.appendChild(item);
+      }
+      
+      socket.on('move', (initial, final) => {
+	addtoMoveList(initial, final);
+      });
+
+      socket.onAny((event, ...args) => {
+	console.log(event, args);
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="gamewindow">
+      <div id="chessboard" data-testid="chessboard">
+        <! -- sketch.js will draw inside here -->
+      </div>
+      <div id="movewindow">
+        <p>Moves</p>
+        <ol id="moves"></ol>
+      </div>
+    </div>
   </body>
 </html>

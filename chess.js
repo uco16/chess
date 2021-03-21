@@ -43,16 +43,39 @@ server.listen(port, hostname, () => {
   console.log('Server running at http://'+hostname+':'+port)
 });
 
+// --- socket.io ---
+var queue = [];	    // sockets waiting for opponents
+
+//function findOpponent(socket) {
+//  if (queue) { // someone is waiting in queue, match them
+//    // POSSIBLE BUG: does this code execute sequentially?
+//    // or is there a chance that multiple new users try to connect
+//    // to the same user in the queue at the same time?
+//    var opponent = queue.pop();
+//    var room = socket.id + '#' + opponent.id;
+//    socket.join(room);
+//    opponent.join(room);
+//  } else { // no one is in queue, add socket to queue
+//    queue.push(socket);
+//  }
+//}
+
 io.on('connection', (socket) => {
   // socket is a reference for the current client
-  console.log('user ' + socket.id + ' connected');
+  console.log('User ' + socket.id + ' connected');
 
   socket.on('move', (initial, final) => {
-    console.log(socket.id + " played [" + initial + "] to [" + final +"]");
+    socket.broadcast.emit('move', initial, final);
   });
 
   socket.on('disconnect', () => {
     console.log('user ' + socket.id + ' disconnected');
   });
+
+  socket.onAny((event, ...args) => {
+    console.log(event, args);
+  });
+
 });
+
 

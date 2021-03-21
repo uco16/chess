@@ -78,7 +78,6 @@ class ChessGame:
         # queen
         pieces.append(Queen(colour='black', Game=self, location=(3, 4)))
 
-
         # proper setup
         #for col in range(8):  # white pawns
         #    pieces.append(Pawn(colour='white', Game=self, location=(col, 1)))
@@ -148,7 +147,6 @@ class ChessGame:
         #self.update_possible_moves()
         self.turn += 1
 
-
     def changed_squares(self):
         "Find squares that changed since last turn."
         changed_squares = list()
@@ -158,7 +156,6 @@ class ChessGame:
                 if last_pos[i][j] != self.position[i][j]:
                     changed_squares.append((i,j))
         return changed_squares
-
 
     def print_matrix_representation(self):
         # a1=(0,0) is in the lower left and h8=(7,7) in the upper right
@@ -226,7 +223,9 @@ class ChessGame:
                 # Position of the pawn that moved last turn:
                 pawnsquare = epsquares[1]
                 # If we land over or under this square, it is a valid move
-                if (initial[1] == pawnsquare[1]
+                if (initial[1] == pawnsquare[1]     # COMMENT 21 March: seems like we
+                                                    # do not need to check this, since initial is already
+                                                    # established to be an epsquare?
                         and abs(final[1] - pawnsquare[1]) == 1
                         and final[0] == pawnsquare[0]):
                     return True  # en passant capture
@@ -298,11 +297,6 @@ class ChessGame:
 
         # If no True value was returned until now:
         return False
-
-    def analytical_to_positions(self):
-        """Convert a move like 'Ne3' or 'e5' to the corresponding moves on the
-        board."""
-        pass
 
 
 class ChessPiece(object):

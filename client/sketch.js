@@ -28,7 +28,16 @@ for (let col=0; col<9; col++) {
 }
 let pieceImages;
 
-function preload() {
+function startGame(color) {
+    console.log("sketch: match, start game with colour " + color);
+    playerColor = color;
+
+    drawBoard();
+    initializePieces();
+    drawUnselectedPieces();
+}
+
+function setup() {
   pieceImages = {
     'pawn': loadImage('client/pieces/pawn.png'),
     'rook': loadImage('client/pieces/rook.png'),
@@ -47,25 +56,13 @@ function preload() {
     'queen_white': loadImage('client/pieces/queen_white.png'),
     'king_white': loadImage('client/pieces/king_white.png'),
   };
-}
 
-function setup() {
   let canvas = createCanvas(size, size);
   canvas.parent('chessboard');	  // position canvas in html
   drawBoard();
-  initializePieces();
-  drawUnselectedPieces();
+  //initializePieces();
+  //drawUnselectedPieces();
   
-  // start game when opponent was matched and colour is received
-  socket.on('match', (color) => {
-    console.log("sketch: match, start game with colour " + color);
-    playerColor = color;
-
-    drawBoard();
-    initializePieces();
-    drawUnselectedPieces();
-  });
-
   // define what to do when move is received
   socket.on('move', (initial, final) => {
     move(initial, final);

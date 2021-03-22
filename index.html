@@ -14,19 +14,34 @@
       socket is declared in sketch.js, should probably do this more consistently -->
     <script src="client/modules/isLegal.js"></script>
     <script>
+      function clearMoveList() {
+	var moves = document.getElementById('moves');
+	if (moves.hasChildNodes()) {
+	  console.log(moves.childNodes);
+	  for (let i = 0; i < moves.childNodes.length; i++) {
+	    moves.removeChild(moves.childNodes[i]);
+	  }
+	}
+      }
+
       function addtoMoveList(initial, final) {
 	var moves = document.getElementById('moves');
 	var item = document.createElement('li');
 	item.textContent = 'Move ' + initial + ' to ' + final;
 	moves.appendChild(item);
       }
+
+      socket.on('match', (color) => {
+	clearMoveList();
+	startGame(color);  // function defined in sketch.js
+      });
       
       socket.on('move', (initial, final) => {
 	addtoMoveList(initial, final);
       });
 
       socket.onAny((event, ...args) => {
-	console.log(event, args);
+	console.log('index:', event, args);
       });
     </script>
   </head>

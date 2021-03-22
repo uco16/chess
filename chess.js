@@ -67,8 +67,8 @@ function joinQueue(socket) {
 function match(socket1, socket2) {
   console.log("Match between " + socket1.id + " and " + socket2.id);
   let room = socket1.id + '#' + socket2.id;
-  socket1.join(room);
-  socket2.join(room);
+  socket1.opponent = socket2;
+  socket2.opponent = socket1;
   io.to(socket1.id).emit('match', 'white');
   io.to(socket2.id).emit('match', 'black');
 }
@@ -80,7 +80,7 @@ io.on('connection', (socket) => {
   joinQueue(socket);
 
   socket.on('move', (initial, final) => {
-    socket.broadcast.emit('move', initial, final);
+    socket.to(socket.opponent.id).emit('move', initial, final);
   });
 
   socket.on('disconnect', () => {

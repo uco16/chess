@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
-const server = require('http').createServer(handleRequest);
-const io = require('socket.io')(server);
+const httpServer = require('http').createServer(handleRequest);
+const io = require('socket.io')(httpServer);
 
 const hostname = '127.0.0.1';
 const port = 8080;
@@ -39,36 +39,52 @@ function handleRequest(req, res) {
   );
 }
 
-server.listen(port, hostname, () => {
-  console.log('Server running at http://'+hostname+':'+port)
+httpServer.listen(port, hostname, () => {
+  console.log('httpServer running at http://'+hostname+':'+port)
 });
 
 // --- socket.io ---
-var queue = [];	    // sockets waiting for opponents
+let queue = [];	    // sockets waiting for opponents
 
-//function findOpponent(socket) {
-//  if (queue) { // someone is waiting in queue, match them
-//    // POSSIBLE BUG: does this code execute sequentially?
-//    // or is there a chance that multiple new users try to connect
-//    // to the same user in the queue at the same time?
-//    var opponent = queue.pop();
-//    var room = socket.id + '#' + opponent.id;
-//    socket.join(room);
-//    opponent.join(room);
-//  } else { // no one is in queue, add socket to queue
-//    queue.push(socket);
-//  }
-//}
+function leaveQueue(socket) {
+  queue = queue.filter((client) => {return client != socket});
+  console.log('User ' + socket.id + " left queue.");
+}
+
+function joinQueue(socket) {
+  if (!!queue.length) { // someone is waiting in queue, match them
+    // POSSIBLE BUG: does this code execute sequentially?
+    // or is there a chance that multiple new users try to connect
+    // to the same user in the queue at the same time?
+    let opponent = queue.pop();
+    match(opponent, socket);
+  } else { // no one is in queue, add socket to queue
+    console.log('User ' + socket.id + " joined queue");
+    queue.push(socket);
+  }
+}
+
+function match(socket1, socket2) {
+  console.log("Match between " + socket1.id + " and " + socket2.id);
+  let room = socket1.id + '#' + socket2.id;
+  socket1.join(room);
+  socket2.join(room);
+  io.to(socket1.id).emit('match', 'white');
+  io.to(socket2.id).emit('match', 'black');
+}
 
 io.on('connection', (socket) => {
   // socket is a reference for the current client
   console.log('User ' + socket.id + ' connected');
+
+  joinQueue(socket);
 
   socket.on('move', (initial, final) => {
     socket.broadcast.emit('move', initial, final);
   });
 
   socket.on('disconnect', () => {
+    leaveQueue(socket);
     console.log('user ' + socket.id + ' disconnected');
   });
 

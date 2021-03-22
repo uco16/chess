@@ -85,7 +85,7 @@ function isLegalPawnMove(position, initial, final, color, enpassantSquares) {
   if (isEmpty(position, final)) {
     if (final[0] == initial[0]) {
       // check: simple pawn move
-      if (rowDiff == 1) {
+      if (Math.abs(rowDiff) == 1) {
 	console.log("simple");
 	return true;
       }
@@ -94,7 +94,7 @@ function isLegalPawnMove(position, initial, final, color, enpassantSquares) {
 	'white': 1,
 	'black': 6,
       };
-      if (rowDiff == 2 && initial[1] == baseRow[color]) {
+      if (Math.abs(rowDiff) == 2 && initial[1] == baseRow[color]) {
 	const intermediateSquare = [initial[0], (initial[1] + final[1]) / 2];
 	if (isEmpty(position, intermediateSquare)) {
 	  console.log("double");
@@ -111,6 +111,7 @@ function isLegalPawnMove(position, initial, final, color, enpassantSquares) {
   }
 
   // If none of the above were successful, this was not a valid pawn move.
+  console.log('isLegal: none were successful');
   return false;
 }
 

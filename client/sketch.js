@@ -14,21 +14,19 @@ const sqs = boardsize / 8;
 const pcs = sqs/1.5;
 const darkcol = [128, 64, 0];
 const lightcol = [255, 166, 77];
-const playerColor = 'white';
-const flippedBoard = false;
 
-// Variables
-var position = [padding + 10, padding + 10];
-var selectedPiece = null;
-var activePieces = [];
-var pieces = [];
-for (var col=0; col<9; col++) {
+// variables
+let playerColor = 'white';
+let selectedPiece = null;
+let activePieces = [];
+let pieces = [];
+for (let col=0; col<9; col++) {
   pieces[col] = [];
-  for (var row=0; row<9; row++) {
+  for (let row=0; row<9; row++) {
     pieces[col][row] = null;
   }
 }
-var pieceImages;
+let pieceImages;
 
 function preload() {
   pieceImages = {
@@ -52,12 +50,21 @@ function preload() {
 }
 
 function setup() {
-  var canvas = createCanvas(size, size);
+  let canvas = createCanvas(size, size);
   canvas.parent('chessboard');	  // position canvas in html
-  
   drawBoard();
   initializePieces();
   drawUnselectedPieces();
+  
+  // start game when opponent was matched and colour is received
+  socket.on('match', (color) => {
+    console.log("sketch: match, start game with colour " + color);
+    playerColor = color;
+
+    drawBoard();
+    initializePieces();
+    drawUnselectedPieces();
+  });
 
   // define what to do when move is received
   socket.on('move', (initial, final) => {
@@ -67,6 +74,18 @@ function setup() {
 
 function initializePieces() {
 
+  // reset letiable values
+  selectedPiece = null;
+  activePieces = [];
+  pieces = [];
+  for (let col=0; col<9; col++) {
+    pieces[col] = [];
+    for (let row=0; row<9; row++) {
+      pieces[col][row] = null;
+    }
+  }
+
+  // fill up pieces
   const baseRow = ['rook', 'knight_left', 'bishop_left', 'queen', 
 		   'king', 'bishop_right', 'knight_right', 'rook'];
 
@@ -112,15 +131,11 @@ function drawBoard() {
   fill(...lightcol);
   square(padding, padding, boardsize)
   fill(...darkcol);
-  var row;
-  var col;
-  var inversion = 0;
-  if (flippedBoard) {
-    inversion = 1;
-  }
+  let row;
+  let col;
   for (col = 0; col < 8; col++) {
     for (row = 0; row < 8; row++) {
-      if ((row + col) % 2 == 1-inversion) {
+      if ((row + col) % 2 == 0) {
         square(...ColRowtoXY(col, row), sqs);
       }
     }
@@ -175,7 +190,7 @@ function mouseReleased() {
 
 function sendMove(initial, final) {
   socket.emit('move', initial, final);
-  console.log("emitted move");
+  console.log("sketch: emit move");
   addtoMoveList(initial, final);
 }
 
@@ -209,14 +224,26 @@ function XYtoColRow(x, y) {
   // 
   // x, y are computer graphics style, so y counts form the top
   // whereas col, row counts from bottom left to top right
-  col = Math.floor((x - padding)/sqs);
-  row = 7 - Math.floor((y - padding)/sqs);
+  let col = Math.floor((x - padding)/sqs);
+  let row = Math.floor((y - padding)/sqs);
+  if (playerColor == 'white') {
+    row = 7 - row;
+  } else {
+    col = 7 - col;
+  }
   return [col, row];
 }
 
 function ColRowtoXY(col, row) {
-  x = padding + col*sqs;
-  y = padding + (7 - row)*sqs;
+  let x;
+  let y;
+  if (playerColor == 'white') {
+    x = padding + col*sqs;
+    y = padding + (7 - row)*sqs;
+  } else {
+    x = padding + (7-col)*sqs;
+    y = padding + row*sqs;
+  }
   return [x, y];
 }
 

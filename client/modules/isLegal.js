@@ -62,7 +62,8 @@ function isLegalPawnMove(position, initial, final, color, enpassantSquares) {
   const colDiff = final[0] - initial[0];
   const rowDiff = final[1] - initial[1];
 
-  if ((color == 'white' && colDiff <= 0) || (color == 'black' && colDiff >= 0)) {
+  if ((color == 'white' && rowDiff <= 0) || (color == 'black' && rowDiff >= 0)) {
+    console.log("wrong direction for " + color);
     return false;
   }
 
@@ -75,15 +76,17 @@ function isLegalPawnMove(position, initial, final, color, enpassantSquares) {
     // Since we already checked the that the direction of the move is consistent
     // with colour, we just need to see if we land in the same column as the opponent.
     if (final[0] == enpassantSquares[1][0]) {
-	return true;
+      console.log("Enpassant!");
+      return true;
     }
   }
   // -------------------
 
   if (isEmpty(position, final)) {
-    if (final[0] == intial[0]) {
+    if (final[0] == initial[0]) {
       // check: simple pawn move
       if (rowDiff == 1) {
+	console.log("simple");
 	return true;
       }
       // check: double move from base row
@@ -94,6 +97,7 @@ function isLegalPawnMove(position, initial, final, color, enpassantSquares) {
       if (rowDiff == 2 && initial[1] == baseRow[color]) {
 	const intermediateSquare = [initial[0], (initial[1] + final[1]) / 2];
 	if (isEmpty(position, intermediateSquare)) {
+	  console.log("double");
 	  return true;  // double pawn move
 	}
       }
@@ -101,6 +105,7 @@ function isLegalPawnMove(position, initial, final, color, enpassantSquares) {
   } else {
     // check: capture
     if (Math.abs(colDiff) == 1) {  // diagonal step
+      console.log("capture");
       return true;
     }
   }
@@ -112,8 +117,8 @@ function isLegalPawnMove(position, initial, final, color, enpassantSquares) {
 function isEmpty(position, location) {
   // do this in centralized function in case the implementation of 'position' changes
   if (position[location[0]][location[1]]) {
-    return true;
+    return false;
   }
-  return false;
+  return true;
 }
 

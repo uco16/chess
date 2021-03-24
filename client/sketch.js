@@ -6,11 +6,11 @@
 // socket from socket.io module
 const socket = io();
 
-// Constants
+// Board colours
 const darkcol = [128, 64, 0];
 const lightcol = [255, 166, 77];
 
-// variables
+// default variables
 let size = document.getElementById('chessboard').clientWidth;
 let padding = size/16;  // width of the edge of the board
 let boardsize = size - 2 * padding;
@@ -29,15 +29,19 @@ for (let col=0; col<9; col++) {
 let pieceImages;
 
 function startGame(color) {
-    console.log("sketch: match, start game with colour " + color);
-    playerColor = color;
+  console.log("sketch: match, start game with colour " + color);
+  playerColor = color;
+  setup();
 
-    drawBoard();
-    initializePieces();
-    drawUnselectedPieces();
+  // define what to do when move is received
+  socket.on('move', (initial, final) => {
+    console.log('sketch.js: received move', initial, final);
+    move(initial, final);
+  });
 }
 
-function setup() {
+function preload() {
+  // load images before doing anything else
   pieceImages = {
     'pawn': loadImage('client/pieces/pawn.png'),
     'rook': loadImage('client/pieces/rook.png'),
@@ -56,22 +60,19 @@ function setup() {
     'queen_white': loadImage('client/pieces/queen_white.png'),
     'king_white': loadImage('client/pieces/king_white.png'),
   };
+}
 
+function setup() {
   let canvas = createCanvas(size, size);
   canvas.parent('chessboard');	  // position canvas in html
   drawBoard();
-  //initializePieces();
-  //drawUnselectedPieces();
-  
-  // define what to do when move is received
-  socket.on('move', (initial, final) => {
-    move(initial, final);
-  });
+  initializePieces();
+  drawUnselectedPieces();
 }
 
 function initializePieces() {
 
-  // reset letiable values
+  // reset variable values
   selectedPiece = null;
   activePieces = [];
   pieces = [];
@@ -85,7 +86,6 @@ function initializePieces() {
   // fill up pieces
   const baseRow = ['rook', 'knight_left', 'bishop_left', 'queen', 
 		   'king', 'bishop_right', 'knight_right', 'rook'];
-
   for (let col = 0; col < 8; col++) {
     //constructor(pos, color, img, type) {
     let name = baseRow[col];
@@ -222,6 +222,7 @@ function move(initial, final) {
   }
 
   pieces[final[0]][final[1]] = piece;
+  console.log("this is ", piece);
   piece.position = final;
   drawBoard();
   drawUnselectedPieces();
@@ -266,8 +267,8 @@ class ChessPiece {
   constructor(pos, color, img, type) {
     this.position = pos;
     this.color = color;
-    this.img = img;
     this.type = type;
+    this.img = img;
   }
   drag() {
     let x, y;

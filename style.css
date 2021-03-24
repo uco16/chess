@@ -26,7 +26,7 @@
   #chessboard {
     width: 75%;
     display: block;
-    max-width: 100vh;
+    max-width: 92vh;  /* ensure board size is smaller than screen size */
   }
 
   .movewindow {

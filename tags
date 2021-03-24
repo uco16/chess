@@ -320,6 +320,7 @@ preferredMediaType	node_modules/negotiator/index.js	/^Negotiator.prototype.prefe
 preferredMediaTypes	node_modules/negotiator/index.js	/^Negotiator.prototype.preferredMediaTypes = Negotiator.prototype.mediaTypes;$/;"	m	class:Negotiator
 preferredMediaTypes	node_modules/negotiator/lib/mediaType.js	/^function preferredMediaTypes(accept, provided) {$/;"	f	function:function
 preflightContinue	node_modules/cors/lib/index.js	/^    preflightContinue: false,$/;"	p	class:defaults
+preload	client/sketch.js	/^function preload() {$/;"	f
 print_matrix_representation	engine/engineV1.py	/^    def print_matrix_representation(self):$/;"	m	class:ChessGame
 print_matrix_representation	engine/engineV2.py	/^    def print_matrix_representation(self):$/;"	m	class:ChessGame
 prompt_move	engine/engineV1.py	/^    def prompt_move(self):$/;"	m	class:ChessGame

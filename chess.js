@@ -80,6 +80,7 @@ io.on('connection', (socket) => {
   joinQueue(socket);
 
   socket.on('move', (initial, final) => {
+    console.log(`server: received move from ${socket.id} and sending to ${socket.opponent.id}`);
     socket.to(socket.opponent.id).emit('move', initial, final);
   });
 

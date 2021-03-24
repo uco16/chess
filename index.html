@@ -14,7 +14,7 @@
       </div>
       <div class="movewindow">
         <h2>Moves</h2>
-        <ol id="moves"></ol>
+        <ol id="moves" style="overflow:auto"></ol>
       </div>
     </div>
 
@@ -37,10 +37,17 @@
       }
 
       function addtoMoveList(initial, final) {
-	var moves = document.getElementById('moves');
-	var item = document.createElement('li');
-	item.textContent = 'Move ' + initial + ' to ' + final;
+	let moves = document.getElementById('moves');
+	let item = document.createElement('li');
+	// check if isScrolledDown before we add another move to the list
+	let isScrolledDown = (moves.scrollHeight - moves.clientHeight <= moves.scrollTop + 1);
+
+	item.textContent = `[${initial}] to [${final}]`;
 	moves.appendChild(item);
+
+	if (isScrolledDown) {
+	  moves.scrollTop = moves.scrollHeight - moves.clientHeight;
+	}
       }
 
       socket.on('match', (color) => {

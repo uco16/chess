@@ -40,7 +40,7 @@ function handleRequest(req, res) {
 }
 
 httpServer.listen(port, hostname, () => {
-  console.log('httpServer running at http://'+hostname+':'+port)
+  console.log(`Starting httpServer, listening at http://${hostname}:${port}.`);
 });
 
 // --- socket.io ---
@@ -48,7 +48,7 @@ let queue = [];	    // sockets waiting for opponents
 
 function leaveQueue(socket) {
   queue = queue.filter((client) => {return client != socket});
-  console.log('User ' + socket.id + " left queue.");
+  console.log(`User ${socket.id} left queue.`);
 }
 
 function joinQueue(socket) {
@@ -59,7 +59,7 @@ function joinQueue(socket) {
     let opponent = queue.pop();
     match(opponent, socket);
   } else { // no one is in queue, add socket to queue
-    console.log('User ' + socket.id + " joined queue");
+    console.log(`User ${socket.id} joined queue.`);
     queue.push(socket);
   }
 }
@@ -75,7 +75,7 @@ function match(socket1, socket2) {
 
 io.on('connection', (socket) => {
   // socket is a reference for the current client
-  console.log('User ' + socket.id + ' connected');
+  console.log(`User ${socket.id} connected.`);
 
   joinQueue(socket);
 
@@ -85,7 +85,7 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     leaveQueue(socket);
-    console.log('user ' + socket.id + ' disconnected');
+    console.log(`User ${socket.id} disconnected.`);
   });
 
   socket.onAny((event, ...args) => {

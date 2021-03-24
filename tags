@@ -221,10 +221,8 @@ isQuality	node_modules/negotiator/lib/encoding.js	/^function isQuality(spec) {$/
 isQuality	node_modules/negotiator/lib/language.js	/^function isQuality(spec) {$/;"	f
 isQuality	node_modules/negotiator/lib/mediaType.js	/^function isQuality(spec) {$/;"	f	function:function
 isString	node_modules/cors/lib/index.js	/^  function isString(s) {$/;"	f
-joinQueue	chess.js	/^function joinQueue(socket) {$/;"	f
 language	node_modules/negotiator/index.js	/^Negotiator.prototype.language = function language(available) {$/;"	m	class:Negotiator
 languages	node_modules/negotiator/index.js	/^Negotiator.prototype.languages = function languages(available) {$/;"	m	class:Negotiator
-leaveQueue	chess.js	/^function leaveQueue(socket) {$/;"	f
 linkSync	node_modules/node-bin-setup/index.js	/^function linkSync(src, dest) {$/;"	f
 listen	node_modules/engine.io/lib/engine.io.js	/^function listen(port, options, fn) {$/;"	f
 listeners	node_modules/component-emitter/index.js	/^Emitter.prototype.listeners = function(event){$/;"	m	class:Emitter
@@ -237,7 +235,6 @@ make_move	engine/engineV1.py	/^def make_move(position, movecolour):$/;"	f
 map	node_modules/engine.io/lib/parser-v3/index.js	/^function map(ary, each, done) {$/;"	f
 margin: 0	style.css	/^  margin: 0;$/;"	s
 mask	node_modules/ws/lib/buffer-util.js	/^    mask: _mask,$/;"	p	class:module.exports
-match	chess.js	/^function match(socket1, socket2) {$/;"	f
 matrix_notation	engine/engineV1.py	/^def matrix_notation(square):$/;"	f
 matrix_notation	engine/engineV2.py	/^def matrix_notation(square):$/;"	f
 maxPayload	node_modules/ws/lib/websocket-server.js	/^      maxPayload: 100 * 1024 * 1024,$/;"	p	class:options

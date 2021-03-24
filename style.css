@@ -51,8 +51,9 @@
     height: 11em;
     margin-top: 0.4em;
     padding-top: 1em;
-    overflow: auto;
     text-align: center;
     font-size: 1.3em;
+
+    overflow: auto;
   }
 }

@@ -1,26 +1,58 @@
-html, body {
+* {
   margin: 0;
   padding: 0;
 }
 
-canvas {
-  display: block;
-}
+/* Mobile first */
 
 #chessboard {
-  width: 400px;
+  width: 100%;
 }
-#moves {
-  width: 200px;
-  height: 300px;
-  overflow: auto;
+.movewindow {
+  display: none;
 }
 
-#movewindow {
-  margin-left: 20px;
-  width: 300px;
-}
+@media (min-width: 730px) {
+  /* tablets, half-desktop */
 
-#gamewindow {
-  display: flex;
+  body {
+    margin: 2em;
+  }
+
+  .gamewindow {
+    display: flex;
+  }
+
+  #chessboard {
+    width: 75%;
+    display: block;
+    max-width: 100vh;
+  }
+
+  .movewindow {
+    display: block;
+    width: 23%;
+    height: 20em;
+    padding: 0.3em 1em;
+    margin-left: 2%;
+    background-color: #ebebe0;
+    border: 2px solid brown;
+  }
+
+  h2 {
+    font-size: 1.5em;
+    padding: 0.4em;
+    text-transform: capitalize;
+    margin-bottom: 0.4em;
+    border-bottom: 2px solid brown;
+  }
+
+  #moves {
+    height: 11em;
+    margin-top: 0.4em;
+    padding-top: 1em;
+    overflow: auto;
+    text-align: center;
+    font-size: 1.3em;
+  }
 }

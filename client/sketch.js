@@ -7,15 +7,15 @@
 const socket = io();
 
 // Constants
-const size = 400;
-const padding = 25;
-const boardsize = size - 2 * padding;
-const sqs = boardsize / 8;
-const pcs = sqs/1.5;
 const darkcol = [128, 64, 0];
 const lightcol = [255, 166, 77];
 
 // variables
+let size = document.getElementById('chessboard').clientWidth;
+let padding = size/16;  // width of the edge of the board
+let boardsize = size - 2 * padding;
+let sqs = boardsize / 8;
+let pcs = sqs/1.5;
 let playerColor = 'white';
 let selectedPiece = null;
 let activePieces = [];
@@ -184,6 +184,18 @@ function mouseReleased() {
     selectedPiece = null;
   }
 }
+
+function windowResized() {
+  // scale chessboard sketch responsively as window size is changed
+  size = document.getElementById('chessboard').clientWidth;
+  padding = size/16;  // width of the edge of the board
+  boardsize = size - 2 * padding;
+  sqs = boardsize / 8;
+  pcs = sqs/1.5;
+  resizeCanvas(size, size);
+  drawBoard();
+  drawUnselectedPieces();
+};
 
 function sendMove(initial, final) {
   socket.emit('move', initial, final);

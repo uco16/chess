@@ -2,13 +2,25 @@
 <html lang="en">
   <head>
     <title>Chess</title>
-    <script src="client/p5.js"></script>
-    <script src="client/p5.sound.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="icon" type="image/png" href="client/pieces/knight_left.png">
     <meta charset="utf-8">
+  </head>
+
+  <body>
+    <div class="gamewindow">
+      <div id="chessboard">
+        <! -- sketch.js will draw inside here -->
+      </div>
+      <div class="movewindow">
+        <h2>Moves</h2>
+        <ol id="moves"></ol>
+      </div>
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
+    <script src="client/p5.js"></script>
+    <script src="client/p5.sound.min.js"></script>
     <script src="client/sketch.js"></script>
     <!-- the script tags seem to share their namespace,
       socket is declared in sketch.js, should probably do this more consistently -->
@@ -44,17 +56,5 @@
 	console.log('index:', event, args);
       });
     </script>
-  </head>
-
-  <body>
-    <div id="gamewindow">
-      <div id="chessboard" data-testid="chessboard">
-        <! -- sketch.js will draw inside here -->
-      </div>
-      <div id="movewindow">
-        <p>Moves</p>
-        <ol id="moves"></ol>
-      </div>
-    </div>
   </body>
 </html>

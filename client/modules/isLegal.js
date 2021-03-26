@@ -29,7 +29,16 @@ function isLegal(position, move, enpassantSquares=[[-1,-1], [-1,-1], [-1, -1]]) 
     case 'pawn': 
       return isLegalPawnMove(position, initial, final, color, enpassantSquares);
     case 'king':
-      return isLegalKingMove(position, initial, final, color);
+      return isLegalKingMove(position, initial, final);
+    case 'bishop':
+      return isLegalBishopMove(position, initial, final);
+    case 'rook':
+      return isLegalRookMove(position, initial, final);
+
+    //case 'queen':
+    //  const isBishopMove = isLegalBishopMove(position, initial, final);
+    //  const isRookMove = isLegalRookMove(position, initial, final);
+    //  return isBishopMove || isRookMove;
   }
 }
 
@@ -48,6 +57,60 @@ function identifyPiece(piece) {
   return [color, type];
 }
 
+function isLegalRookMove(position, initial, final) {
+  // has to be same column or same row
+  if (final[0] == initial[0] || final[1] == initial[1]) {
+    if (pathIsBlocked(position, initial, final)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+  // if initial and final are neither on the same row nor the same column
+  return false;
+}
+
+function isLegalBishopMove(position, initial, final) {
+  // initial and final have to be on a diagonal
+  if (Math.abs(final[0] - initial[0]) != Math.abs(final[1] - initial[1])) {
+    return false;
+  }
+  // diagonal has to be empty 
+  if (pathIsBlocked(position, initial, final)) {
+    return false;
+  }
+  
+  return true;
+}
+
+function pathIsBlocked(position, initial, final) {
+  // returns true if any piece lies on the path between initial and final
+  // can deal with diagonal paths and paths along a column and along a row
+  const colDiff = final[0] - initial[0];
+  const rowDiff = final[1] - initial[1];
+
+  let colSign;
+  let rowSign;
+  if (colDiff != 0) {
+    colSign = colDiff / Math.abs(colDiff);
+  } else {
+    colSign = 0;
+  }
+  if (rowDiff != 0) {
+    rowSign = rowDiff / Math.abs(rowDiff);
+  } else {
+    rowSign = 0;
+  }
+
+  const maxColRowDiff = Math.max(Math.abs(colDiff), Math.abs(rowDiff));
+  for (let i=1; i < maxColRowDiff; i++) {
+    // for each position on the diagonal path, check if it contains a piece
+    if (position[initial[0]+i*colSign][initial[1]+i*rowSign]) {
+      return true;  // a piece blocks the way
+    }
+  }
+}
+
 function isLegalKingMove(position, initial, final) {
   const colDiff = final[0] - initial[0];
   const rowDiff = final[1] - initial[1];
@@ -63,7 +126,6 @@ function isLegalPawnMove(position, initial, final, color, enpassantSquares) {
   const rowDiff = final[1] - initial[1];
 
   if ((color == 'white' && rowDiff <= 0) || (color == 'black' && rowDiff >= 0)) {
-    console.log("wrong direction for " + color);
     return false;
   }
 
@@ -76,7 +138,6 @@ function isLegalPawnMove(position, initial, final, color, enpassantSquares) {
     // Since we already checked the that the direction of the move is consistent
     // with colour, we just need to see if we land in the same column as the opponent.
     if (final[0] == enpassantSquares[1][0]) {
-      console.log("Enpassant!");
       return true;
     }
   }
@@ -86,7 +147,6 @@ function isLegalPawnMove(position, initial, final, color, enpassantSquares) {
     if (final[0] == initial[0]) {
       // check: simple pawn move
       if (Math.abs(rowDiff) == 1) {
-	console.log("simple");
 	return true;
       }
       // check: double move from base row
@@ -97,7 +157,6 @@ function isLegalPawnMove(position, initial, final, color, enpassantSquares) {
       if (Math.abs(rowDiff) == 2 && initial[1] == baseRow[color]) {
 	const intermediateSquare = [initial[0], (initial[1] + final[1]) / 2];
 	if (isEmpty(position, intermediateSquare)) {
-	  console.log("double");
 	  return true;  // double pawn move
 	}
       }
@@ -105,13 +164,11 @@ function isLegalPawnMove(position, initial, final, color, enpassantSquares) {
   } else {
     // check: capture
     if (Math.abs(colDiff) == 1) {  // diagonal step
-      console.log("capture");
       return true;
     }
   }
 
   // If none of the above were successful, this was not a valid pawn move.
-  console.log('isLegal: none were successful');
   return false;
 }
 

@@ -251,13 +251,16 @@ class ChessGame:
 
         # --- Bishop ---
         if piece[1] == 'B':
-            if abs(initial[0]-final[0]) == abs(initial[1]-final[1]):
-                for col in range(min(initial[0], final[0])+1,
-                                 max(initial[0], final[0])):
-                    for row in range(min(initial[1], final[1])+1,
-                                     max(initial[1], final[1])):
-                        if self.position[col][row] != '  ':
-                            return False
+            col_diff = final[0]-initial[0]
+            row_diff = final[1]-initial[1]
+            if abs(col_diff) == abs(row_diff):
+                col_sign = col_diff / abs(col_diff)
+                row_sign = row_diff / abs(row_diff)
+                for i in range(1, abs(colDiff)):
+                    col = initial[0]+i*col_sign
+                    row = initial[1]+i*row_sign
+                    if self.position[col][row] != '  ':
+                        return False  # a piece blocks the path
 
                 # for loop went through without a return
                 return True
@@ -265,16 +268,16 @@ class ChessGame:
         # --- Queen ---
         if piece[1] == 'Q':
             # Bishop Logic
-            if abs(initial[0]-final[0]) == abs(initial[1]-final[1]):
-                for col in range(min(initial[0], final[0])+1,
-                                 max(initial[0], final[0])):
-                    for row in range(min(initial[1], final[1])+1,
-                                     max(initial[1], final[1])):
-                        if self.position[col][row] != '  ':
-                            return False
-
-                # for loop went through without a return
-                return True
+            col_diff = final[0]-initial[0]
+            row_diff = final[1]-initial[1]
+            if abs(col_diff) == abs(row_diff):
+                col_sign = col_diff / abs(col_diff)
+                row_sign = row_diff / abs(row_diff)
+                for i in range(1, abs(colDiff)):
+                    col = initial[0]+i*col_sign
+                    row = initial[1]+i*row_sign
+                    if self.position[col][row] != '  ':
+                        return False  # a piece blocks the path
 
             # Rook Logic
             if final[0] == initial[0]:

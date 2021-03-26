@@ -47,16 +47,16 @@ function preload() {
     'rook': loadImage('client/pieces/rook.png'),
     'knight_left': loadImage('client/pieces/knight_left.png'),
     'knight_right': loadImage('client/pieces/knight_right.png'),
-    'bishop_left': loadImage('client/pieces/knight_left.png'),
-    'bishop_right': loadImage('client/pieces/knight_right.png'),
+    'bishop_left': loadImage('client/pieces/bishop_left.png'),
+    'bishop_right': loadImage('client/pieces/bishop_right.png'),
     'queen': loadImage('client/pieces/queen.png'),
     'king': loadImage('client/pieces/king.png'),
     'pawn_white': loadImage('client/pieces/pawn_white.png'),
     'rook_white': loadImage('client/pieces/rook_white.png'),
     'knight_left_white': loadImage('client/pieces/knight_left_white.png'),
     'knight_right_white': loadImage('client/pieces/knight_right_white.png'),
-    'bishop_left_white': loadImage('client/pieces/knight_left_white.png'),
-    'bishop_right_white': loadImage('client/pieces/knight_right_white.png'),
+    'bishop_left_white': loadImage('client/pieces/bishop_left_white.png'),
+    'bishop_right_white': loadImage('client/pieces/bishop_right_white.png'),
     'queen_white': loadImage('client/pieces/queen_white.png'),
     'king_white': loadImage('client/pieces/king_white.png'),
   };
@@ -199,7 +199,6 @@ function windowResized() {
 
 function sendMove(initial, final) {
   socket.emit('move', initial, final);
-  console.log("sketch: emit move");
   addtoMoveList(initial, final);
 }
 
@@ -222,7 +221,6 @@ function move(initial, final) {
   }
 
   pieces[final[0]][final[1]] = piece;
-  console.log("this is ", piece);
   piece.position = final;
   drawBoard();
   drawUnselectedPieces();

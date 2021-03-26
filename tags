@@ -213,8 +213,10 @@ isEmpty	client/modules/isLegal.js	/^function isEmpty(position, location) {$/;"	f
 isLegal	client/modules/isLegal.js	/^function isLegal(position, move, enpassantSquares=[[-1,-1], [-1,-1], [-1, -1]]) {$/;"	f
 isLegal	engine/engineV1.py	/^    def isLegal(self, initial, final):$/;"	m	class:ChessGame
 isLegal	engine/engineV2.py	/^    def isLegal(self, initial, final):$/;"	m	class:ChessGame
+isLegalBishopMove	client/modules/isLegal.js	/^function isLegalBishopMove(position, initial, final) {$/;"	f
 isLegalKingMove	client/modules/isLegal.js	/^function isLegalKingMove(position, initial, final) {$/;"	f
 isLegalPawnMove	client/modules/isLegal.js	/^function isLegalPawnMove(position, initial, final, color, enpassantSquares) {$/;"	f
+isLegalRookMove	client/modules/isLegal.js	/^function isLegalRookMove(position, initial, final) {$/;"	f
 isOriginAllowed	node_modules/cors/lib/index.js	/^  function isOriginAllowed(origin, allowedOrigin) {$/;"	f
 isQuality	node_modules/negotiator/lib/charset.js	/^function isQuality(spec) {$/;"	f
 isQuality	node_modules/negotiator/lib/encoding.js	/^function isQuality(spec) {$/;"	f
@@ -299,6 +301,7 @@ parseEncoding	node_modules/negotiator/lib/encoding.js	/^function parseEncoding(s
 parseLanguage	node_modules/negotiator/lib/language.js	/^function parseLanguage(str, i) {$/;"	f
 parseMediaType	node_modules/negotiator/lib/mediaType.js	/^function parseMediaType(str, i) {$/;"	f
 path	node_modules/node-bin-setup/index.js	/^var path = require('path');$/;"	v
+pathIsBlocked	client/modules/isLegal.js	/^function pathIsBlocked(position, initial, final) {$/;"	f
 pawn	client/sketch.js	/^    'pawn': loadImage('client\/pieces\/pawn.png'),$/;"	p	class:pieceImages
 play	engine/engineV1.py	/^    def play(self):$/;"	m	class:ChessGame
 play	engine/engineV1.py	/^def play():$/;"	f

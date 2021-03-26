@@ -35,10 +35,10 @@ function isLegal(position, move, enpassantSquares=[[-1,-1], [-1,-1], [-1, -1]]) 
     case 'rook':
       return isLegalRookMove(position, initial, final);
 
-    //case 'queen':
-    //  const isBishopMove = isLegalBishopMove(position, initial, final);
-    //  const isRookMove = isLegalRookMove(position, initial, final);
-    //  return isBishopMove || isRookMove;
+    case 'queen':
+      const isBishopMove = isLegalBishopMove(position, initial, final);
+      const isRookMove = isLegalRookMove(position, initial, final);
+      return isBishopMove || isRookMove;
   }
 }
 

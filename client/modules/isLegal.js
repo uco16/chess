@@ -34,11 +34,12 @@ function isLegal(position, move, enpassantSquares=[[-1,-1], [-1,-1], [-1, -1]]) 
       return isLegalBishopMove(position, initial, final);
     case 'rook':
       return isLegalRookMove(position, initial, final);
-
     case 'queen':
       const isBishopMove = isLegalBishopMove(position, initial, final);
       const isRookMove = isLegalRookMove(position, initial, final);
       return isBishopMove || isRookMove;
+    case 'knight':
+      return isLegalKnightMove(position, initial, final);
   }
 }
 
@@ -55,6 +56,12 @@ function identifyPiece(piece) {
   const type = piece.type;
   const color = piece.color;
   return [color, type];
+}
+
+function isLegalKnightMove(position, initial, final) {
+  const colDiff = Math.abs(final[0] - initial[0]);
+  const rowDiff = Math.abs(final[1] - initial[1]);
+  return (colDiff + rowDiff == 3) ;
 }
 
 function isLegalRookMove(position, initial, final) {
@@ -105,7 +112,7 @@ function pathIsBlocked(position, initial, final) {
   const maxColRowDiff = Math.max(Math.abs(colDiff), Math.abs(rowDiff));
   for (let i=1; i < maxColRowDiff; i++) {
     // for each position on the diagonal path, check if it contains a piece
-    if (position[initial[0]+i*colSign][initial[1]+i*rowSign]) {
+    if (!isEmpty(position, [initial[0]+i*colSign, initial[1]+i*rowSign])) {
       return true;  // a piece blocks the way
     }
   }
@@ -163,7 +170,7 @@ function isLegalPawnMove(position, initial, final, color, enpassantSquares) {
     }
   } else {
     // check: capture
-    if (Math.abs(colDiff) == 1) {  // diagonal step
+    if (Math.abs(colDiff) == 1 && Math.abs(rowDiff) == 1) {  // diagonal step
       return true;
     }
   }

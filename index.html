@@ -50,6 +50,11 @@
 	}
       }
 
+      function numMovesPlayed() {
+	var moves = document.getElementById('moves');
+	return moves.childNodes.length;
+      }
+
       socket.on('match', (color) => {
 	clearMoveList();
 	startGame(color);  // function defined in sketch.js
@@ -60,7 +65,7 @@
       });
 
       socket.onAny((event, ...args) => {
-	console.log('index:', event, args);
+	console.log('index: socket received ', event, args);
       });
     </script>
   </body>

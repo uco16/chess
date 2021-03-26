@@ -6,11 +6,8 @@
 // socket from socket.io module
 const socket = io();
 
-// Board colours
-const darkcol = [128, 64, 0];
-const lightcol = [255, 166, 77];
-
 // default variables
+let gameHasStarted = false;
 let size = document.getElementById('chessboard').clientWidth;
 let padding = size/16;  // width of the edge of the board
 let boardsize = size - 2 * padding;
@@ -31,11 +28,11 @@ let pieceImages;
 function startGame(color) {
   console.log("sketch: match, start game with colour " + color);
   playerColor = color;
+  gameHasStarted = true;
   setup();
 
   // define what to do when move is received
   socket.on('move', (initial, final) => {
-    console.log('sketch.js: received move', initial, final);
     move(initial, final);
   });
 }
@@ -122,6 +119,10 @@ function drawUnselectedPieces() {
 }
 
 function drawBoard() {
+  // Board colours
+  const darkcol = [128, 64, 0];
+  const lightcol = [255, 166, 77];
+
   // draw the board without pieces
   background(204, 68, 0);
   strokeWeight(0);
@@ -160,29 +161,47 @@ function mousePressed() {
 }
 
 function mouseReleased() {
-  if (selectedPiece != null) {
+  if (selectedPiece) {
     const startPos = selectedPiece.position;
     const endPos = mousePos();
-    const isInsideBoard = (0 <= endPos[0] && endPos[0] < 8 && 0 <= endPos[1] && endPos[1] < 8);
-    const positionHasChanged = (startPos[0] != endPos[0] || startPos[1] != endPos[1]);
-
     drawBoard();
     drawUnselectedPieces();
-    // check if move is legal by using function from modules/isLegal.js
-    if (positionHasChanged && isInsideBoard) {
-      targetPiece = pieces[endPos[0]][endPos[1]];
-      if (targetPiece == null || targetPiece.color != playerColor) {
-	if (isLegal(pieces, [startPos, endPos])) {
-	sendMove(selectedPiece.position, mousePos());  // send move to server
-	move(selectedPiece.position, mousePos());  // play move client side
-	} else {
-	  console.log("Illegal Move ", [startPos, endPos]);
-	}
-      }
+
+    if (isValidMove(startPos, endPos)) {
+      sendMove(selectedPiece.position, mousePos());  // send move to server
+      move(selectedPiece.position, mousePos());  // play move client side
     }
     selectedPiece.draw();
     selectedPiece = null;
   }
+}
+
+function isValidMove(startPos, endPos) {
+  // can only move on your own turn (or before start of game)
+  if (!isNotEnemyTurn()) {
+    console.log("Not your turn.");
+    return false;
+  }
+
+  const startPosIsEndPos = (startPos[0] == endPos[0] && startPos[1] == endPos[1]);
+  if (startPosIsEndPos) {
+    return false;
+  }
+  const isOutsideBoard = !(0 <= endPos[0] && endPos[0] < 8 && 0 <= endPos[1] && endPos[1] < 8);
+  if (isOutsideBoard) {
+    return false;
+  }
+
+  targetPiece = pieces[endPos[0]][endPos[1]];
+  if (targetPiece && targetPiece.color == playerColor) {
+    return false;
+  }
+
+  // using function from modules/isLegal.js
+  if (isLegal(pieces, [startPos, endPos])) {
+    return true;
+  }
+  return false;
 }
 
 function windowResized() {
@@ -198,8 +217,10 @@ function windowResized() {
 };
 
 function sendMove(initial, final) {
-  socket.emit('move', initial, final);
-  addtoMoveList(initial, final);
+  if (gameHasStarted) {
+    socket.emit('move', initial, final);
+    addtoMoveList(initial, final);
+  }
 }
 
 function deactivate(piece) {
@@ -258,6 +279,18 @@ function ColRowtoXY(col, row) {
 function mousePos() {
   // return [col, row] under mouse position
   return XYtoColRow(mouseX, mouseY);
+}
+
+function isNotEnemyTurn() {
+  if (!gameHasStarted) {
+    return true;
+  }
+  n = numMovesPlayed();
+  if (playerColor == 'white') {
+    return (n % 2 == 0);
+  } else {
+    return (n % 2 == 1);
+  }
 }
 
 

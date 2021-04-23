@@ -15,6 +15,7 @@ document.write(`
 
   <nav class="toolbar">
     <a class="tab">About</a>
+    <a class="tab">Sign In</a>
     <a class="tab">New Game</a>
   </nav>
 </header>
@@ -22,6 +23,7 @@ document.write(`
   <aside id="menu-drawer">
     <nav class="menu-list">
       <a class="menu-item" onclick="collapseMenu()">About</a>
+      <a class="menu-item" onclick="collapseMenu()">Sign In</a>
       <a class="menu-item" onclick="collapseMenu()">New Game</a>
     </nav>
   </aside>

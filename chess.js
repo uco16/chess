@@ -3,8 +3,8 @@ const fs = require('fs');
 const httpServer = require('http').createServer(handleRequest);
 const io = require('socket.io')(httpServer);
 
-const hostname = '127.0.0.1';
-const port = 8080;
+const hostname = '192.168.2.109';
+const port = 8000;
 
 function handleRequest(req, res) {
   var pathname = req.url;

@@ -1,8 +1,10 @@
+import { arraysEqual } from './jslogic.js';
+
 // Client-side script to determine whether a move is legal in the current position
 
 // main script that will be exported and used by the sketch to decide
 // whether or not a given move by the player is legal
-function isLegal(position, move, enpassantSquares=[[-1,-1], [-1,-1], [-1, -1]]) {
+export default function isLegal(position, move, previousMoveFinal=null) {
   // check if move is legal in given position
   //
   // assumptions:
@@ -25,22 +27,21 @@ function isLegal(position, move, enpassantSquares=[[-1,-1], [-1,-1], [-1, -1]]) 
   const piece = position[initial[0]][initial[1]];
   const [color, type] = identifyPiece(piece);
 
-  switch (type) {
-    case 'pawn': 
-      return isLegalPawnMove(position, initial, final, color, enpassantSquares);
-    case 'king':
-      return isLegalKingMove(position, initial, final);
-    case 'bishop':
-      return isLegalBishopMove(position, initial, final);
-    case 'rook':
-      return isLegalRookMove(position, initial, final);
-    case 'queen':
-      const isBishopMove = isLegalBishopMove(position, initial, final);
-      const isRookMove = isLegalRookMove(position, initial, final);
-      return isBishopMove || isRookMove;
-    case 'knight':
-      return isLegalKnightMove(position, initial, final);
+  const patternFunctions = {
+    'pawn': isLegalPawnMove,
+    'king': isLegalKingMove,
+    'bishop': isLegalBishopMove,
+    'rook': isLegalRookMove,
+    'queen': isLegalQueenMove,
+    'knight': isLegalKnightMove,
+  };
+
+  if (type == 'pawn') {
+    var moveData = [position, initial, final, previousMoveFinal];
+  } else {
+    var moveData = [position, initial, final];
   }
+  return patternFunctions[type](...moveData);
 }
 
 // --- auxiliary functions ---
@@ -56,6 +57,12 @@ function identifyPiece(piece) {
   const type = piece.type;
   const color = piece.color;
   return [color, type];
+}
+
+function isLegalQueenMove(position, initial, final) {
+  const isBishopMove = isLegalBishopMove(position, initial, final);
+  const isRookMove = isLegalRookMove(position, initial, final);
+  return isBishopMove || isRookMove;
 }
 
 function isLegalKnightMove(position, initial, final) {
@@ -127,25 +134,36 @@ function isLegalKingMove(position, initial, final) {
   return false;
 }
 
-function isLegalPawnMove(position, initial, final, color, enpassantSquares) {
+function isLegalPawnMove(position, initial, final, previousMoveFinal) {
   // all pawn moves have to be upwards for white and downwards for black
   const colDiff = final[0] - initial[0];
   const rowDiff = final[1] - initial[1];
+
+  let piece = position[initial[0]][initial[1]];
+  let color = identifyPiece(piece)[0];
 
   if ((color == 'white' && rowDiff <= 0) || (color == 'black' && rowDiff >= 0)) {
     return false;
   }
 
   // --- EN-PASSANT ---
-  if (initial == enpassantSquares[0] || initial == enpassantSquares[2]) {
-    // Our pawn can do an enpassant move.
-    //
-    // If we are white, a valid move lands above that pawn, if black below.
-    //
-    // Since we already checked the that the direction of the move is consistent
-    // with colour, we just need to see if we land in the same column as the opponent.
-    if (final[0] == enpassantSquares[1][0]) {
-      return true;
+  if (previousMoveFinal !== null) {
+    let previous_move_piece = position[previousMoveFinal[0]][previousMoveFinal[1]];
+    let previous_move_type = identifyPiece(previous_move_piece)[1];
+    if (previous_move_type == "pawn") {
+      if (arraysEqual(initial, [previousMoveFinal[0]-1, previousMoveFinal[1]])
+	  || arraysEqual(initial, [previousMoveFinal[0]+1, previousMoveFinal[1]])) {
+	// Our pawn started its move from next to an opponent's pawn who just moved there
+	// Our pawn can do an enpassant move.
+	//
+	// If we are white, a valid move lands above that pawn, if black below.
+	//
+	// Since we already checked the that the direction of the move is consistent
+	// with colour, we just need to see if we land in the same column as the opponent.
+	if (final[0] == previousMoveFinal[0]) {
+	  return true;
+	}
+      }
     }
   }
   // -------------------
@@ -186,4 +204,3 @@ function isEmpty(position, location) {
   }
   return true;
 }
-

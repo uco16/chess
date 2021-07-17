@@ -15,8 +15,9 @@ document.write(`
 
   <nav class="toolbar">
     <a class="tab">About</a>
+    <a class="tab" href="/play.html">New Game</a>
+    <a class="tab">Change Name</a>
     <a class="tab">Sign In</a>
-    <a class="tab">New Game</a>
   </nav>
 </header>
 <div>

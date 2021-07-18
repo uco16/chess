@@ -8,13 +8,13 @@ export function clearMoveList() {
   }
 }
 
-export function addtoMoveList(initial, final) {
+export function addtoMoveList(initial, final, iType, fType) {
   let moves = document.getElementById('moves');
   let item = document.createElement('li');
   // check if isScrolledDown before we add another move to the list
   let isScrolledDown = (moves.scrollHeight - moves.clientHeight <= moves.scrollTop + 1);
 
-  item.textContent = `[${initial}] to [${final}]`;
+  item.textContent = `${chessNotation(initial, iType)}, ${chessNotation(final, fType)}`;
   moves.appendChild(item);
 
   if (isScrolledDown) {
@@ -27,10 +27,29 @@ export function numMovesPlayed() {
   return moves.childNodes.length;
 }
 
-socket.on('match', (color) => {
-  clearMoveList();
-});
+function chessNotation(position, type) {
+  // Returns the chess notation for a given matrix position
+  let [column, row] = position;
+  let letter = 'abcdefgh'[column];
+  let number = (row+1).toString();
+  let abbrev = {
+    'empty': '',
+    'pawn': '',
+    'knight': 'N',
+    'king': 'K',
+    'rook': 'R',
+    'bishop': 'B',
+    'queen': 'Q',
+  }
+  console.log(abbrev, type);
+  return abbrev[type].concat(letter, number);
+}
 
-socket.on('move', (initial, final) => {
-  addtoMoveList(initial, final);
+//socket.on('match', (color) => {
+//  clearMoveList();
+//});
+
+socket.on('move', (initial, final, iname, fname) => {
+  addtoMoveList(initial, final, iname, fname);
+  console.log("movelist: received move", initial, final, iname, fname);
 });

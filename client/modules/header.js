@@ -16,9 +16,9 @@ document.write(`
   <nav class="toolbar">
     <a class="tab">About</a>
     <a class="tab" href="/play.html">New Game</a>
-    <a class="tab">Change Name</a>
-    <a class="tab">Sign In</a>
+    <input type="textbox" id="name_selector" placeholder="Choose Name">
   </nav>
+  </div>
 </header>
 <div>
   <aside id="menu-drawer">

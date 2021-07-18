@@ -3,7 +3,7 @@ const fs = require('fs');
 const httpServer = require('http').createServer(handleRequest);
 const io = require('socket.io')(httpServer);
 
-const hostname = '192.168.2.109';
+const hostname = '0.0.0.0';
 const port = 8000;
 
 function handleRequest(req, res) {
@@ -79,9 +79,9 @@ io.on('connection', (socket) => {
 
   joinQueue(socket);
 
-  socket.on('move', (initial, final) => {
+  socket.on('move', (...args) => {
     console.log(`server: received move from ${socket.id} and sending to ${socket.opponent.id}`);
-    socket.to(socket.opponent.id).emit('move', initial, final);
+    socket.to(socket.opponent.id).emit('move', ...args);
   });
 
   socket.on('disconnect', () => {

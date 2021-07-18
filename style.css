@@ -154,6 +154,7 @@ header a, header a:visited, .menu-item, .menu-item:visited {
 .toolbar {
   height: 100%;
   min-height: 4rem;
+  flex: 1;
 }
 
 .tab {
@@ -165,6 +166,19 @@ header a, header a:visited, .menu-item, .menu-item:visited {
   align-items: center;
   opacity: .7;
   transition: 150ms opacity linear;
+}
+
+.toolbar input {
+  border: none;
+}
+
+#name_selector {
+  margin-left: auto;
+  height: 2em;
+  border: none;
+  margin: auto 2rem auto auto;
+  padding: 0 1em;
+  width: 6.5em;
 }
 
 .tab:hover {

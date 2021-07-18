@@ -1,12 +1,49 @@
 import { arraysEqual } from './jslogic.js';
+import { numMovesPlayed } from './movelist.js';
 
 // Client-side script to determine whether a move is legal in the current position
 
 // main script that will be exported and used by the sketch to decide
 // whether or not a given move by the player is legal
-export default function isLegal(position, move, previousMoveFinal=null) {
+export default function isLegal(startPos, endPos, pieces, previousMoveFinal, playerColor) {
   // check if move is legal in given position
   //
+  // can only move on your own turn (or before start of game)
+  if (!isNotEnemyTurn(playerColor)) {
+    console.log("Not your turn.");
+    return false;
+  }
+  // end position has to be different to start position
+  const startPosIsEndPos = (startPos[0] == endPos[0] && startPos[1] == endPos[1]);
+  if (startPosIsEndPos) {
+    return false;
+  }
+  // end position has to be inside the board
+  const isOutsideBoard = !(0 <= endPos[0] && endPos[0] < 8 && 0 <= endPos[1] && endPos[1] < 8);
+  if (isOutsideBoard) {
+    return false;
+  }
+  // the piece on the end position has to be empty or of opposing color
+  let targetPiece = pieces[endPos[0]][endPos[1]];
+  if (targetPiece && targetPiece.color == playerColor) {
+    return false;
+  }
+  if (isValidMove(pieces, [startPos, endPos], previousMoveFinal)) {
+    return true;
+  }
+  return false;
+}
+
+function isNotEnemyTurn(playerColor) {
+  let n = numMovesPlayed();
+  if (playerColor == 'white') {
+    return (n % 2 == 0);
+  } else {
+    return (n % 2 == 1);
+  }
+}
+
+function isValidMove(position, move, previousMoveFinal) {
   // assumptions:
   //  position: 8x8 matrix with chess pieces as entries
   //
@@ -16,10 +53,6 @@ export default function isLegal(position, move, previousMoveFinal=null) {
   //  
   //  assume there is a piece of the player's color at 'initial'
   //  and that at 'final' there is a piece of the opponents color or no piece at all
-  //
-  //  enpassantSquares: [left, center, right] three coordinates identifying where a pawn
-  //			can make an enpassant move from and to, if no move is possible, 
-  //			assume left, right are out of bounds, e.g. left = right = -1.
 
   const initial = move[0];
   const final = move[1];
@@ -43,6 +76,7 @@ export default function isLegal(position, move, previousMoveFinal=null) {
   }
   return patternFunctions[type](...moveData);
 }
+
 
 // --- auxiliary functions ---
 

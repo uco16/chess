@@ -81,7 +81,6 @@ function sketch (p) {
   }
 
   function drawBoard() {
-
     // draw the board without pieces
     p.background(204, 68, 0);
     p.strokeWeight(0);
@@ -142,6 +141,18 @@ function sketch (p) {
       selectedPiece = null;
     }
   }
+
+  p.windowResized = () => {
+    // scale chessboard sketch responsively as window size is changed
+    size = document.getElementById('chessboard').clientWidth;
+    padding = size/16;  // width of the edge of the board
+    boardsize = size - 2 * padding;
+    sqs = boardsize / 8;
+    pcs = sqs/1.5;
+    p.resizeCanvas(size, size);
+    drawBoard();
+    drawUnselectedPieces();
+  };
 
   function sendMove(initial, final, initialPieceName, finalPieceName) {
     socket.emit('move', initial, final, initialPieceName, finalPieceName);

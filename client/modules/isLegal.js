@@ -1,4 +1,4 @@
-import { arraysEqual } from './jslogic.js';
+import { arraysEqual, copyMatrix } from './jslogic.js';
 import { numMovesPlayed } from './movelist.js';
 
 // Client-side script to determine whether a move is legal in the current position
@@ -25,13 +25,21 @@ export default function isLegal(startPos, endPos, pieces, previousMoveFinal, pla
   }
   // the piece on the end position has to be empty or of opposing color
   let targetPiece = pieces[endPos[0]][endPos[1]];
-  if (targetPiece && targetPiece.color == playerColor) {
+  if (targetPiece && identifyPiece(targetPiece)[0] == playerColor) {
     return false;
   }
-  if (isValidMove(pieces, [startPos, endPos], previousMoveFinal)) {
-    return true;
+  // piece has to move in a valid way
+  if (!isValidPattern(pieces, startPos, endPos, previousMoveFinal)) {
+    return false;
   }
-  return false;
+
+  // player cannot be left in check after move
+  if (isLeftInCheck(pieces, startPos, endPos)) {
+    console.log("This move leaves you in check.")
+    return false;
+  }
+
+  return true;
 }
 
 function isNotEnemyTurn(playerColor) {
@@ -43,7 +51,7 @@ function isNotEnemyTurn(playerColor) {
   }
 }
 
-function isValidMove(position, move, previousMoveFinal) {
+function isValidPattern(position, initial, final, previousMoveFinal) {
   // assumptions:
   //  position: 8x8 matrix with chess pieces as entries
   //
@@ -54,8 +62,6 @@ function isValidMove(position, move, previousMoveFinal) {
   //  assume there is a piece of the player's color at 'initial'
   //  and that at 'final' there is a piece of the opponents color or no piece at all
 
-  const initial = move[0];
-  const final = move[1];
   // piece to be moved
   const piece = position[initial[0]][initial[1]];
   const [color, type] = identifyPiece(piece);
@@ -88,9 +94,44 @@ function identifyPiece(piece) {
   //
   //  The implementation depends on which type of object 'piece' is,
   //  so we handle this as an external function to be able to adjust it in the future.
-  const type = piece.type;
-  const color = piece.color;
-  return [color, type];
+  const color = {'w': 'white', 'b': 'black'};
+  const type = {
+    'P': 'pawn',
+    'R': 'rook',
+    'N': 'knight',
+    'B': 'bishop',
+    'K': 'king',
+    'Q': 'queen',
+  };
+  return [color[piece[0]], type[piece[1]]];
+}
+
+function findPiece(position, color, type) {
+  let findings = [];
+  for (var col=0; col<9; col++) {
+    for (var row=0; row<9; row++) {
+      if (isPiece(position, [col, row], color, type)) {
+	findings.push([col, row]);
+      }
+    }
+  }
+  return findings;
+}
+
+function isPiece(position, location, color, type) {
+  if (isEmpty(position, location)) {
+    return false;
+  }
+  let [pcColor, pcType] = identifyPiece(position[location[0]][location[1]]);
+  return (pcColor === color && pcType === type);
+}
+
+function isEmpty(position, location) {
+  // do this in centralized function in case the implementation of 'position' changes
+  if (position[location[0]][location[1]]) {
+    return false;
+  }
+  return true;
 }
 
 function isLegalQueenMove(position, initial, final) {
@@ -231,10 +272,45 @@ function isLegalPawnMove(position, initial, final, previousMoveFinal) {
   return false;
 }
 
-function isEmpty(position, location) {
-  // do this in centralized function in case the implementation of 'position' changes
-  if (position[location[0]][location[1]]) {
-    return false;
-  }
-  return true;
+function isLeftInCheck(position, initial, final) {
+  // return true iff player is in check after move is made
+
+  let piece = position[initial[0]][initial[1]];
+  let playerColor = identifyPiece(piece)[0];
+
+  let pos_copy = copyMatrix(position);
+  pos_copy[initial[0]][initial[1]] = null;
+  pos_copy[final[0]][final[1]] = piece;
+  return inCheck(pos_copy, playerColor);
 }
+
+function inCheck(position, playerColor) {
+  // return true iff playerColor is in check in given position
+
+  let opponentColor;
+  if (playerColor === 'white') {
+    opponentColor = 'black';
+  } else {
+    opponentColor = 'white';
+  }
+  
+  // find position of king
+  let kingPos = findPiece(position, playerColor, 'king')[0];
+  // check if king is under attack by other player
+  // knights
+  let knightsquares = [[kingPos[0]-1, kingPos[1]+2], 
+		       [kingPos[0]-1, kingPos[1]-2],
+		       [kingPos[0]+1, kingPos[1]+2],
+		       [kingPos[0]+1, kingPos[1]-2],
+		       [kingPos[0]-2, kingPos[1]+1],
+		       [kingPos[0]-2, kingPos[1]-1],
+		       [kingPos[0]+2, kingPos[1]+1],
+		       [kingPos[0]+2, kingPos[1]-1]]
+  for (let i=0; i<8; i++) {
+    if (isPiece(position, knightsquares[i], opponentColor, 'knight')) {
+      return true;
+    }
+  }
+  return false;
+}
+

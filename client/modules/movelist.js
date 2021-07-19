@@ -41,7 +41,6 @@ function chessNotation(position, type) {
     'bishop': 'B',
     'queen': 'Q',
   }
-  console.log(abbrev, type);
   return abbrev[type].concat(letter, number);
 }
 
@@ -51,5 +50,5 @@ function chessNotation(position, type) {
 
 socket.on('move', (initial, final, iname, fname) => {
   addtoMoveList(initial, final, iname, fname);
-  console.log("movelist: received move", initial, final, iname, fname);
+  //console.log("movelist: received move", initial, final, iname, fname);
 });

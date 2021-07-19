@@ -15,3 +15,12 @@ export function nullMatrix(cols,rows) {
   }
   return mx;
 }
+
+export function copyMatrix(mx) {
+  // returns shallow copy of matrix, as long as the objects are strings/ints/etc.
+  let new_mx = [];
+  for (var col=0; col < mx.length; ++col) {
+    new_mx[col] = mx[col].slice();
+  }
+  return new_mx;
+}

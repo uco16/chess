@@ -24,9 +24,9 @@
     <script>
       // exposes socket global to following scripts
       var socket = io();
-      socket.onAny((event, ...args) => {
-	console.log('play: socket received ', event, args);
-      });
+      //socket.onAny((event, ...args) => {
+//	console.log('play: socket received ', event, args);
+     // });
     </script>
     <script src="client/modules/p5.js"></script>
     <script src="client/sketch.js" type="module"></script>

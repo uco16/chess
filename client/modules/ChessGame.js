@@ -42,4 +42,25 @@ export default class ChessGame {
       this.activePieces.splice(index, 1);
     }
   }
+  isEmpty(coordinates) {
+    // check if there is a piece on square coordinates
+    if (this.pieces[coordinates[0]][coordinates[1]]) {
+      return false;
+    }
+    return true;
+  }
+  strRep() {
+    // returns a matrix where the ChessPiece objects are replaced by their
+    // string representation
+    let cp = nullMatrix(9,9);
+    for (var col=0; col < 9; ++col) {
+      for (var row=0; row < 9; ++row) {
+	let piece = this.pieces[col][row];
+	if (piece !== null) {
+	  cp[col][row] = piece.strRep();
+	}   
+      }
+    }
+    return cp;
+  }
 }

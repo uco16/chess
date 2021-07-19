@@ -50,6 +50,7 @@ Accepts	node_modules/accepts/index.js	/^Accepts.prototype.charset =$/;"	c	class:
 Accepts	node_modules/accepts/index.js	/^Accepts.prototype.lang =$/;"	c	class:Accepts.Accepts
 Accepts	node_modules/accepts/index.js	/^Accepts.prototype.type =$/;"	c
 Ansi256	node_modules/chalk/source/index.js	/^	Ansi256: 2,$/;"	p	class:chalk.Level
+B	client/modules/isLegal.js	/^    'B': 'bishop',$/;"	p	class:const
 BAD_HANDSHAKE_METHOD	node_modules/engine.io/lib/server.js	/^  BAD_HANDSHAKE_METHOD: 2,$/;"	p	class:Server.errors
 BAD_REQUEST	node_modules/engine.io/lib/server.js	/^  BAD_REQUEST: 3,$/;"	p	class:Server.errors
 BIN	node_modules/undefsafe/node_modules/debug/Makefile	/^BIN := $(THIS_DIR)\/node_modules\/.bin$/;"	m
@@ -85,6 +86,7 @@ DuplexWrapper	node_modules/duplexer3/index.js	/^function DuplexWrapper(options, 
 Emitter	node_modules/component-emitter/index.js	/^Emitter.prototype.on =$/;"	c
 Emitter	node_modules/component-emitter/index.js	/^function Emitter(obj) {$/;"	f
 FORBIDDEN	node_modules/engine.io/lib/server.js	/^  FORBIDDEN: 4,$/;"	p	class:Server.errors
+K	client/modules/isLegal.js	/^    'K': 'king',$/;"	p	class:const
 King	engine/engineV2.py	/^class King(ChessPiece):$/;"	c
 Knight	engine/engineV2.py	/^class Knight(ChessPiece):$/;"	c
 Logger	node_modules/nodemon/lib/utils/log.js	/^var Logger = function (r) {$/;"	c
@@ -97,15 +99,19 @@ Minimatch	node_modules/minimatch/minimatch.js	/^Minimatch.prototype.parseNegate 
 Minimatch.defaults	node_modules/minimatch/minimatch.js	/^Minimatch.defaults = function (def) {$/;"	f
 MurmurHash3	node_modules/imurmurhash/imurmurhash.js	/^    MurmurHash3.prototype.hash = function(key) {$/;"	c
 MurmurHash3	node_modules/imurmurhash/imurmurhash.js	/^    function MurmurHash3(key, seed) {$/;"	f
+N	client/modules/isLegal.js	/^    'N': 'knight',$/;"	p	class:const
 N	node_modules/rc/test/nested-env-vars.js	/^var N = 'RC'+ seed;$/;"	v
 NODE	node_modules/undefsafe/node_modules/debug/Makefile	/^NODE ?= $(shell which node)$/;"	m
 Negotiator	node_modules/negotiator/index.js	/^function Negotiator(request) {$/;"	c
 None	node_modules/chalk/source/index.js	/^	None: 0,$/;"	p	class:chalk.Level
+P	client/modules/isLegal.js	/^    'P': 'pawn',$/;"	p	class:const
 PATH	node_modules/undefsafe/node_modules/debug/Makefile	/^PATH := node_modules\/.bin:$(PATH)$/;"	m
 PKG	node_modules/undefsafe/node_modules/debug/Makefile	/^PKG ?= $(if $(YARN),$(YARN),$(NODE) $(shell which npm))$/;"	m
 PacketType	node_modules/socket.io-parser/dist/index.js	/^var PacketType;$/;"	v
 Pawn	engine/engineV2.py	/^class Pawn(ChessPiece):$/;"	c
+Q	client/modules/isLegal.js	/^    'Q': 'queen',$/;"	p	class:const
 Queen	engine/engineV2.py	/^class Queen(DistancePiece):$/;"	c
+R	client/modules/isLegal.js	/^    'R': 'rook',$/;"	p	class:const
 Range	node_modules/make-dir/node_modules/semver/semver.js	/^Range.prototype.format = function () {$/;"	c
 Range	node_modules/make-dir/node_modules/semver/semver.js	/^Range.prototype.toString = function () {$/;"	c	class:Range
 Range	node_modules/package-json/node_modules/semver/semver.js	/^Range.prototype.format = function () {$/;"	c
@@ -187,6 +193,7 @@ __init__	engine/engineV2.py	/^    def __init__(self, colour, Game, location):$/;
 __init__	engine/engineV2.py	/^    def __init__(self, colour, Game, location):$/;"	m	class:Rook
 __init__	engine/engineV2.py	/^    def __init__(self, colour, Game, location, directions):$/;"	m	class:DistancePiece
 _deconstructPacket	node_modules/socket.io-parser/dist/binary.js	/^function _deconstructPacket(data, buffers) {$/;"	f
+_isValidUTF8	node_modules/ws/lib/validation.js	/^function _isValidUTF8(buf) {$/;"	f
 _log	node_modules/nodemon/lib/utils/log.js	/^Logger.prototype._log = function (type, msg) {$/;"	m	class:Logger
 _mask	node_modules/ws/lib/buffer-util.js	/^function _mask(source, mask, output, offset, length) {$/;"	f
 _placeholder	node_modules/socket.io-parser/dist/binary.js	/^        const placeholder = { _placeholder: true, num: buffers.length };$/;"	p	class:isBinary
@@ -225,10 +232,12 @@ arrayBufferToBuffer	node_modules/engine.io/lib/parser-v3/index.js	/^function arr
 ascii	node_modules/picomatch/lib/constants.js	/^  ascii: '\\\\x00-\\\\x7F',$/;"	p	class:const
 assign	node_modules/cors/lib/index.js	/^  var assign = require('object-assign');$/;"	v
 attach	node_modules/engine.io/lib/engine.io.js	/^function attach(server, options) {$/;"	f
+b	client/modules/isLegal.js	/^  const color = {'w': 'white', 'b': 'black'};$/;"	p	class:const
 backslash	node_modules/glob-parent/index.js	/^var backslash = \/\\\\\/g;$/;"	v
 balanced	node_modules/balanced-match/index.js	/^function balanced(a, b, str) {$/;"	f
 balanced	node_modules/brace-expansion/index.js	/^var balanced = require('balanced-match');$/;"	v
 binary	node_modules/ws/lib/websocket.js	/^      binary: typeof data !== 'string',$/;"	p	class:const
+bishop	client/modules/ChessPiece.js	/^      'bishop': 'B',$/;"	p	class:strRep
 bishop	client/modules/isLegal.js	/^    'bishop': isLegalBishopMove,$/;"	p	class:const
 bishop	client/modules/movelist.js	/^    'bishop': 'B',$/;"	p	class:let
 black	client/modules/isLegal.js	/^	'black': 6,$/;"	p	class:const
@@ -550,6 +559,7 @@ filterPatterns	node_modules/to-regex-range/index.js	/^function filterPatterns(ar
 fin	node_modules/ws/lib/sender.js	/^        fin: options.fin,$/;"	p
 findAppScript	node_modules/nodemon/lib/config/load.js	/^function findAppScript() {$/;"	f
 findPackage	node_modules/nodemon/lib/version.js	/^function findPackage(dir) {$/;"	f
+findPiece	client/modules/isLegal.js	/^function findPiece(position, color, type) {$/;"	f
 float	node_modules/boxen/index.js	/^		float: 'left',$/;"	p	class:options
 fmtLong	node_modules/ms/index.js	/^function fmtLong(ms) {$/;"	f
 fmtLong	node_modules/undefsafe/node_modules/ms/index.js	/^function fmtLong(ms) {$/;"	f
@@ -653,6 +663,7 @@ ignore	node_modules/nodemon/lib/rules/index.js	/^  ignore: {$/;"	p	class:module.
 ignore	node_modules/nodemon/lib/rules/index.js	/^var rules = { ignore: [], watch: [] };$/;"	p	class:rules
 ignore	node_modules/nodemon/lib/rules/parse.js	/^    ignore: [],$/;"	p	class:parse.rules
 ignoreRoot	node_modules/nodemon/lib/config/defaults.js	/^var ignoreRoot = require('ignore-by-default').directories();$/;"	v
+inCheck	client/modules/isLegal.js	/^function inCheck(position, playerColor) {$/;"	f
 includePrerelease	node_modules/make-dir/node_modules/semver/bin/semver.js	/^  var options = { loose: loose, includePrerelease: includePrerelease, rtl: rtl }$/;"	p	class:var.options
 includePrerelease	node_modules/package-json/node_modules/semver/bin/semver.js	/^  var options = { loose: loose, includePrerelease: includePrerelease, rtl: rtl }$/;"	p	class:var.options
 includePrerelease	node_modules/semver-diff/node_modules/semver/bin/semver.js	/^  var options = { loose: loose, includePrerelease: includePrerelease, rtl: rtl }$/;"	p	class:var.options
@@ -682,6 +693,7 @@ isFS	node_modules/pump/index.js	/^var isFS = function (stream) {$/;"	f	function:
 isGlob	node_modules/glob-parent/index.js	/^var isGlob = require('is-glob');$/;"	v
 isGlob	node_modules/picomatch/lib/scan.js	/^      token = { value: '', depth: 0, isGlob: false };$/;"	p	class:token
 isGlob	node_modules/picomatch/lib/scan.js	/^  let token = { value: '', depth: 0, isGlob: false };$/;"	p	class:let
+isLeftInCheck	client/modules/isLegal.js	/^function isLeftInCheck(position, initial, final) {$/;"	f
 isLegal	engine/engineV1.py	/^    def isLegal(self, initial, final):$/;"	m	class:ChessGame
 isLegal	engine/engineV2.py	/^    def isLegal(self, initial, final):$/;"	m	class:ChessGame
 isLegalBishopMove	client/modules/isLegal.js	/^function isLegalBishopMove(position, initial, final) {$/;"	f
@@ -695,6 +707,7 @@ isNotEnemyTurn	client/modules/isLegal.js	/^function isNotEnemyTurn(playerColor) 
 isNumber	node_modules/minimist/index.js	/^function isNumber (x) {$/;"	f
 isOriginAllowed	node_modules/cors/lib/index.js	/^  function isOriginAllowed(origin, allowedOrigin) {$/;"	f
 isPadded	node_modules/brace-expansion/index.js	/^function isPadded(el) {$/;"	f
+isPiece	client/modules/isLegal.js	/^function isPiece(position, location, color, type) {$/;"	f
 isQuality	node_modules/negotiator/lib/charset.js	/^function isQuality(spec) {$/;"	f
 isQuality	node_modules/negotiator/lib/encoding.js	/^function isQuality(spec) {$/;"	f
 isQuality	node_modules/negotiator/lib/language.js	/^function isQuality(spec) {$/;"	f
@@ -706,7 +719,9 @@ isSpecificValue	node_modules/deep-extend/lib/deep-extend.js	/^function isSpecifi
 isStrictTypedArray	node_modules/is-typedarray/index.js	/^function isStrictTypedArray(arr) {$/;"	f
 isString	node_modules/cors/lib/index.js	/^  function isString(s) {$/;"	f
 isTypedArray	node_modules/is-typedarray/index.js	/^function isTypedArray(arr) {$/;"	f
-isValidMove	client/modules/isLegal.js	/^function isValidMove(position, move, previousMoveFinal) {$/;"	f
+isValidPattern	client/modules/isLegal.js	/^function isValidPattern(position, initial, final, previousMoveFinal) {$/;"	f
+isValidStatusCode	node_modules/ws/lib/validation.js	/^function isValidStatusCode(code) {$/;"	f
+isValidUTF8	node_modules/ws/lib/validation.js	/^    isValidUTF8: _isValidUTF8$/;"	p	class:module.exports
 isWin32	node_modules/glob-parent/index.js	/^var isWin32 = require('os').platform() === 'win32';$/;"	v
 json	node_modules/package-json/index.js	/^		json: true,$/;"	p	class:const
 keep-alive	node_modules/http-cache-semantics/index.js	/^    'keep-alive': true,$/;"	p	class:const
@@ -714,8 +729,10 @@ keepAlive	node_modules/package-json/index.js	/^	keepAlive: true,$/;"	p	class:con
 key	node_modules/minimist/index.js	/^        var key = keys[keys.length - 1];$/;"	v
 kill	node_modules/nodemon/lib/monitor/run.js	/^function kill(child, signal, callback) {$/;"	f
 killedAfterChange	node_modules/nodemon/lib/monitor/run.js	/^var killedAfterChange = false;$/;"	v
+king	client/modules/ChessPiece.js	/^      'king': 'K',$/;"	p	class:strRep
 king	client/modules/isLegal.js	/^    'king': isLegalKingMove,$/;"	p	class:const
 king	client/modules/movelist.js	/^    'king': 'K',$/;"	p	class:let
+knight	client/modules/ChessPiece.js	/^      'knight': 'N',$/;"	p	class:strRep
 knight	client/modules/isLegal.js	/^    'knight': isLegalKnightMove,$/;"	p	class:const
 knight	client/modules/movelist.js	/^    'knight': 'N',$/;"	p	class:let
 language	node_modules/negotiator/index.js	/^Negotiator.prototype.language = function language(available) {$/;"	m	class:Negotiator
@@ -959,6 +976,7 @@ path	node_modules/nodemon/lib/version.js	/^var path = require('path');$/;"	v
 path	node_modules/readdirp/index.js	/^      entry = { path: sysPath.relative(this._root, fullPath), fullPath, basename };$/;"	p	class:entry
 pathIsBlocked	client/modules/isLegal.js	/^function pathIsBlocked(position, initial, final) {$/;"	f
 pathPosixDirname	node_modules/glob-parent/index.js	/^var pathPosixDirname = require('path').posix.dirname;$/;"	v
+pawn	client/modules/ChessPiece.js	/^      'pawn': 'P',$/;"	p	class:strRep
 pawn	client/modules/isLegal.js	/^    'pawn': isLegalPawnMove,$/;"	p	class:const
 pawn	client/modules/movelist.js	/^    'pawn': '',$/;"	p	class:let
 pawn	client/sketch.js	/^      'pawn': p.loadImage('client\/pieces\/pawn.png'),$/;"	p	class:pieceImages
@@ -1006,6 +1024,7 @@ publishQueue	node_modules/graceful-fs/graceful-fs.js	/^function publishQueue(con
 punct	node_modules/picomatch/lib/constants.js	/^  punct: '\\\\-!"#$%&\\'()\\\\*+,.\/:;<=>?@[\\\\]^_`{|}~',$/;"	p	class:const
 push	node_modules/ws/lib/extension.js	/^function push(dest, name, elem) {$/;"	f
 q	node_modules/negotiator/lib/encoding.js	/^      q: minQuality,$/;"	p	class:accepts
+queen	client/modules/ChessPiece.js	/^      'queen': 'Q',$/;"	p	class:strRep
 queen	client/modules/isLegal.js	/^    'queen': isLegalQueenMove,$/;"	p	class:const
 queen	client/modules/movelist.js	/^    'queen': 'Q',$/;"	p	class:let
 quoteCount	node_modules/negotiator/lib/mediaType.js	/^function quoteCount(string) {$/;"	f	function:function
@@ -1080,6 +1099,7 @@ right	node_modules/boxen/index.js	/^			right: 0,$/;"	p	class:object
 right	node_modules/boxen/index.js	/^			right: detail * 3,$/;"	p	class:object
 rm	engine/engineV1.py	/^    def rm(self, pos):$/;"	m	class:ChessGame
 rm	engine/engineV2.py	/^    def rm(self, pos):$/;"	m	class:ChessGame
+rook	client/modules/ChessPiece.js	/^      'rook': 'R',$/;"	p	class:strRep
 rook	client/modules/isLegal.js	/^    'rook': isLegalRookMove,$/;"	p	class:const
 rook	client/modules/movelist.js	/^    'rook': 'R',$/;"	p	class:let
 root	node_modules/nodemon/lib/version.js	/^var root = null;$/;"	v
@@ -1241,6 +1261,7 @@ transfer-encoding	node_modules/http-cache-semantics/index.js	/^    'transfer-enc
 translateLevel	node_modules/chalk/node_modules/supports-color/index.js	/^function translateLevel(level) {$/;"	f
 translateLevel	node_modules/supports-color/index.js	/^function translateLevel(level) {$/;"	f
 tree	node_modules/pstree.remy/lib/utils.js	/^function tree(stats) {$/;"	f
+trim	node_modules/ws/lib/websocket-server.js	/^function trim(str) {$/;"	f
 tryBaseDir	node_modules/nodemon/lib/monitor/match.js	/^function tryBaseDir(dir) {$/;"	f
 tryDecode	node_modules/cookie/index.js	/^function tryDecode(str, decode) {$/;"	f
 tryDecode	node_modules/engine.io/lib/parser-v3/index.js	/^function tryDecode(data) {$/;"	f
@@ -1313,6 +1334,7 @@ version	node_modules/nodemon/lib/utils/index.js	/^var version = process.versions
 version	node_modules/nodemon/lib/version.js	/^function version(callback) {$/;"	f
 version	node_modules/package-json/index.js	/^		version: 'latest',$/;"	p	class:options
 volatile	node_modules/socket.io-adapter/dist/index.js	/^            volatile: flags.volatile,$/;"	p	class:const
+w	client/modules/isLegal.js	/^  const color = {'w': 'white', 'b': 'black'};$/;"	p	class:const
 w	node_modules/ms/index.js	/^var w = d * 7;$/;"	v
 waitForSubProcesses	node_modules/nodemon/lib/monitor/run.js	/^function waitForSubProcesses(pid, callback) {$/;"	f
 watch	node_modules/nodemon/lib/monitor/run.js	/^var watch = require('.\/watch').watch;$/;"	v

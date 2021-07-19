@@ -126,14 +126,15 @@ function sketch (p) {
       drawBoard();
       drawUnselectedPieces();
 
-      if (isLegal(startPos, endPos, game.pieces, previousMoveFinal, playerColor)) {
+      if (isLegal(startPos, endPos, game.strRep(), previousMoveFinal, playerColor)) {
 	let initialPieceType = game.pieces[startPos[0]][startPos[1]].type;
-	let finalPiece = game.pieces[endPos[0]][endPos[1]];
-	let finalPieceType = 'empty';
-	if (finalPiece !== null) {
+	let finalPieceType;
+	if (game.isEmpty(endPos)) {
+	  finalPieceType = 'empty';
+	} else {
+	  let finalPiece = game.pieces[endPos[0]][endPos[1]];
 	  finalPieceType = finalPiece.type;
 	}
-
 	sendMove(selectedPiece.position, mousePos(), initialPieceType, finalPieceType);  // send move to server
 	move(selectedPiece.position, mousePos());  // play move client side
       }

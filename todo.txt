@@ -1,0 +1,9 @@
+- check if king is left in check with any move: DONE
+- win / lose / draw screen at the end
+- timer
+- looking for opponent
+- names and rating of you and opponent
+- gather pieces on side
+- optional feedback (e.g. "invalid move: this move left you in check")
+- label chessboard
+- promotion to queen

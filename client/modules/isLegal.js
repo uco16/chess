@@ -1,4 +1,4 @@
-import { arraysEqual, copyMatrix } from './jslogic.js';
+import { arraysEqual, copyMatrix, arraysAdd } from './jslogic.js';
 import { numMovesPlayed } from './movelist.js';
 
 // Client-side script to determine whether a move is legal in the current position
@@ -19,8 +19,7 @@ export default function isLegal(startPos, endPos, pieces, previousMoveFinal, pla
     return false;
   }
   // end position has to be inside the board
-  const isOutsideBoard = !(0 <= endPos[0] && endPos[0] < 8 && 0 <= endPos[1] && endPos[1] < 8);
-  if (isOutsideBoard) {
+  if (!isInBoard(endPos)) {
     return false;
   }
   // the piece on the end position has to be empty or of opposing color
@@ -40,6 +39,10 @@ export default function isLegal(startPos, endPos, pieces, previousMoveFinal, pla
   }
 
   return true;
+}
+
+function isInBoard(position) {
+  return (0 <= position[0] && position[0] < 8 && 0 <= position[1] && position[1] < 8);
 }
 
 function isNotEnemyTurn(playerColor) {
@@ -278,9 +281,11 @@ function isLeftInCheck(position, initial, final) {
   let piece = position[initial[0]][initial[1]];
   let playerColor = identifyPiece(piece)[0];
 
-  let pos_copy = copyMatrix(position);
+  let pos_copy = copyMatrix(position);  // shallow copy of position
+  // make move in the copy matrix
   pos_copy[initial[0]][initial[1]] = null;
   pos_copy[final[0]][final[1]] = piece;
+  // test if the player is in check in the new position after making the move
   return inCheck(pos_copy, playerColor);
 }
 
@@ -311,6 +316,76 @@ function inCheck(position, playerColor) {
       return true;
     }
   }
+
+  // columns: rooks & queens
+  for (const direction of ['up', 'down', 'left', 'right']) {
+    let pc=firstPiece(position, kingPos, direction);
+    if (pc !== null) {
+      let [color, type] = identifyPiece(pc);
+      if (color===opponentColor && (type==='queen' || type==='rook')) {
+	return true;
+      }
+    }
+  }
+  
+  // diagonals: bishops & queens
+  for (const direction of ['topright', 'botright', 'botleft', 'topleft']) {
+    let pc=firstPiece(position, kingPos, direction);
+    if (pc !== null) {
+      let [color, type] = identifyPiece(pc);
+      if (color===opponentColor && (type==='queen' || type==='bishop')) {
+	return true;
+      }
+    }
+  }
+
+  // pawns
+  let pawnSquares;
+  if (playerColor==='white') {
+    pawnSquares = [[kingPos[0]-1, kingPos[1]+1], [kingPos[0]+1, kingPos[1]+1]];
+  } else {
+    pawnSquares = [[kingPos[0]-1, kingPos[1]-1], [kingPos[0]+1, kingPos[1]-1]];
+  }
+  for (const pawnSquare of pawnSquares) {
+    if (isPiece(position, pawnSquare, opponentColor, 'pawn')) {
+      return true;
+    }
+  }
+
+  // king (only relevant when trying to do a move with the king)
+  for (let i=-1; i<=1; i++) {
+    for (let j=-1; j<=1; j++) {
+      let square = [kingPos[0]+i, kingPos[1]+j];
+      if (isPiece(position, square, opponentColor, 'king')) {
+	return true;
+      }
+    }
+  }
   return false;
 }
 
+function firstPiece(position, square, direction) {
+  // returns coords of first piece in line of sight of square
+  const step = {  // specifies what one step in the given direction looks like
+    'up': [0, 1],  // do not increment column, but increment row
+    'down': [0, -1],  // decrement row
+    'left': [-1, 0],
+    'right': [1, 0],
+    'topright': [1, 1],
+    'botright': [1, -1],
+    'topleft': [-1, 1],
+    'botleft': [-1, -1],
+  };
+  let curPos = square.slice();  // shallow copy
+  for (let i=0; i<8; i++) {
+    curPos = arraysAdd(curPos, step[direction]);  // make one step in direction
+    if (!isInBoard(curPos)) {
+      break;
+    }
+    if (!isEmpty(position, curPos)) {
+      return position[curPos[0]][curPos[1]];
+    }
+  }
+  // no piece in line of sight in column/row direction from square
+  return null;
+}

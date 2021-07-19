@@ -5,6 +5,17 @@ export function arraysEqual(a, b) {
     a.every((val, index) => val === b[index]);
 }
 
+export function arraysAdd(a, b) {
+  if (a.length != b.length) {
+    throw new Error('Cannot add arrays of different length');
+  }
+  let sum = [];
+  for (let i=0; i<a.length; i++) {
+    sum.push(a[i]+b[i]);
+  }
+  return sum;
+}
+
 export function nullMatrix(cols,rows) {
   let mx = [];
   for (let col=0; col<9; col++) {

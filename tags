@@ -560,6 +560,7 @@ fin	node_modules/ws/lib/sender.js	/^        fin: options.fin,$/;"	p
 findAppScript	node_modules/nodemon/lib/config/load.js	/^function findAppScript() {$/;"	f
 findPackage	node_modules/nodemon/lib/version.js	/^function findPackage(dir) {$/;"	f
 findPiece	client/modules/isLegal.js	/^function findPiece(position, color, type) {$/;"	f
+firstPiece	client/modules/isLegal.js	/^function firstPiece(position, square, direction) {$/;"	f
 float	node_modules/boxen/index.js	/^		float: 'left',$/;"	p	class:options
 fmtLong	node_modules/ms/index.js	/^function fmtLong(ms) {$/;"	f
 fmtLong	node_modules/undefsafe/node_modules/ms/index.js	/^function fmtLong(ms) {$/;"	f
@@ -693,6 +694,7 @@ isFS	node_modules/pump/index.js	/^var isFS = function (stream) {$/;"	f	function:
 isGlob	node_modules/glob-parent/index.js	/^var isGlob = require('is-glob');$/;"	v
 isGlob	node_modules/picomatch/lib/scan.js	/^      token = { value: '', depth: 0, isGlob: false };$/;"	p	class:token
 isGlob	node_modules/picomatch/lib/scan.js	/^  let token = { value: '', depth: 0, isGlob: false };$/;"	p	class:let
+isInBoard	client/modules/isLegal.js	/^function isInBoard(position) {$/;"	f
 isLeftInCheck	client/modules/isLegal.js	/^function isLeftInCheck(position, initial, final) {$/;"	f
 isLegal	engine/engineV1.py	/^    def isLegal(self, initial, final):$/;"	m	class:ChessGame
 isLegal	engine/engineV2.py	/^    def isLegal(self, initial, final):$/;"	m	class:ChessGame
@@ -1290,6 +1292,7 @@ undefsafe	node_modules/undefsafe/lib/undefsafe.js	/^function undefsafe(obj, path
 unescapeBraces	node_modules/brace-expansion/index.js	/^function unescapeBraces(str) {$/;"	f
 unmask	node_modules/ws/lib/buffer-util.js	/^    unmask: _unmask$/;"	p	class:module.exports
 unsafe	node_modules/ini/ini.js	/^function unsafe (val, doUnesc) {$/;"	f	function:function.decode
+up	client/modules/isLegal.js	/^    'up': [0, 1],  \/\/ do not increment column, but increment row$/;"	p	class:const
 update_allowed_movements	engine/engineV2.py	/^    def update_allowed_movements(self):$/;"	m	class:ChessPiece
 update_allowed_movements	engine/engineV2.py	/^    def update_allowed_movements(self):$/;"	m	class:DistancePiece
 update_allowed_movements	engine/engineV2.py	/^    def update_allowed_movements(self):$/;"	m	class:King

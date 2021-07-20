@@ -5,10 +5,12 @@ import { numMovesPlayed } from './movelist.js';
 
 // main script that will be exported and used by the sketch to decide
 // whether or not a given move by the player is legal
-export default function isLegal(startPos, endPos, pieces, previousMoveFinal, playerColor) {
+export default function isLegal(startPos, endPos, pieces, previousMoveFinal, playerColor, canCastle) {
   // check if move is legal in given position
   //
   // can only move on your own turn (or before start of game)
+  // canCastle: dictionary of form {'left': boolean, 'right': boolean}
+  //
   if (!isNotEnemyTurn(playerColor)) {
     console.log("Not your turn.");
     return false;
@@ -28,7 +30,7 @@ export default function isLegal(startPos, endPos, pieces, previousMoveFinal, pla
     return false;
   }
   // piece has to move in a valid way
-  if (!isValidPattern(pieces, startPos, endPos, previousMoveFinal)) {
+  if (!isValidPattern(pieces, startPos, endPos, previousMoveFinal, canCastle)) {
     return false;
   }
 
@@ -54,7 +56,7 @@ function isNotEnemyTurn(playerColor) {
   }
 }
 
-function isValidPattern(position, initial, final, previousMoveFinal) {
+function isValidPattern(position, initial, final, previousMoveFinal, canCastle) {
   // assumptions:
   //  position: 8x8 matrix with chess pieces as entries
   //
@@ -78,8 +80,10 @@ function isValidPattern(position, initial, final, previousMoveFinal) {
     'knight': isLegalKnightMove,
   };
 
-  if (type == 'pawn') {
+  if (type === 'pawn') {
     var moveData = [position, initial, final, previousMoveFinal];
+  } else if (type === 'king') {
+    var moveData = [position, initial, final, canCastle];
   } else {
     var moveData = [position, initial, final];
   }
@@ -203,11 +207,34 @@ function pathIsBlocked(position, initial, final) {
   }
 }
 
-function isLegalKingMove(position, initial, final) {
+function isLegalKingMove(position, initial, final, canCastle) {
+  // standard king move: 1 step in any direction
   const colDiff = final[0] - initial[0];
   const rowDiff = final[1] - initial[1];
   if (Math.abs(colDiff) <= 1 && Math.abs(rowDiff) <= 1) {
     return true;
+  }
+  // castling: only possible if king and the relevant rook have not moved
+  // and if there are no pieces in between them
+  if (rowDiff === 0) { // king just moves left or right
+    let playerColor = identifyPiece(position[initial[0]][initial[1]])[0];
+    if (colDiff === 2 && canCastle['right'])  {
+      // king moves two steps to the right
+      // player can still castle right (so king and right rook are in initial positions)
+      let fp = firstPiece(position, initial, 'right');
+      let [pieceColor, pieceType] = identifyPiece(fp);
+      if (playerColor===pieceColor && 'rook'===pieceType) {
+	// first piece to the right is a rook of the player's color
+	return true;  // can castle right
+      }
+    } else if (colDiff === -2 && canCastle['left'])  {
+      let fp = firstPiece(position, initial, 'left');
+      let [pieceColor, pieceType] = identifyPiece(fp);
+      if (playerColor===pieceColor && 'rook'===pieceType) {
+	// first piece to the left is a rook of the player's color
+	return true;  // can castle left
+      }
+    }
   }
   return false;
 }
@@ -289,7 +316,7 @@ function isLeftInCheck(position, initial, final) {
   return inCheck(pos_copy, playerColor);
 }
 
-function inCheck(position, playerColor) {
+export function inCheck(position, playerColor) {
   // return true iff playerColor is in check in given position
 
   let opponentColor;
@@ -312,7 +339,7 @@ function inCheck(position, playerColor) {
 		       [kingPos[0]+2, kingPos[1]+1],
 		       [kingPos[0]+2, kingPos[1]-1]]
   for (let i=0; i<8; i++) {
-    if (isPiece(position, knightsquares[i], opponentColor, 'knight')) {
+    if (isInBoard(knightsquares[i]) && isPiece(position, knightsquares[i], opponentColor, 'knight')) {
       return true;
     }
   }
@@ -365,7 +392,7 @@ function inCheck(position, playerColor) {
 }
 
 function firstPiece(position, square, direction) {
-  // returns coords of first piece in line of sight of square
+  // returns first piece in line of sight of square
   const step = {  // specifies what one step in the given direction looks like
     'up': [0, 1],  // do not increment column, but increment row
     'down': [0, -1],  // decrement row

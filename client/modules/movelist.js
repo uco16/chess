@@ -1,3 +1,5 @@
+import {algebraic} from './chesslogic.js';
+
 export function clearMoveList() {
   var moves = document.getElementById('moves');
   if (moves.hasChildNodes()) {
@@ -10,12 +12,21 @@ export function clearMoveList() {
 
 export function addtoMoveList(initial, final, iType, fType) {
   let moves = document.getElementById('moves');
-  let item = document.createElement('li');
-  // check if isScrolledDown before we add another move to the list
+  // check if isScrolledDown BEFORE we add another move to the list
   let isScrolledDown = (moves.scrollHeight - moves.clientHeight <= moves.scrollTop + 1);
 
-  item.textContent = `${chessNotation(initial, iType)}, ${chessNotation(final, fType)}`;
-  moves.appendChild(item);
+  // create new list item on every odd move
+  if (numMovesPlayed()%2===0) {
+    var item = document.createElement('li');
+    moves.appendChild(item);
+  } else {
+    var item = moves.lastChild;
+  }
+  // add move to the relevant list item inside a span
+
+  let move = document.createElement('span');
+  move.innerHTML = `${chessNotation(initial, final, iType, fType)}`;
+  item.appendChild(move);
 
   if (isScrolledDown) {
     moves.scrollTop = moves.scrollHeight - moves.clientHeight;
@@ -23,25 +34,35 @@ export function addtoMoveList(initial, final, iType, fType) {
 }
 
 export function numMovesPlayed() {
+  let counter = 0;
   var moves = document.getElementById('moves');
-  return moves.childNodes.length;
+  for (let listItem of moves.childNodes) {
+    counter += listItem.childNodes.length;
+  }
+  return counter;
 }
 
-function chessNotation(position, type) {
-  // Returns the chess notation for a given matrix position
-  let [column, row] = position;
-  let letter = 'abcdefgh'[column];
-  let number = (row+1).toString();
-  let abbrev = {
-    'empty': '',
-    'pawn': '',
-    'knight': 'N',
+function chessNotation(initial, final, iType, fType) {
+  // Returns the FIDE notation for given move
+  const letter = {
     'king': 'K',
+    'queen': 'Q',
     'rook': 'R',
     'bishop': 'B',
-    'queen': 'Q',
+    'knight': 'N',
+    'pawn': '',
+  };
+  let destination = algebraic(final);
+  let capture = '';
+  if (fType !== 'empty') {
+    if (iType === 'pawn') {
+      capture = algebraic(initial)[0] + '×';
+    } else {
+      capture = '×';
+    }
   }
-  return abbrev[type].concat(letter, number);
+  let type = letter[iType];
+  return type + capture + destination;
 }
 
 //socket.on('match', (color) => {

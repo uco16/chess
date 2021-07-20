@@ -1,7 +1,6 @@
 // imports from custom client-side functions
 import isLegal from './modules/isLegal.js';
 import {addtoMoveList} from './modules/movelist.js';
-import {arraysEqual} from './modules/jslogic.js';
 import ChessGame from './modules/ChessGame.js';
 
 // default variables
@@ -20,7 +19,6 @@ function sketch (p) {
   // "instance mode" https://github.com/processing/p5.js/wiki/p5.js-overview#instantiation--namespace
   let selectedPiece = null;
   let pieceImages;
-  let previousMoveFinal = null;
   let game;
 
   // const socket = io();
@@ -28,7 +26,10 @@ function sketch (p) {
   // explicitly importing and setting sketch.js to a module seems to break socket.io?
 
   // define what to do when move is received
-  socket.on('move', (initial, final, itype, ftype) => { move(initial, final); });
+  socket.on('move', (initial, final, ...args) => { 
+    console.log('received move', [initial, final], args);
+    move(initial, final); 
+  });
 
   p.preload = () => {
     // load images before doing anything else
@@ -111,7 +112,7 @@ function sketch (p) {
     let col, row;
     [col, row] = mousePos();
     if (0 <= col && col < 8 && 0 <= row && row < 8) {
-      let pieceUnderMouse = game.pieces[col][row];
+      let pieceUnderMouse = game.getPiece([col, row]);
       if (pieceUnderMouse != null && pieceUnderMouse.color == playerColor) {
 	selectedPiece = pieceUnderMouse;
       }
@@ -125,19 +126,20 @@ function sketch (p) {
       drawBoard();
       drawUnselectedPieces();
 
-      if (isLegal(startPos, endPos, game.strRep(), previousMoveFinal, playerColor)) {
-	let initialPieceType = game.pieces[startPos[0]][startPos[1]].type;
+      if (isLegal(startPos, endPos, game.strRep(),
+		  game.previousMoveFinal, playerColor, game.canCastle[playerColor])) {
+	let initialPieceType = game.getPiece(startPos).type;
 	let finalPieceType;
 	if (game.isEmpty(endPos)) {
 	  finalPieceType = 'empty';
 	} else {
-	  let finalPiece = game.pieces[endPos[0]][endPos[1]];
+	  let finalPiece = game.getPiece(endPos);
 	  finalPieceType = finalPiece.type;
 	}
-	sendMove(selectedPiece.position, mousePos(), initialPieceType, finalPieceType);  // send move to server
-	move(selectedPiece.position, mousePos());  // play move client side
+	sendMove(startPos, endPos, initialPieceType, finalPieceType);  // send move to server
+	move(startPos, endPos);  // play move client side
       }
-      drawPiece(selectedPiece);
+      drawPiece(selectedPiece);  // need to draw piece in case the move was not legal
       selectedPiece = null;
     }
   }
@@ -156,40 +158,16 @@ function sketch (p) {
 
   function sendMove(initial, final, initialPieceName, finalPieceName) {
     socket.emit('move', initial, final, initialPieceName, finalPieceName);
+    console.log('sent move', [initial, final], [initialPieceName, finalPieceName])
     addtoMoveList(initial, final, initialPieceName, finalPieceName);
   }
 
   function move(initial, final) {
-    let piece = game.pieces[initial[0]][initial[1]];
-    game.pieces[initial[0]][initial[1]] = null;
-
-    let targetPiece = game.pieces[final[0]][final[1]];
-    // check for enpassant
-    if (previousMoveFinal !== null) {
-      let previous_move_piece = game.pieces[previousMoveFinal[0]][previousMoveFinal[1]];
-      if (previous_move_piece.type == "pawn") {
-	if (arraysEqual(initial, [previousMoveFinal[0]-1, previousMoveFinal[1]])
-	    || arraysEqual(initial, [previousMoveFinal[0]+1, previousMoveFinal[1]])) {
-	  if (final[0] == previousMoveFinal[0]) {
-	    // is enpassant
-	    targetPiece = previous_move_piece;
-	    game.pieces[previousMoveFinal[0]][previousMoveFinal[1]] = null;
-	  }
-	}
-      }
-    }
-    if (targetPiece) {
-      //in the case of a capture, we need to remove the captured piece
-      //from the active pieces
-      game.deactivate(targetPiece);
-    }
-
-    game.pieces[final[0]][final[1]] = piece;
-    piece.position = final;
+    game.move(initial, final);
+    console.log(game.movesPlayed);
     drawBoard();
     drawUnselectedPieces();
-    drawPiece(piece);
-    previousMoveFinal = final;
+    drawPiece(game.getPiece(final));
   }
 
   function mousePos() {

@@ -201,6 +201,9 @@ header a, header a:visited, .menu-item, .menu-item:visited {
 
   .gamewindow {
     display: flex;
+    padding: 1em;
+    align-items: flex-start;
+    justify-content: center;
   }
 
   #chessboard {
@@ -211,14 +214,13 @@ header a, header a:visited, .menu-item, .menu-item:visited {
 
   .movewindow {
     display: block;
-    width: 23%;
-    height: 20em;
+    width: 10rem;
     padding: 0.3em 1em;
-    margin-left: 2%;
+    margin-left: 1em;
+    margin-top: 36px;
+    margin-bottom: 40px;
     background-color: #ebebe0;
     border: 2px solid brown;
-    border-radius: 40px;
-    box-shadow: 5px 5px 15px;
   }
 
   h2 {
@@ -229,13 +231,19 @@ header a, header a:visited, .menu-item, .menu-item:visited {
     border-bottom: 2px solid brown;
   }
 
+  .movewindow h2 {
+    text-align: center;
+  }
+
   #moves {
     height: 11em;
     margin-top: 0.4em;
-    padding-top: 1em;
-    text-align: center;
     font-size: 1.3em;
-
     overflow: auto;
+    padding-left: 1.6em;
+  }
+
+  #moves li span:nth-child(2) {
+    margin-left: 0.4em;
   }
 }

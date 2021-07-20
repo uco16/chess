@@ -1,4 +1,6 @@
-- check if king is left in check with any move: DONE
+- castling: DONE
+- promotion to queen
+- check and checkmate labels in movelist
 - win / lose / draw screen at the end
 - timer
 - looking for opponent
@@ -6,4 +8,6 @@
 - gather pieces on side
 - optional feedback (e.g. "invalid move: this move left you in check")
 - label chessboard
-- promotion to queen
+- offer draw button
+- forfeit button
+- right click on drag to cancel the move

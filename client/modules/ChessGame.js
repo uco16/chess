@@ -33,7 +33,9 @@ export default class ChessGame {
     }
   }
 
-  createPiece(pos, color, name, p) {
+  createPiece(pos, color, name) {
+    // creates and adds to the game a new ChessPiece object
+    // note that "name" requires type + "_left" or "_right' in case of knights and bishops
     let type;
     if (name.length > 6) {
       type = name.slice(0,6);
@@ -43,7 +45,7 @@ export default class ChessGame {
     if (color === 'white') {
       name = name + '_white';
     }
-    let piece = new ChessPiece(pos, color, this.pieceImages[name], type, p);
+    let piece = new ChessPiece(pos, color, this.pieceImages[name], type);
     this.activePieces.push(piece);
     this.pieces[pos[0]][pos[1]] = piece;
   }
@@ -60,11 +62,14 @@ export default class ChessGame {
     }
   }
 
+  deletePiece(coordinates) {
+    let piece = this.getPiece(coordinates);
+    this.deactivate(piece);
+    this.setPiece(coordinates, null);
+  }
+
   deactivate(piece) {
-    const index = this.activePieces.indexOf(piece);
-    if (index > -1) {
-      this.activePieces.splice(index, 1);
-    }
+    this.activePieces = this.activePieces.filter(pc => pc !== piece);
   }
 
   isEmpty(coordinates) {
@@ -132,6 +137,16 @@ export default class ChessGame {
 	console.log(`${playerColor} cannot castle right anymore`)
       }
     }
+  }
+
+  promote(coordinates, promotionChoice) {
+    let pawnColor = this.getPiece(coordinates).color;
+    this.deletePiece(coordinates);  // delete the pawn that is at 'coordinates'
+    let name = promotionChoice;
+    if (promotionChoice==="knight" || promotionChoice==="bishop") {
+      name += '_left';
+    }
+    this.createPiece(coordinates, pawnColor, name);
   }
 
   strRep() {

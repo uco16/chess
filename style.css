@@ -212,27 +212,67 @@ header a, header a:visited, .menu-item, .menu-item:visited {
     max-width: 92vh;  /* ensure board size is smaller than screen size */
   }
 
-  .movewindow {
-    display: block;
-    width: 10rem;
-    padding: 0.3em 1em;
+  .asideboard {
     margin-left: 1em;
-    margin-top: 36px;
-    margin-bottom: 40px;
+  }
+
+  .window {
+    width: 10rem;
     background-color: #ebebe0;
     border: 2px solid brown;
+    min-height: 2em;
+    padding: 0.5em 1em;
+  }
+
+  .movewindow {
+    display: block;
+    margin-top: 36px;
+    margin-bottom: 40px;
   }
 
   h2 {
     font-size: 1.5em;
-    padding: 0.4em;
+    padding-bottom: 0.1em;
     text-transform: capitalize;
-    margin-bottom: 0.4em;
     border-bottom: 2px solid brown;
   }
 
-  .movewindow h2 {
+  .asideboard h2 {
     text-align: center;
+  }
+
+  .options {
+    display: flex;
+    justify-content: center;
+    margin-top: 0.5em;
+
+    display: none;
+  }
+
+  #promotion {
+    display: none;
+  }
+
+  .option {
+    background-color: #ffa64ddb;
+    height: 2em;
+    width: 2em;
+    margin: 0 auto;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .option:hover {
+    border: 2px solid brown;
+    box-sizing: border-box;
+  }
+  
+  .option img {
+    width: 85%;
+    height: 85%;
   }
 
   #moves {

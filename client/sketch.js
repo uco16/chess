@@ -2,6 +2,10 @@
 import isLegal from './modules/isLegal.js';
 import {addtoMoveList} from './modules/movelist.js';
 import ChessGame from './modules/ChessGame.js';
+import inputPromotion from './modules/promotion.js';
+
+// debugging
+let verbose=true;
 
 // default variables
 let size = document.getElementById('chessboard').clientWidth;
@@ -10,6 +14,7 @@ let boardsize = size - 2 * padding;
 let sqs = boardsize / 8;
 let pcs = sqs/1.5;
 let playerColor;
+let awaitingPromotion = false;
 
 // Board colours
 const darkcol = [128, 64, 0];
@@ -26,9 +31,13 @@ function sketch (p) {
   // explicitly importing and setting sketch.js to a module seems to break socket.io?
 
   // define what to do when move is received
-  socket.on('move', (initial, final, ...args) => { 
-    console.log('received move', [initial, final], args);
+  socket.on('move', (initial, final, iType, fType, promotionOption) => { 
+    if (verbose) {console.log('received move', [initial, final], [iType, fType], promotionOption);}
     move(initial, final); 
+    if (promotionOption) {
+      // promoting pawn is currently on 'final' square
+      promote(final, promotionOption);
+    }
   });
 
   p.preload = () => {
@@ -58,6 +67,14 @@ function sketch (p) {
     drawBoard();
     game = new ChessGame(p, pieceImages);
     drawUnselectedPieces();
+  }
+
+  p.draw = () => {
+    if (p.mouseIsPressed && selectedPiece != null) {
+      drawBoard();
+      drawUnselectedPieces();
+      dragPiece(selectedPiece);
+    }
   }
 
   function drawUnselectedPieces() {
@@ -99,14 +116,6 @@ function sketch (p) {
     }
   }
 
-  p.draw = () => {
-    if (p.mouseIsPressed && selectedPiece != null) {
-      drawBoard();
-      drawUnselectedPieces();
-      dragPiece(selectedPiece);
-    }
-  }
-
   p.mousePressed = () => {
     // mouse down selects/grabs piece of own colour
     let col, row;
@@ -126,22 +135,61 @@ function sketch (p) {
       drawBoard();
       drawUnselectedPieces();
 
-      if (isLegal(startPos, endPos, game.strRep(),
+      if (!awaitingPromotion &&
+	isLegal(startPos, endPos, game.strRep(),
 		  game.previousMoveFinal, playerColor, game.canCastle[playerColor])) {
-	let initialPieceType = game.getPiece(startPos).type;
-	let finalPieceType;
-	if (game.isEmpty(endPos)) {
-	  finalPieceType = 'empty';
-	} else {
-	  let finalPiece = game.getPiece(endPos);
-	  finalPieceType = finalPiece.type;
-	}
-	sendMove(startPos, endPos, initialPieceType, finalPieceType);  // send move to server
-	move(startPos, endPos);  // play move client side
+	handleMove(startPos, endPos);
       }
       drawPiece(selectedPiece);  // need to draw piece in case the move was not legal
       selectedPiece = null;
     }
+  }
+
+  async function handleMove(startPos, endPos) {
+    let initialPieceType = game.getPiece(startPos).type;
+    let finalPieceType;
+    if (game.isEmpty(endPos)) {
+      finalPieceType = 'empty';
+    } else {
+      finalPieceType = game.getPiece(endPos).type;
+    }
+    move(startPos, endPos);  // play move client side
+
+    // before sending the move, check if a pawn has reached promotion square
+    if (initialPieceType==='pawn' && (endPos[1]===0 || endPos[1]===7)) {
+      awaitingPromotion = true;  // blocks further moves being done
+      const promotionResult = await inputPromotion(playerColor);
+      sendMove(startPos, endPos, initialPieceType, finalPieceType, promotionResult);
+      awaitingPromotion = false;
+      promote(endPos, promotionResult);
+    } else {
+      sendMove(startPos, endPos, initialPieceType, finalPieceType);  // send move to server
+    }
+  }
+
+  function sendMove(initial, final, ...args) {
+    socket.emit('move', initial, final, ...args);
+    if (verbose) {console.log('sent move', [initial, final], args);}
+    addtoMoveList(initial, final, ...args);
+  }
+
+  function move(initial, final) {
+    game.move(initial, final);
+    drawBoard();
+    drawUnselectedPieces();
+    drawPiece(game.getPiece(final));
+  }
+
+  function promote(square, promotionOption) {
+    if (verbose) {console.log('promote to', promotionOption);}
+    game.promote(square, promotionOption);  
+    drawBoard();
+    drawUnselectedPieces();
+  }
+
+  function mousePos() {
+    // return [col, row] under mouse position
+    return XYtoColRow(p.mouseX, p.mouseY);
   }
 
   p.windowResized = () => {
@@ -156,24 +204,6 @@ function sketch (p) {
     drawUnselectedPieces();
   };
 
-  function sendMove(initial, final, initialPieceName, finalPieceName) {
-    socket.emit('move', initial, final, initialPieceName, finalPieceName);
-    console.log('sent move', [initial, final], [initialPieceName, finalPieceName])
-    addtoMoveList(initial, final, initialPieceName, finalPieceName);
-  }
-
-  function move(initial, final) {
-    game.move(initial, final);
-    console.log(game.movesPlayed);
-    drawBoard();
-    drawUnselectedPieces();
-    drawPiece(game.getPiece(final));
-  }
-
-  function mousePos() {
-    // return [col, row] under mouse position
-    return XYtoColRow(p.mouseX, p.mouseY);
-  }
 
   // mobile device behaviour
   //p.touchMoved = () => {
@@ -211,6 +241,6 @@ function ColRowtoXY(col, row) {
 
 socket.on('match', (color) => {
   playerColor = color;
-  console.log("sketch: match, start game with colour " + playerColor);
+  if (verbose) {console.log("sketch: match, start game with colour " + playerColor);}
   new p5(sketch, 'chessboard');
 });

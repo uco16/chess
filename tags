@@ -13,7 +13,10 @@
 #moves 	style.css	/^  #moves {$/;"	i
 #moves li span:nth-child	style.css	/^  #moves li span:nth-child(2) {$/;"	i
 #name_selector 	style.css	/^#name_selector {$/;"	i
+#promotion 	style.css	/^  #promotion {$/;"	i
 (	node_modules/is-glob/index.js	/^var chars = { '{': '}', '(': ')', '[': ']'};$/;"	p	class:chars
+.asideboard 	style.css	/^  .asideboard {$/;"	c
+.asideboard h2 	style.css	/^  .asideboard h2 {$/;"	c
 .css	chess.js	/^    '.css':  'text\/css'$/;"	p	class:handleRequest.typeExt
 .drawn + #menu-dimming 	style.css	/^.drawn + #menu-dimming {$/;"	c
 .gamewindow 	style.css	/^  .gamewindow {$/;"	c
@@ -31,13 +34,17 @@
 .menu-list 	style.css	/^.menu-list {$/;"	c
 .movewindow 	style.css	/^  .movewindow {$/;"	c
 .movewindow 	style.css	/^.movewindow {$/;"	c
-.movewindow h2 	style.css	/^  .movewindow h2 {$/;"	c
+.option 	style.css	/^  .option {$/;"	c
+.option img 	style.css	/^  .option img {$/;"	c
+.option:hover 	style.css	/^  .option:hover {$/;"	c
+.options 	style.css	/^  .options {$/;"	c
 .shutting + #menu-dimming 	style.css	/^.shutting + #menu-dimming {$/;"	c
 .tab 	style.css	/^.tab {$/;"	c
 .tab:hover 	style.css	/^.tab:hover {$/;"	c
 .toolbar 	style.css	/^  .toolbar {$/;"	c
 .toolbar 	style.css	/^.toolbar {$/;"	c
 .toolbar input 	style.css	/^.toolbar input {$/;"	c
+.window 	style.css	/^  .window {$/;"	c
 0	node_modules/chalk/source/index.js	/^	0: 'None',$/;"	p	class:chalk.Level
 0	node_modules/engine.io/lib/server.js	/^  0: "Transport unknown",$/;"	p	class:Server.errorMessages
 1	node_modules/chalk/source/index.js	/^	1: 'Basic',$/;"	p	class:chalk.Level
@@ -454,6 +461,7 @@ dirty	node_modules/nodemon/lib/version.js	/^function dirty() {$/;"	f
 disable	node_modules/debug/src/common.js	/^	function disable() {$/;"	f	function:setup
 disable	node_modules/nodemon/node_modules/debug/src/common.js	/^  function disable() {$/;"	f	function:setup
 disable	node_modules/undefsafe/node_modules/debug/src/debug.js	/^function disable() {$/;"	f
+displayPromotion	client/modules/promotion.js	/^function displayPromotion(color, promoteTo) {$/;"	f
 distance	node_modules/color-convert/route.js	/^			distance: -1,$/;"	p	class:graph
 dot	node_modules/chokidar/lib/constants.js	/^exports.ANYMATCH_OPTS = {dot: true};$/;"	p	class:exports.ANYMATCH_OPTS
 dot	node_modules/nodemon/lib/monitor/match.js	/^    dot: true,$/;"	p	class:match.minimatchOpts
@@ -639,6 +647,7 @@ gzip	node_modules/engine.io/lib/transports/polling.js	/^  gzip: zlib.createGzip,
 h	node_modules/ms/index.js	/^var h = m * 60;$/;"	v
 h	node_modules/undefsafe/node_modules/ms/index.js	/^var h = m * 60;$/;"	v
 h2 	style.css	/^  h2 {$/;"	s
+handlePromotionChoice	client/modules/promotion.js	/^function handlePromotionChoice(evt) {$/;"	f
 handleRequest	chess.js	/^function handleRequest(req, res) {$/;"	f
 handle_enpassant	engine/engineV1.py	/^    def handle_enpassant(self, initial, final):$/;"	m	class:ChessGame
 handle_enpassant	engine/engineV2.py	/^    def handle_enpassant(self, initial, final):$/;"	m	class:ChessGame
@@ -659,6 +668,7 @@ help	node_modules/nodemon/lib/help/index.js	/^function help(item) {$/;"	f
 help	node_modules/nodemon/lib/nodemon.js	/^var help = require('.\/help');$/;"	v
 help	node_modules/package-json/node_modules/semver/bin/semver.js	/^function help () {$/;"	f	function:function.success
 help	node_modules/semver-diff/node_modules/semver/bin/semver.js	/^function help () {$/;"	f	function:function.success
+hidePromotion	client/modules/promotion.js	/^function hidePromotion(color) {$/;"	f
 i	node_modules/negotiator/lib/encoding.js	/^      i: i$/;"	p	class:accepts
 identifyPiece	client/modules/isLegal.js	/^function identifyPiece(piece) {$/;"	f
 identity	node_modules/brace-expansion/index.js	/^function identity(e) {$/;"	f
@@ -844,8 +854,8 @@ module.exports	node_modules/ws/browser.js	/^module.exports = function () {$/;"	f
 mongo	node_modules/keyv/src/index.js	/^		mongo: '@keyv\/mongo',$/;"	p	class:const
 mongodb	node_modules/keyv/src/index.js	/^		mongodb: '@keyv\/mongo',$/;"	p	class:const
 monitor	node_modules/nodemon/lib/nodemon.js	/^var monitor = require('.\/monitor');$/;"	v
-mousePos	client/sketch.js	/^  function mousePos() {$/;"	f	function:sketch
-move	client/sketch.js	/^  function move(initial, final) {$/;"	f	function:sketch
+mousePos	client/sketch.js	/^  function mousePos() {$/;"	f
+move	client/sketch.js	/^  function move(initial, final) {$/;"	f
 moves	client/modules/movelist.js	/^  var moves = document.getElementById('moves');$/;"	v
 multiComment	node_modules/strip-json-comments/index.js	/^var multiComment = 2;$/;"	v
 mutateExecOptions	node_modules/nodemon/lib/config/load.js	/^function mutateExecOptions(options) {$/;"	f
@@ -1018,6 +1028,7 @@ prevTime	node_modules/undefsafe/node_modules/debug/src/debug.js	/^var prevTime;$
 print	node_modules/picomatch/lib/constants.js	/^  print: '\\\\x20-\\\\x7E ',$/;"	p	class:const
 print_matrix_representation	engine/engineV1.py	/^    def print_matrix_representation(self):$/;"	m	class:ChessGame
 print_matrix_representation	engine/engineV2.py	/^    def print_matrix_representation(self):$/;"	m	class:ChessGame
+promote	client/sketch.js	/^  function promote(square, promotionOption) {$/;"	f
 prompt_move	engine/engineV1.py	/^    def prompt_move(self):$/;"	m	class:ChessGame
 prompt_move	engine/engineV2.py	/^    def prompt_move(self):$/;"	m	class:ChessGame
 protocol	node_modules/engine.io-parser/lib/index.js	/^  protocol: 4,$/;"	p	class:module.exports
@@ -1142,7 +1153,7 @@ selectColor	node_modules/undefsafe/node_modules/debug/src/debug.js	/^function se
 send	node_modules/engine.io/lib/transports/websocket.js	/^    function send(data) {$/;"	f
 sendAfterClose	node_modules/ws/lib/websocket.js	/^function sendAfterClose(websocket, data, cb) {$/;"	f
 sendErrorMessage	node_modules/engine.io/lib/server.js	/^function sendErrorMessage(req, res, code) {$/;"	f
-sendMove	client/sketch.js	/^  function sendMove(initial, final, initialPieceName, finalPieceName) {$/;"	f	function:sketch
+sendMove	client/sketch.js	/^  function sendMove(initial, final, ...args) {$/;"	f
 serialize	node_modules/cookie/index.js	/^function serialize(name, val, options) {$/;"	f
 serializeActiveFile	node_modules/write-file-atomic/index.js	/^function serializeActiveFile (absoluteName) {$/;"	f
 setArg	node_modules/minimist/index.js	/^    function setArg (key, val, arg) {$/;"	f

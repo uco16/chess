@@ -1,13 +1,22 @@
-- castling: DONE
-- promotion to queen
 - check and checkmate labels in movelist
 - win / lose / draw screen at the end
 - timer
 - looking for opponent
 - names and rating of you and opponent
+- name of the one who is due to move is glowing
+- "choose name" link up with data base, check if name is already taken, if so then prompt for sign in
+- "choose name and play" on main screen
+- "if you like the name, register an account to keep your progress"
 - gather pieces on side
 - optional feedback (e.g. "invalid move: this move left you in check")
 - label chessboard
 - offer draw button
 - forfeit button
 - right click on drag to cancel the move
+- FEN notation https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+- mobile: put moves underneath game, but in horizontal list, scrollable
+- create some test cases
+- implement function that causes the next match to start from a test position
+- pointer on chessboard pieces
+- square that the selected piece is hovered over glows
+- put knights the correct way, and while you're at it, fix the rendering to make it more object-oriented (i.e. the sketch should keep track of images, nnot the objects).

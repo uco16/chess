@@ -247,6 +247,7 @@ backslash	node_modules/glob-parent/index.js	/^var backslash = \/\\\\\/g;$/;"	v
 balanced	node_modules/balanced-match/index.js	/^function balanced(a, b, str) {$/;"	f
 balanced	node_modules/brace-expansion/index.js	/^var balanced = require('balanced-match');$/;"	v
 binary	node_modules/ws/lib/websocket.js	/^      binary: typeof data !== 'string',$/;"	p	class:const
+bishop	client/modules/ChessGame.js	/^      'bishop': 'B',$/;"	p	class:piecePlacement
 bishop	client/modules/ChessPiece.js	/^      'bishop': 'B',$/;"	p	class:strRep
 bishop	client/modules/isLegal.js	/^    'bishop': isValidBishopPattern,$/;"	p	class:const
 bishop	client/modules/movelist.js	/^    'bishop': 'B',$/;"	p	class:const
@@ -743,9 +744,11 @@ keepAlive	node_modules/package-json/index.js	/^	keepAlive: true,$/;"	p	class:con
 key	node_modules/minimist/index.js	/^        var key = keys[keys.length - 1];$/;"	v
 kill	node_modules/nodemon/lib/monitor/run.js	/^function kill(child, signal, callback) {$/;"	f
 killedAfterChange	node_modules/nodemon/lib/monitor/run.js	/^var killedAfterChange = false;$/;"	v
+king	client/modules/ChessGame.js	/^      'king': 'K',$/;"	p	class:piecePlacement
 king	client/modules/ChessPiece.js	/^      'king': 'K',$/;"	p	class:strRep
 king	client/modules/isLegal.js	/^    'king': isValidKingPattern,$/;"	p	class:const
 king	client/modules/movelist.js	/^    'king': 'K',$/;"	p	class:const
+knight	client/modules/ChessGame.js	/^      'knight': 'N',$/;"	p	class:piecePlacement
 knight	client/modules/ChessPiece.js	/^      'knight': 'N',$/;"	p	class:strRep
 knight	client/modules/isLegal.js	/^    'knight': isValidKnightPattern,$/;"	p	class:const
 knight	client/modules/movelist.js	/^    'knight': 'N',$/;"	p	class:const
@@ -992,6 +995,7 @@ path	node_modules/nodemon/lib/version.js	/^var path = require('path');$/;"	v
 path	node_modules/readdirp/index.js	/^      entry = { path: sysPath.relative(this._root, fullPath), fullPath, basename };$/;"	p	class:entry
 pathIsBlocked	client/modules/isLegal.js	/^function pathIsBlocked(position, initial, final) {$/;"	f
 pathPosixDirname	node_modules/glob-parent/index.js	/^var pathPosixDirname = require('path').posix.dirname;$/;"	v
+pawn	client/modules/ChessGame.js	/^      'pawn': 'P',$/;"	p	class:piecePlacement
 pawn	client/modules/ChessPiece.js	/^      'pawn': 'P',$/;"	p	class:strRep
 pawn	client/modules/isLegal.js	/^    'pawn': isValidPawnPattern,$/;"	p	class:const
 pawn	client/modules/movelist.js	/^    'pawn': '',$/;"	p	class:const
@@ -1041,6 +1045,7 @@ publishQueue	node_modules/graceful-fs/graceful-fs.js	/^function publishQueue(con
 punct	node_modules/picomatch/lib/constants.js	/^  punct: '\\\\-!"#$%&\\'()\\\\*+,.\/:;<=>?@[\\\\]^_`{|}~',$/;"	p	class:const
 push	node_modules/ws/lib/extension.js	/^function push(dest, name, elem) {$/;"	f
 q	node_modules/negotiator/lib/encoding.js	/^      q: minQuality,$/;"	p	class:accepts
+queen	client/modules/ChessGame.js	/^      'queen': 'Q',$/;"	p	class:piecePlacement
 queen	client/modules/ChessPiece.js	/^      'queen': 'Q',$/;"	p	class:strRep
 queen	client/modules/isLegal.js	/^    'queen': isValidQueenPattern,$/;"	p	class:const
 queen	client/modules/movelist.js	/^    'queen': 'Q',$/;"	p	class:const
@@ -1116,6 +1121,7 @@ right	node_modules/boxen/index.js	/^			right: 0,$/;"	p	class:object
 right	node_modules/boxen/index.js	/^			right: detail * 3,$/;"	p	class:object
 rm	engine/engineV1.py	/^    def rm(self, pos):$/;"	m	class:ChessGame
 rm	engine/engineV2.py	/^    def rm(self, pos):$/;"	m	class:ChessGame
+rook	client/modules/ChessGame.js	/^      'rook': 'R',$/;"	p	class:piecePlacement
 rook	client/modules/ChessPiece.js	/^      'rook': 'R',$/;"	p	class:strRep
 rook	client/modules/isLegal.js	/^    'rook': isValidRookPattern,$/;"	p	class:const
 rook	client/modules/movelist.js	/^    'rook': 'R',$/;"	p	class:const

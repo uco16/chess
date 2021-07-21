@@ -9,3 +9,4 @@ export function algebraic(position) {
   let number = (row+1).toString();
   return letter + number;
 }
+

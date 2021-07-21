@@ -4,9 +4,9 @@ import isLegal from './isLegal.js';
 
 export default class ChessGame {
   // keep track and manipulate ChessPiece objects
-  constructor(p, pieceImages) {
+  constructor(pieceImages) {
     this.pieceImages = pieceImages;
-    this.initializePieces(p);
+    this.initializePieces();
     this.previousMoveFinal = null;
     this.movesPlayed = [];
 
@@ -15,9 +15,13 @@ export default class ChessGame {
     // left: left side of board from white's perspective
     this.canCastle = {'white': {'left': true, 'right': true},
                       'black': {'left': true, 'right': true}}
+
+    // FEN: halfmoveClock counts the number of halfmoves since the last pawn advance or capturing move
+    // used for the fifty move draw rule
+    this.halfmoveClock = 0;
   }
 
-  initializePieces(p) {
+  initializePieces() {
     // reset variable values
     this.activePieces = [];
     this.pieces = nullMatrix(9,9);
@@ -26,10 +30,10 @@ export default class ChessGame {
 		     'king', 'bishop_right', 'knight_right', 'rook'];
     for (let col = 0; col < 8; col++) {
       let name = baseRow[col];
-      this.createPiece([col, 0], 'white', name, p);
-      this.createPiece([col, 7], 'black', name, p);
-      this.createPiece([col, 1], 'white', 'pawn', p);
-      this.createPiece([col, 6], 'black', 'pawn', p);
+      this.createPiece([col, 0], 'white', name);
+      this.createPiece([col, 7], 'black', name);
+      this.createPiece([col, 1], 'white', 'pawn');
+      this.createPiece([col, 6], 'black', 'pawn');
     }
   }
 
@@ -108,6 +112,14 @@ export default class ChessGame {
     this.setPiece(final, piece);
     this.movesPlayed.push([initial, final]);
 
+    if (targetPiece || piece.type==='pawn') {
+      // was pawn move or capture: reset halfmoveClock
+      this.halfmoveClock = 0;
+    } else {
+      // was other half move: increment halfmoveClock
+      this.halfmoveClock++;
+    }
+
     // if king or rook was moved, disallow future castling
     let playerColor = piece.color;
     let baseRow = {'white': 0, 'black': 7};
@@ -162,5 +174,92 @@ export default class ChessGame {
       }
     }
     return cp;
+  }
+
+  // ------- FEN ------------
+
+  piecePlacement() {
+    // FEN piece placement
+    const pieceLetters = {
+      'pawn': 'P',
+      'knight': 'N',
+      'bishop': 'B',
+      'rook': 'R',
+      'queen': 'Q',
+      'king': 'K',
+    };
+    let piece_placement = '';
+    for (let row=7; row >= 0; row--) {
+      let counter = 0;
+      for (let col=0; col < 8; col++) {
+	if (this.isEmpty([col, row])) {
+	  counter++;
+	} else {
+	  if (counter>0) {
+	    // append the number ${counter} to the string
+	    piece_placement += counter;
+	    counter = 0;  // and reset counter
+	  }
+	  // append the piece type (lower case for black, upper case for white)
+	  let piece = this.pieces[col][row];
+	  let letter = pieceLetters[piece.type];
+	  if (piece.color==='black') {letter = letter.toLowerCase();}
+	  piece_placement += letter;
+	}
+      }
+      // end of the row, append ${counter} to string
+      if (counter > 0) {piece_placement += counter;}
+      // append a '/' to indicate end of row
+      piece_placement += '/';
+    }
+    return piece_placement;
+  }
+
+  activeColor() {
+    let numMovesPlayed = this.movesPlayed.length;
+    return ['white', 'black'][numMovesPlayed%2];
+  }
+
+  castlingAvailability() {
+    //this.canCastle = {'white': {'left': true, 'right': true},
+    //                  'black': {'left': true, 'right': true}}
+    let castling_string = '';
+    if (this.canCastle['white']['right']) {castling_string += 'K';}  // white kingside
+    if (this.canCastle['white']['left']) {castling_string += 'Q';}  // white queenside
+    if (this.canCastle['black']['right']) {castling_string += 'k';}  // black kingside
+    if (this.canCastle['black']['left']) {castling_string += 'q';}  // black queenside
+    if (castling_string==='') {castling_string += '-';}
+    return castling_string;
+  }
+
+  enPassantTarget() {
+    // returns the square that a pawn can move into when capturing en passant
+    if (this.movesPlayed.length === 0) { return '-'; }
+
+    // check if last move was double pawn advance
+    let [lastMoveInitial, lastMoveFinal] = this.movesPlayed[this.movesPlayed.length-1];
+    let lastPiece = this.getPiece(lastMoveFinal);
+    if ( lastPiece.type==='pawn' 
+        && ( lastMoveFinal[0]-lastMoveInitial[0] === 0 ) 
+        && ( Math.abs(lastMoveFinal[1]-lastMoveInitial[1]) === 2 )) {
+      let fileChar = 'abcdefgh'[lastMoveFinal[0]];
+      let rankDigit = 1 + (lastMoveFinal[1]+lastMoveInitial[1])/2; // FEN uses 1-index
+      return fileChar + rankDigit;
+    } else {
+      return '-';
+    }
+  }
+
+  fullmoveNumber() {
+    return 1 + Math.floor(this.movesPlayed.length/2);
+  }
+
+  toFEN() {
+    // returns the FEN representation of the current position
+    // see 16.1 on https://www.thechessdrum.net/PGN_Reference.txt
+    // piecePlacement + activeColor[0] + castlingAvailability + enPassantTarget + halfmoveClock + fullmoveNumber
+    
+    return [this.piecePlacement(), this.activeColor()[0], this.castlingAvailability(),
+            this.enPassantTarget(), this.halfmoveClock, this.fullmoveNumber()].join(' ');
   }
 }

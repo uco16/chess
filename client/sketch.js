@@ -70,7 +70,7 @@ function sketch (p) {
   p.setup = () => {
     p.createCanvas(size, size);
     drawBoard();
-    game = new ChessGame(p, pieceImages);
+    game = new ChessGame(pieceImages);
     drawUnselectedPieces();
   }
 
@@ -144,6 +144,7 @@ function sketch (p) {
 	isLegal(startPos, endPos, game.strRep(),
 		  game.previousMoveFinal, playerColor, game.canCastle[playerColor])) {
 	handleMove(startPos, endPos);
+	console.log(game.toFEN());
       }
       drawPiece(selectedPiece);  // need to draw piece in case the move was not legal
       selectedPiece = null;

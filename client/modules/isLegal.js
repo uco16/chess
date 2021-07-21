@@ -426,15 +426,15 @@ function firstPiece(position, square, direction) {
   return null;
 }
 
-export function isCheckmate(position, playerColor) {
-  // return true iff playerColor has no legal moves in the current position
-
-  let playerColorPieces = findPieces(position, playerColor);
-  console.log(playerColorPieces);
-  // find all squares with playerColor Pieces
-  if (any(moves, isLegal)) {
-    return false;
-  } else {
-    return true;
-  }
-}
+//export function isCheckmate(position, playerColor) {
+//  // return true iff playerColor has no legal moves in the current position
+//
+//  let playerColorPieces = findPieces(position, playerColor);
+//  console.log(playerColorPieces);
+//  // find all squares with playerColor Pieces
+//  if (any(moves, isLegal)) {
+//    return false;
+//  } else {
+//    return true;
+//  }
+//}

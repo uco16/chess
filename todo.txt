@@ -1,3 +1,6 @@
+- FEN notation https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+- create some test cases
+- implement function that causes the next match to start from a test position
 - checkmate
 - check (DONE) and checkmate labels in movelist
 - position repeated three times: draw
@@ -7,8 +10,6 @@
 - looking for opponent
 - timer
 - label chessboard
-- create some test cases
-- implement function that causes the next match to start from a test position
 - right click on drag to cancel the move
 - names and rating of you and opponent
 - name of the one who is due to move is glowing
@@ -17,7 +18,6 @@
 - "if you like the name, register an account to keep your progress"
 - gather pieces on side
 - optional feedback (e.g. "invalid move: this move left you in check")
-- FEN notation https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
 - mobile: put moves underneath game, but in horizontal list, scrollable
 - pointer on chessboard pieces
 - square that the selected piece is hovered over glows

@@ -35,3 +35,14 @@ export function copyMatrix(mx) {
   }
   return new_mx;
 }
+
+export function any(array, boolFunc) {
+  // returns true iff boolFunc(x) is not null/0/''/false for all x in array
+  let ans = false;
+  for (let i=0; i<array.length; i++) {
+    if (boolFunc(...array[i])) {
+      return true;
+    }
+  }
+  return false;
+}

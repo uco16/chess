@@ -1,5 +1,5 @@
 // imports from custom client-side functions
-import isLegal from './modules/isLegal.js';
+import isLegal, {inCheck} from './modules/isLegal.js';
 import {addtoMoveList} from './modules/movelist.js';
 import ChessGame from './modules/ChessGame.js';
 import inputPromotion from './modules/promotion.js';
@@ -33,11 +33,16 @@ function sketch (p) {
   // define what to do when move is received
   socket.on('move', (initial, final, iType, fType, promotionOption) => { 
     if (verbose) {console.log('received move', [initial, final], [iType, fType], promotionOption);}
+
+    // play and render move on board
     move(initial, final); 
     if (promotionOption) {
       // promoting pawn is currently on 'final' square
       promote(final, promotionOption);
     }
+
+    // add to move list
+    addtoMoveList(initial, final, iType, fType, inCheck(game.strRep(), playerColor));
   });
 
   p.preload = () => {
@@ -165,12 +170,15 @@ function sketch (p) {
     } else {
       sendMove(startPos, endPos, initialPieceType, finalPieceType);  // send move to server
     }
+
+    if (playerColor==='white') { var opponentColor='black'; }
+    else { opponentColor='white'; }
+    addtoMoveList(startPos, endPos, initialPieceType, finalPieceType, inCheck(game.strRep(), opponentColor));
   }
 
   function sendMove(initial, final, ...args) {
+    if (verbose) {console.log('sending move', [initial, final], args);}
     socket.emit('move', initial, final, ...args);
-    if (verbose) {console.log('sent move', [initial, final], args);}
-    addtoMoveList(initial, final, ...args);
   }
 
   function move(initial, final) {

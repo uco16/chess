@@ -1,5 +1,6 @@
-import { arraysEqual, copyMatrix, arraysAdd } from './jslogic.js';
+import { arraysEqual, copyMatrix, arraysAdd, any } from './jslogic.js';
 import { numMovesPlayed } from './movelist.js';
+import { chessPieceTypes } from './chesslogic.js';
 
 // Client-side script to determine whether a move is legal in the current position
 
@@ -72,12 +73,12 @@ function isValidPattern(position, initial, final, previousMoveFinal, canCastle) 
   const [color, type] = identifyPiece(piece);
 
   const patternFunctions = {
-    'pawn': isLegalPawnMove,
-    'king': isLegalKingMove,
-    'bishop': isLegalBishopMove,
-    'rook': isLegalRookMove,
-    'queen': isLegalQueenMove,
-    'knight': isLegalKnightMove,
+    'pawn': isValidPawnPattern,
+    'king': isValidKingPattern,
+    'bishop': isValidBishopPattern,
+    'rook': isValidRookPattern,
+    'queen': isValidQueenPattern,
+    'knight': isValidKnightPattern,
   };
 
   if (type === 'pawn') {
@@ -113,16 +114,24 @@ function identifyPiece(piece) {
   return [color[piece[0]], type[piece[1]]];
 }
 
-function findPiece(position, color, type) {
-  let findings = [];
-  for (var col=0; col<9; col++) {
-    for (var row=0; row<9; row++) {
-      if (isPiece(position, [col, row], color, type)) {
-	findings.push([col, row]);
+function findPieces(position, color, type) {
+  if (typeof type === 'undefined') {  // return all 'color' pieces when type not specified
+    let playerColorPieces = [];
+    for (let type of chessPieceTypes) {
+      playerColorPieces.push(...findPieces(position, playerColor, type));
+    }
+    return playerColorPieces;
+  } else {
+    let findings = [];
+    for (var col=0; col<9; col++) {
+      for (var row=0; row<9; row++) {
+	if (isPiece(position, [col, row], color, type)) {
+	  findings.push([col, row]);
+	}
       }
     }
+    return findings;
   }
-  return findings;
 }
 
 function isPiece(position, location, color, type) {
@@ -141,19 +150,19 @@ function isEmpty(position, location) {
   return true;
 }
 
-function isLegalQueenMove(position, initial, final) {
-  const isBishopMove = isLegalBishopMove(position, initial, final);
-  const isRookMove = isLegalRookMove(position, initial, final);
+function isValidQueenPattern(position, initial, final) {
+  const isBishopMove = isValidBishopPattern(position, initial, final);
+  const isRookMove = isValidRookPattern(position, initial, final);
   return isBishopMove || isRookMove;
 }
 
-function isLegalKnightMove(position, initial, final) {
+function isValidKnightPattern(position, initial, final) {
   const colDiff = Math.abs(final[0] - initial[0]);
   const rowDiff = Math.abs(final[1] - initial[1]);
   return (colDiff + rowDiff == 3) ;
 }
 
-function isLegalRookMove(position, initial, final) {
+function isValidRookPattern(position, initial, final) {
   // has to be same column or same row
   if (final[0] == initial[0] || final[1] == initial[1]) {
     if (pathIsBlocked(position, initial, final)) {
@@ -166,7 +175,7 @@ function isLegalRookMove(position, initial, final) {
   return false;
 }
 
-function isLegalBishopMove(position, initial, final) {
+function isValidBishopPattern(position, initial, final) {
   // initial and final have to be on a diagonal
   if (Math.abs(final[0] - initial[0]) != Math.abs(final[1] - initial[1])) {
     return false;
@@ -207,7 +216,7 @@ function pathIsBlocked(position, initial, final) {
   }
 }
 
-function isLegalKingMove(position, initial, final, canCastle) {
+function isValidKingPattern(position, initial, final, canCastle) {
   // standard king move: 1 step in any direction
   const colDiff = final[0] - initial[0];
   const rowDiff = final[1] - initial[1];
@@ -239,7 +248,7 @@ function isLegalKingMove(position, initial, final, canCastle) {
   return false;
 }
 
-function isLegalPawnMove(position, initial, final, previousMoveFinal) {
+function isValidPawnPattern(position, initial, final, previousMoveFinal) {
   // all pawn moves have to be upwards for white and downwards for black
   const colDiff = final[0] - initial[0];
   const rowDiff = final[1] - initial[1];
@@ -327,7 +336,7 @@ export function inCheck(position, playerColor) {
   }
   
   // find position of king
-  let kingPos = findPiece(position, playerColor, 'king')[0];
+  let kingPos = findPieces(position, playerColor, 'king')[0];
   // check if king is under attack by other player
   // knights
   let knightsquares = [[kingPos[0]-1, kingPos[1]+2], 
@@ -415,4 +424,17 @@ function firstPiece(position, square, direction) {
   }
   // no piece in line of sight in column/row direction from square
   return null;
+}
+
+export function isCheckmate(position, playerColor) {
+  // return true iff playerColor has no legal moves in the current position
+
+  let playerColorPieces = findPieces(position, playerColor);
+  console.log(playerColorPieces);
+  // find all squares with playerColor Pieces
+  if (any(moves, isLegal)) {
+    return false;
+  } else {
+    return true;
+  }
 }

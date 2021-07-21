@@ -10,7 +10,7 @@ export function clearMoveList() {
   }
 }
 
-export function addtoMoveList(initial, final, iType, fType) {
+export function addtoMoveList(initial, final, iType, fType, isCheck) {
   let moves = document.getElementById('moves');
   // check if isScrolledDown BEFORE we add another move to the list
   let isScrolledDown = (moves.scrollHeight - moves.clientHeight <= moves.scrollTop + 1);
@@ -24,8 +24,10 @@ export function addtoMoveList(initial, final, iType, fType) {
   }
   // add move to the relevant list item inside a span
 
+  let checkMarker = '';
+  if (isCheck) {checkMarker = '+';}
   let move = document.createElement('span');
-  move.innerHTML = `${chessNotation(initial, final, iType, fType)}`;
+  move.innerHTML = `${chessNotation(initial, final, iType, fType)}` + checkMarker;
   item.appendChild(move);
 
   if (isScrolledDown) {
@@ -68,8 +70,3 @@ function chessNotation(initial, final, iType, fType) {
 //socket.on('match', (color) => {
 //  clearMoveList();
 //});
-
-socket.on('move', (initial, final, iname, fname) => {
-  addtoMoveList(initial, final, iname, fname);
-  //console.log("movelist: received move", initial, final, iname, fname);
-});

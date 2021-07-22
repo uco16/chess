@@ -269,3 +269,6 @@ socket.on('match', (color, FEN) => {
   // add one move "1. ..." to the movelist
   if (FEN.split(' ')[1]==='b') { addtoMoveList(); };
 });
+// only tell the server that you are ready for match AFTER you have defined what to do
+// when the server matches you
+socket.emit('readyForMatch');

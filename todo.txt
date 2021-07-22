@@ -21,3 +21,4 @@
 - put knights the correct way (NOT DONE), and while you're at it, fix the rendering to make it more object-oriented (i.e. the sketch should keep track of images, not the objects (DONE)).
 - add some more FEN strings
 - devise some test cases
+- click to move as well as drag

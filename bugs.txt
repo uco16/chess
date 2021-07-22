@@ -1,1 +1,3 @@
 - on V's laptop (all browsers, even when U hosts): white player always connects properly but black player does not connect sometimes (not known when)
+DONE: issue was that the second client received the "match" from the server before defining what to do on 'match' (ie before socket.on('match') was run in sketch.js).
+Issue was fixed by emitting a 'readyToMatch' after socket.on('match') on client-side. The server then allows the socket to join queue only once 'readyToMatch' is received.

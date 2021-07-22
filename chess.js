@@ -54,12 +54,14 @@ function leaveQueue(socket) {
 }
 
 function joinQueue(socket) {
-  if (queue.length > 0) { // someone is waiting in queue
+  if (queue.length > 0) { 
+    // someone is waiting in queue
     let opponent = queue.pop();  // get someone from the queue
     match(opponent, socket);  // create a match between them
-  } else { // no one is in queue, add socket to queue
+  } else { 
+    // no one is in queue
+    queue.push(socket); // add socket to queue
     console.log(`User ${socket.id} joined queue.`);
-    queue.push(socket);
   }
 }
 
@@ -85,7 +87,9 @@ io.on('connection', (socket) => {
   // socket is a reference for the current client
   console.log(`User ${socket.id} connected.`);
 
-  joinQueue(socket);
+  // only join queue when socket is ready for match
+  // (i.e. when client-side defined what to do when match is received)
+  socket.on('readyForMatch', () => { joinQueue(socket); });
 
   socket.on('disconnect', () => {
     leaveQueue(socket);

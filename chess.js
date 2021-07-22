@@ -3,6 +3,8 @@ const fs = require('fs');
 const httpServer = require('http').createServer(handleRequest);
 const io = require('socket.io')(httpServer);
 
+const positions = require('./positions.json');
+
 const hostname = '0.0.0.0';
 const port = 8000;
 
@@ -69,8 +71,10 @@ function match(socket1, socket2) {
   let room = socket1.id + '#' + socket2.id;
   socket1.opponent = socket2;
   socket2.opponent = socket1;
-  io.to(socket1.id).emit('match', 'white');
-  io.to(socket2.id).emit('match', 'black');
+
+  let FEN = positions['fool'];
+  io.to(socket1.id).emit('match', 'white', FEN);
+  io.to(socket2.id).emit('match', 'black', FEN);
 }
 
 io.on('connection', (socket) => {

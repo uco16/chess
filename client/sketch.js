@@ -14,6 +14,7 @@ let boardsize = size - 2 * padding;
 let sqs = boardsize / 8;
 let pcs = sqs/1.5;
 let playerColor;
+let defaultFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 let awaitingPromotion = false;
 
 // Board colours
@@ -70,7 +71,7 @@ function sketch (p) {
   p.setup = () => {
     p.createCanvas(size, size);
     drawBoard();
-    game = new ChessGame(pieceImages);
+    game = new ChessGame(defaultFEN);
     drawUnselectedPieces();
   }
 
@@ -91,16 +92,26 @@ function sketch (p) {
     }
   }
 
+  function pieceImg(piece) {
+    let orientation = '';
+    if (piece.type==='knight' || piece.type==='bishop') {
+      orientation = '_left';
+    }
+    let color = '';
+    if (piece.color==='white') {
+      color = '_white';
+    }
+    return pieceImages[piece.type + orientation + color];
+  }
+
   function drawPiece(piece) {
-    let x, y;
-    [x, y] = ColRowtoXY(...piece.position);
-    p.image(piece.img, x+(sqs-pcs)/2, y+(sqs-pcs)/2, pcs, pcs);
+    let [x, y] = ColRowtoXY(...piece.position);
+    p.image(pieceImg(piece), x+(sqs-pcs)/2, y+(sqs-pcs)/2, pcs, pcs);
   }
 
   function dragPiece(piece) {
-    let x, y;
-    [x, y] = [p.mouseX - pcs/2, p.mouseY - pcs/1.6];
-    p.image(piece.img, x, y, pcs, pcs);
+    let [x, y] = [p.mouseX - pcs/2, p.mouseY - pcs/1.6];
+    p.image(pieceImg(piece), x, y, pcs, pcs);
   }
 
   function drawBoard() {
@@ -144,7 +155,7 @@ function sketch (p) {
 	isLegal(startPos, endPos, game.strRep(),
 		  game.previousMoveFinal, playerColor, game.canCastle[playerColor])) {
 	handleMove(startPos, endPos);
-	console.log(game.toFEN());
+	if (verbose) {console.log(game.toFEN());}
       }
       drawPiece(selectedPiece);  // need to draw piece in case the move was not legal
       selectedPiece = null;
@@ -248,8 +259,13 @@ function ColRowtoXY(col, row) {
   return [x, y];
 }
 
-socket.on('match', (color) => {
+socket.on('match', (color, FEN) => {
   playerColor = color;
+  defaultFEN = FEN;
   if (verbose) {console.log("sketch: match, start game with colour " + playerColor);}
   new p5(sketch, 'chessboard');
+
+  // if the game starts from a position where it is black's turn to move, 
+  // add one move "1. ..." to the movelist
+  if (FEN.split(' ')[1]==='b') { addtoMoveList(); };
 });

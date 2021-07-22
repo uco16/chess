@@ -1,8 +1,7 @@
 export default class ChessPiece {
-  constructor(pos, color, img, type) {
+  constructor(pos, color, type) {
     this.position = pos;
     this.color = color;
-    this.img = img;
     this.type = type;
   }
   strRep() {

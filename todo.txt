@@ -1,6 +1,4 @@
-- FEN notation https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
 - create some test cases
-- implement function that causes the next match to start from a test position
 - checkmate
 - check (DONE) and checkmate labels in movelist
 - position repeated three times: draw

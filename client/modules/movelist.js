@@ -27,7 +27,13 @@ export function addtoMoveList(initial, final, iType, fType, isCheck) {
   let checkMarker = '';
   if (isCheck) {checkMarker = '+';}
   let move = document.createElement('span');
-  move.innerHTML = `${chessNotation(initial, final, iType, fType)}` + checkMarker;
+
+  if (initial !== undefined) {
+    move.innerHTML = `${chessNotation(initial, final, iType, fType)}` + checkMarker;
+  } else {
+    // no move passed in: print '...' into move list instead
+    move.innerHTML = '...';
+  }
   item.appendChild(move);
 
   if (isScrolledDown) {

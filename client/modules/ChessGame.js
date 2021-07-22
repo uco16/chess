@@ -2,11 +2,18 @@ import {nullMatrix, arraysEqual} from './jslogic.js';
 import ChessPiece from './ChessPiece.js';
 import isLegal from './isLegal.js';
 
+const defaultFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
 export default class ChessGame {
   // keep track and manipulate ChessPiece objects
-  constructor(pieceImages) {
-    this.pieceImages = pieceImages;
-    this.initializePieces();
+  constructor(FEN = defaultFEN) {
+    console.log("initializing game from FEN:", FEN);
+
+    // extract information from FEN string
+    let [piecePlacement, activeColorFirst, castlingAvailability, enPassantTarget,
+         halfmoveClock, fullmoveNumber] = FEN.split(' ');
+
+    this.initializePieces(piecePlacement);
     this.previousMoveFinal = null;
     this.movesPlayed = [];
 
@@ -18,40 +25,16 @@ export default class ChessGame {
 
     // FEN: halfmoveClock counts the number of halfmoves since the last pawn advance or capturing move
     // used for the fifty move draw rule
-    this.halfmoveClock = 0;
+    this.halfmoveClock = halfmoveClock;
+    this.fullmoveNumberFEN = parseInt(fullmoveNumber);
+    this.enPassantTargetFEN = enPassantTarget;
   }
 
-  initializePieces() {
-    // reset variable values
-    this.activePieces = [];
-    this.pieces = nullMatrix(9,9);
-    // fill up pieces
-    const baseRow = ['rook', 'knight_left', 'bishop_left', 'queen', 
-		     'king', 'bishop_right', 'knight_right', 'rook'];
-    for (let col = 0; col < 8; col++) {
-      let name = baseRow[col];
-      this.createPiece([col, 0], 'white', name);
-      this.createPiece([col, 7], 'black', name);
-      this.createPiece([col, 1], 'white', 'pawn');
-      this.createPiece([col, 6], 'black', 'pawn');
-    }
-  }
-
-  createPiece(pos, color, name) {
+  createPiece(pos, color, type) {
     // creates and adds to the game a new ChessPiece object
-    // note that "name" requires type + "_left" or "_right' in case of knights and bishops
-    let type;
-    if (name.length > 6) {
-      type = name.slice(0,6);
-    } else {
-      type = name;
-    }
-    if (color === 'white') {
-      name = name + '_white';
-    }
-    let piece = new ChessPiece(pos, color, this.pieceImages[name], type);
+    let piece = new ChessPiece(pos, color, type);
     this.activePieces.push(piece);
-    this.pieces[pos[0]][pos[1]] = piece;
+    this.setPiece(pos, piece);
   }
 
   getPiece(coordinates) {
@@ -60,6 +43,7 @@ export default class ChessGame {
   }
 
   setPiece(coordinates, piece) {
+    // places piece onto coordinates in the 'pieces' matrix
     this.pieces[coordinates[0]][coordinates[1]] = piece;
     if (piece !== null) {
       piece.position = coordinates;
@@ -234,7 +218,7 @@ export default class ChessGame {
 
   enPassantTarget() {
     // returns the square that a pawn can move into when capturing en passant
-    if (this.movesPlayed.length === 0) { return '-'; }
+    if (this.movesPlayed.length === 0) { return this.enPassantTargetFEN; } // from FEN setup
 
     // check if last move was double pawn advance
     let [lastMoveInitial, lastMoveFinal] = this.movesPlayed[this.movesPlayed.length-1];
@@ -251,7 +235,7 @@ export default class ChessGame {
   }
 
   fullmoveNumber() {
-    return 1 + Math.floor(this.movesPlayed.length/2);
+    return this.fullmoveNumberFEN + 1 + Math.floor(this.movesPlayed.length/2);
   }
 
   toFEN() {
@@ -261,5 +245,46 @@ export default class ChessGame {
     
     return [this.piecePlacement(), this.activeColor()[0], this.castlingAvailability(),
             this.enPassantTarget(), this.halfmoveClock, this.fullmoveNumber()].join(' ');
+  }
+
+  initializePieces(piecePlacement) {
+    // initialize pieces from a FEN piece placement string
+
+    // reset variable values
+    this.activePieces = [];
+    this.pieces = nullMatrix(9,9);
+
+    // fill up pieces according to FEN piece placement
+    const letterPieces = {
+      'P': 'pawn', 'N': 'knight', 'B': 'bishop',
+      'R': 'rook', 'Q': 'queen', 'K': 'king',
+    };
+
+    let i = 0;
+    for (let row=7; row >= 0; row--) {
+      for (let col=0; col < 8; col++) {
+	let c = piecePlacement[i];
+	if (!isNaN(c)) {
+	  // c is a number, so we skip c columns
+	  col += parseInt(c)-1;
+	} else {
+	  // c is not a number, so denotes a piece
+	  // find color of piece (uppercase: white, lowercase: black)
+	  if (c === c.toUpperCase()) { var color='white'; }
+	  else { var color='black'; }
+	  // find piece type
+	  let type = letterPieces[c.toUpperCase()];
+	  // create new ChessPiece object
+	  this.createPiece([col, row], color, type);
+	}
+	i++;
+	if (piecePlacement[i] === '/') {i++};
+      }
+    }
+
+    if (i !== piecePlacement.length) {
+      // our index counter i is not at the end of the piecePlacement FEN string
+      throw new Error('Finished setting up board, but did not reach end of string. Invalid FEN string?');
+    }
   }
 }

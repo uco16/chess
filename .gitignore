@@ -1,5 +1,6 @@
-# ignore temporary vim files
+# ignore vim-related files
 *.swp
+tags
 
 # Logs
 logs

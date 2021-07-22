@@ -1,0 +1,1 @@
+- on V's laptop (all browsers, even when U hosts): white player always connects properly but black player does not connect sometimes (not known when)

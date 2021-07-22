@@ -1,4 +1,3 @@
-- create some test cases
 - checkmate
 - check (DONE) and checkmate labels in movelist
 - position repeated three times: draw
@@ -19,4 +18,6 @@
 - mobile: put moves underneath game, but in horizontal list, scrollable
 - pointer on chessboard pieces
 - square that the selected piece is hovered over glows
-- put knights the correct way, and while you're at it, fix the rendering to make it more object-oriented (i.e. the sketch should keep track of images, nnot the objects).
+- put knights the correct way (NOT DONE), and while you're at it, fix the rendering to make it more object-oriented (i.e. the sketch should keep track of images, not the objects (DONE)).
+- add some more FEN strings
+- devise some test cases

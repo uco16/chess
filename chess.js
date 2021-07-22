@@ -54,12 +54,9 @@ function leaveQueue(socket) {
 }
 
 function joinQueue(socket) {
-  if (!!queue.length) { // someone is waiting in queue, match them
-    // POSSIBLE BUG: does this code execute sequentially?
-    // or is there a chance that multiple new users try to connect
-    // to the same user in the queue at the same time?
-    let opponent = queue.pop();
-    match(opponent, socket);
+  if (queue.length > 0) { // someone is waiting in queue
+    let opponent = queue.pop();  // get someone from the queue
+    match(opponent, socket);  // create a match between them
   } else { // no one is in queue, add socket to queue
     console.log(`User ${socket.id} joined queue.`);
     queue.push(socket);
@@ -68,13 +65,20 @@ function joinQueue(socket) {
 
 function match(socket1, socket2) {
   console.log("Match between " + socket1.id + " and " + socket2.id);
-  let room = socket1.id + '#' + socket2.id;
-  socket1.opponent = socket2;
-  socket2.opponent = socket1;
 
-  let FEN = positions['fool'];
+  let FEN = positions['initial'];
   io.to(socket1.id).emit('match', 'white', FEN);
   io.to(socket2.id).emit('match', 'black', FEN);
+
+  // set up the communication of moves between the two players
+  socket1.on('move', (...args) => {
+    console.log(`server: received move from ${socket1.id} and sending to ${socket2.id}`);
+    io.to(socket2.id).emit('move', ...args);
+  });
+  socket2.on('move', (...args) => {
+    console.log(`server: received move from ${socket2.id} and sending to ${socket1.id}`);
+    io.to(socket1.id).emit('move', ...args);
+  });
 }
 
 io.on('connection', (socket) => {
@@ -83,20 +87,10 @@ io.on('connection', (socket) => {
 
   joinQueue(socket);
 
-  socket.on('move', (...args) => {
-    console.log(`server: received move from ${socket.id} and sending to ${socket.opponent.id}`);
-    socket.to(socket.opponent.id).emit('move', ...args);
-  });
-
   socket.on('disconnect', () => {
     leaveQueue(socket);
     console.log(`User ${socket.id} disconnected.`);
   });
-
-  socket.onAny((event, ...args) => {
-    console.log(event, args);
-  });
-
 });
 
 

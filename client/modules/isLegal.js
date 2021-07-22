@@ -115,6 +115,7 @@ function identifyPiece(piece) {
 }
 
 function findPieces(position, color, type) {
+  // finds all squares with pieces of specified type and color on it
   if (typeof type === 'undefined') {  // return all 'color' pieces when type not specified
     let playerColorPieces = [];
     for (let type of chessPieceTypes) {
@@ -426,15 +427,15 @@ function firstPiece(position, square, direction) {
   return null;
 }
 
-//export function isCheckmate(position, playerColor) {
-//  // return true iff playerColor has no legal moves in the current position
-//
-//  let playerColorPieces = findPieces(position, playerColor);
-//  console.log(playerColorPieces);
-//  // find all squares with playerColor Pieces
-//  if (any(moves, isLegal)) {
-//    return false;
-//  } else {
-//    return true;
-//  }
-//}
+export function isCheckmate(position, playerColor) {
+  // return true iff playerColor has no legal moves in the current position
+
+  // find all squares with playerColor Pieces
+  let playerColorPieces = findPieces(position, playerColor);
+  console.log(playerColorPieces);
+  if (any(moves, isLegal)) {
+    return false;
+  } else {
+    return true;
+  }
+}

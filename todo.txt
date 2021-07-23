@@ -23,3 +23,4 @@
 - devise some test cases
 - click to move as well as drag
 - hide ".html" endings by handling request in chess.js
+- write script to move .js file and change all import statements in other js files

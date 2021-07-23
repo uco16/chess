@@ -1,5 +1,7 @@
 // imports from custom client-side functions
-import isLegal, {inCheck} from './modules/isLegal.js';
+import isLegal from './modules/isLegal.js';
+import inCheck from './modules/inCheck.js';
+import isCheckmate from './modules/isCheckmate.js';
 import {addtoMoveList} from './modules/movelist.js';
 import ChessGame from './modules/ChessGame.js';
 import inputPromotion from './modules/promotion.js';
@@ -8,7 +10,7 @@ import inputPromotion from './modules/promotion.js';
 let verbose=true;
 
 // move sound
-const moveSound = new Audio('./sounds/move.mp3');
+const moveSound = new Audio('move.mp3');
 
 // default variables
 let size = document.getElementById('chessboard').clientWidth;
@@ -35,7 +37,7 @@ function sketch (p) {
   // io from socket.io not explicitly imported since we just include the script in index.html
   // explicitly importing and setting sketch.js to a module seems to break socket.io?
 
-  // define what to do when move is received
+  // define what to do when opponent's move is received
   socket.on('move', (initial, final, iType, fType, promotionOption) => { 
     if (verbose) {console.log('received move', [initial, final], [iType, fType], promotionOption);}
 
@@ -189,6 +191,9 @@ function sketch (p) {
 
     if (playerColor==='white') { var opponentColor='black'; }
     else { opponentColor='white'; }
+    // check if player's move has left the opponent in checkmate
+    console.log("opponent in checkmate?:", isCheckmate(game.strRep(), opponentColor));
+
     addtoMoveList(startPos, endPos, initialPieceType, finalPieceType, inCheck(game.strRep(), opponentColor));
   }
 

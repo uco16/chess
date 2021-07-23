@@ -1,15 +1,30 @@
+// imports
 const path = require('path');
 const fs = require('fs');
 const httpServer = require('http').createServer(handleRequest);
 const io = require('socket.io')(httpServer);
 
+// client sounds directory
+const soundDir = '/client/sounds/';
+
+// chess positions
 const positions = require('./positions.json');
+const defaultPosition = positions['fool'];
 
 const hostname = '0.0.0.0';
 const port = 8000;
 
+// --- main ----
+httpServer.listen(port, hostname, () => {
+  console.log(`Starting httpServer, listening at http://${hostname}:${port}.`);
+});
+// -------------
+
+
 function handleRequest(req, res) {
   var pathname = req.url;
+  console.log('requested pathname:', pathname);
+
   // default to index.html
   if (pathname == '/') {
     pathname = '/index.html';
@@ -24,14 +39,22 @@ function handleRequest(req, res) {
     pathname += ext;
   }
 
-  console.log('requested pathname:', pathname, "extension:", ext);
   var typeExt = {
     '.html': 'text/html',
     '.js':   'text/javascript',
-    '.css':  'text/css'
+    '.css':  'text/css',
+    '.mp3':  'audio/mpeg',
+    '.png':  'image/png',
   };
   // default to plain text
   var contentType = typeExt[ext] || 'text/plain';
+
+  if (contentType.substring(0, 5) === 'audio') {
+    // serve audio files from default sound directory
+    pathname = soundDir + pathname.substring(1);
+  }
+
+  console.log('served pathname:', pathname);
 
   // User file system module
   fs.readFile(__dirname + pathname,
@@ -43,15 +66,12 @@ function handleRequest(req, res) {
         return res.end('Error loading ' + pathname);
       }
       // Otherwise, send the data, the contents of the file
+      console.log('sending content of type', contentType);
       res.writeHead(200,{ 'Content-Type': contentType });
       res.end(data);
     }
   );
 }
-
-httpServer.listen(port, hostname, () => {
-  console.log(`Starting httpServer, listening at http://${hostname}:${port}.`);
-});
 
 // --- socket.io ---
 let queue = [];	    // sockets waiting for opponents
@@ -76,9 +96,8 @@ function joinQueue(socket) {
 function match(socket1, socket2) {
   console.log("Match between " + socket1.id + " and " + socket2.id);
 
-  let FEN = positions['initial'];
-  io.to(socket1.id).emit('match', 'white', FEN);
-  io.to(socket2.id).emit('match', 'black', FEN);
+  io.to(socket1.id).emit('match', 'white', defaultPosition);
+  io.to(socket2.id).emit('match', 'black', defaultPosition);
 
   // set up the communication of moves between the two players
   socket1.on('move', (...args) => {

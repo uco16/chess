@@ -17,14 +17,11 @@
 (	node_modules/is-glob/index.js	/^var chars = { '{': '}', '(': ')', '[': ']'};$/;"	p	class:chars
 .asideboard 	style.css	/^  .asideboard {$/;"	c
 .asideboard h2 	style.css	/^  .asideboard h2 {$/;"	c
-.css	chess.js	/^    '.css':  'text\/css'$/;"	p	class:handleRequest.typeExt
 .drawn + #menu-dimming 	style.css	/^.drawn + #menu-dimming {$/;"	c
 .gamewindow 	style.css	/^  .gamewindow {$/;"	c
 .header-height-adjust 	style.css	/^.header-height-adjust {$/;"	c
 .hp-title 	style.css	/^  .hp-title {$/;"	c
 .hp-title 	style.css	/^.hp-title {$/;"	c
-.html	chess.js	/^    '.html': 'text\/html',$/;"	p	class:handleRequest.typeExt
-.js	chess.js	/^    '.js':   'text\/javascript',$/;"	p	class:handleRequest.typeExt
 .menu-icon 	style.css	/^  .menu-icon {$/;"	c
 .menu-icon 	style.css	/^.menu-icon {$/;"	c
 .menu-icon_bar 	style.css	/^.menu-icon_bar {$/;"	c
@@ -61,7 +58,7 @@ Accepts	node_modules/accepts/index.js	/^Accepts.prototype.lang =$/;"	c	class:Acc
 Accepts	node_modules/accepts/index.js	/^Accepts.prototype.type =$/;"	c
 Ansi256	node_modules/chalk/source/index.js	/^	Ansi256: 2,$/;"	p	class:chalk.Level
 B	client/modules/ChessGame.js	/^      'P': 'pawn', 'N': 'knight', 'B': 'bishop',$/;"	p	class:const
-B	client/modules/isLegal.js	/^    'B': 'bishop',$/;"	p	class:const
+B	client/modules/chesslogic.js	/^    'B': 'bishop',$/;"	p	class:const
 BAD_HANDSHAKE_METHOD	node_modules/engine.io/lib/server.js	/^  BAD_HANDSHAKE_METHOD: 2,$/;"	p	class:Server.errors
 BAD_REQUEST	node_modules/engine.io/lib/server.js	/^  BAD_REQUEST: 3,$/;"	p	class:Server.errors
 BIN	node_modules/undefsafe/node_modules/debug/Makefile	/^BIN := $(THIS_DIR)\/node_modules\/.bin$/;"	m
@@ -93,7 +90,7 @@ Emitter	node_modules/component-emitter/index.js	/^Emitter.prototype.on =$/;"	c
 Emitter	node_modules/component-emitter/index.js	/^function Emitter(obj) {$/;"	f
 FORBIDDEN	node_modules/engine.io/lib/server.js	/^  FORBIDDEN: 4,$/;"	p	class:Server.errors
 K	client/modules/ChessGame.js	/^      'R': 'rook', 'Q': 'queen', 'K': 'king',$/;"	p	class:const
-K	client/modules/isLegal.js	/^    'K': 'king',$/;"	p	class:const
+K	client/modules/chesslogic.js	/^    'K': 'king',$/;"	p	class:const
 Logger	node_modules/nodemon/lib/utils/log.js	/^var Logger = function (r) {$/;"	c
 MAX_LENGTH	node_modules/braces/lib/constants.js	/^  MAX_LENGTH: 1024 * 64,$/;"	p	class:module.exports
 MAX_LENGTH	node_modules/picomatch/lib/constants.js	/^  MAX_LENGTH: 1024 * 64,$/;"	p	class:module.exports
@@ -105,20 +102,20 @@ Minimatch.defaults	node_modules/minimatch/minimatch.js	/^Minimatch.defaults = fu
 MurmurHash3	node_modules/imurmurhash/imurmurhash.js	/^    MurmurHash3.prototype.hash = function(key) {$/;"	c
 MurmurHash3	node_modules/imurmurhash/imurmurhash.js	/^    function MurmurHash3(key, seed) {$/;"	f
 N	client/modules/ChessGame.js	/^      'P': 'pawn', 'N': 'knight', 'B': 'bishop',$/;"	p	class:const
-N	client/modules/isLegal.js	/^    'N': 'knight',$/;"	p	class:const
+N	client/modules/chesslogic.js	/^    'N': 'knight',$/;"	p	class:const
 N	node_modules/rc/test/nested-env-vars.js	/^var N = 'RC'+ seed;$/;"	v
 NODE	node_modules/undefsafe/node_modules/debug/Makefile	/^NODE ?= $(shell which node)$/;"	m
 Negotiator	node_modules/negotiator/index.js	/^function Negotiator(request) {$/;"	c
 None	node_modules/chalk/source/index.js	/^	None: 0,$/;"	p	class:chalk.Level
 P	client/modules/ChessGame.js	/^      'P': 'pawn', 'N': 'knight', 'B': 'bishop',$/;"	p	class:const
-P	client/modules/isLegal.js	/^    'P': 'pawn',$/;"	p	class:const
+P	client/modules/chesslogic.js	/^    'P': 'pawn',$/;"	p	class:const
 PATH	node_modules/undefsafe/node_modules/debug/Makefile	/^PATH := node_modules\/.bin:$(PATH)$/;"	m
 PKG	node_modules/undefsafe/node_modules/debug/Makefile	/^PKG ?= $(if $(YARN),$(YARN),$(NODE) $(shell which npm))$/;"	m
 PacketType	node_modules/socket.io-parser/dist/index.js	/^var PacketType;$/;"	v
 Q	client/modules/ChessGame.js	/^      'R': 'rook', 'Q': 'queen', 'K': 'king',$/;"	p	class:const
-Q	client/modules/isLegal.js	/^    'Q': 'queen',$/;"	p	class:const
+Q	client/modules/chesslogic.js	/^    'Q': 'queen',$/;"	p	class:const
 R	client/modules/ChessGame.js	/^      'R': 'rook', 'Q': 'queen', 'K': 'king',$/;"	p	class:const
-R	client/modules/isLegal.js	/^    'R': 'rook',$/;"	p	class:const
+R	client/modules/chesslogic.js	/^    'R': 'rook',$/;"	p	class:const
 Range	node_modules/make-dir/node_modules/semver/semver.js	/^Range.prototype.format = function () {$/;"	c
 Range	node_modules/make-dir/node_modules/semver/semver.js	/^Range.prototype.toString = function () {$/;"	c	class:Range
 Range	node_modules/package-json/node_modules/semver/semver.js	/^Range.prototype.format = function () {$/;"	c
@@ -226,7 +223,8 @@ arrayBufferToBuffer	node_modules/engine.io/lib/parser-v3/index.js	/^function arr
 ascii	node_modules/picomatch/lib/constants.js	/^  ascii: '\\\\x00-\\\\x7F',$/;"	p	class:const
 assign	node_modules/cors/lib/index.js	/^  var assign = require('object-assign');$/;"	v
 attach	node_modules/engine.io/lib/engine.io.js	/^function attach(server, options) {$/;"	f
-b	client/modules/isLegal.js	/^  const color = {'w': 'white', 'b': 'black'};$/;"	p	class:const
+attackedByKnight	client/modules/inCheck.js	/^function attackedByKnight(position, kingPos) {$/;"	f
+b	client/modules/chesslogic.js	/^  const color = {'w': 'white', 'b': 'black'};$/;"	p	class:export
 backslash	node_modules/glob-parent/index.js	/^var backslash = \/\\\\\/g;$/;"	v
 balanced	node_modules/balanced-match/index.js	/^function balanced(a, b, str) {$/;"	f
 balanced	node_modules/brace-expansion/index.js	/^var balanced = require('balanced-match');$/;"	v
@@ -236,6 +234,7 @@ bishop	client/modules/ChessPiece.js	/^      'bishop': 'B',$/;"	p	class:strRep
 bishop	client/modules/isLegal.js	/^    'bishop': isValidBishopPattern,$/;"	p	class:const
 bishop	client/modules/movelist.js	/^    'bishop': 'B',$/;"	p	class:const
 black	client/modules/ChessGame.js	/^    let baseRow = {'white': 0, 'black': 7};$/;"	p	class:let
+black	client/modules/inCheck.js	/^const oppositeColor = {'white': 'black', 'black': 'white'};$/;"	p	class:const
 black	client/modules/isLegal.js	/^	'black': 6,$/;"	p	class:const
 blank	node_modules/picomatch/lib/constants.js	/^  blank: ' \\\\t',$/;"	p	class:const
 bools	node_modules/minimist/index.js	/^    var flags = { bools : {}, strings : {}, unknownFn: null };$/;"	p	class:flags
@@ -549,8 +548,6 @@ filterPatterns	node_modules/to-regex-range/index.js	/^function filterPatterns(ar
 fin	node_modules/ws/lib/sender.js	/^        fin: options.fin,$/;"	p
 findAppScript	node_modules/nodemon/lib/config/load.js	/^function findAppScript() {$/;"	f
 findPackage	node_modules/nodemon/lib/version.js	/^function findPackage(dir) {$/;"	f
-findPieces	client/modules/isLegal.js	/^function findPieces(position, color, type) {$/;"	f
-firstPiece	client/modules/isLegal.js	/^function firstPiece(position, square, direction) {$/;"	f
 float	node_modules/boxen/index.js	/^		float: 'left',$/;"	p	class:options
 fmtLong	node_modules/ms/index.js	/^function fmtLong(ms) {$/;"	f
 fmtLong	node_modules/undefsafe/node_modules/ms/index.js	/^function fmtLong(ms) {$/;"	f
@@ -626,7 +623,6 @@ h	node_modules/ms/index.js	/^var h = m * 60;$/;"	v
 h	node_modules/undefsafe/node_modules/ms/index.js	/^var h = m * 60;$/;"	v
 h2 	style.css	/^  h2 {$/;"	s
 handlePromotionChoice	client/modules/promotion.js	/^function handlePromotionChoice(evt) {$/;"	f
-handleRequest	chess.js	/^function handleRequest(req, res) {$/;"	f
 hasBinary	node_modules/socket.io-parser/dist/is-binary.js	/^function hasBinary(obj, toJSON) {$/;"	f
 hasKey	node_modules/minimist/index.js	/^function hasKey (obj, keys) {$/;"	f
 hasListeners	node_modules/component-emitter/index.js	/^Emitter.prototype.hasListeners = function(event){$/;"	m	class:Emitter
@@ -646,7 +642,6 @@ help	node_modules/package-json/node_modules/semver/bin/semver.js	/^function help
 help	node_modules/semver-diff/node_modules/semver/bin/semver.js	/^function help () {$/;"	f	function:function.success
 hidePromotion	client/modules/promotion.js	/^function hidePromotion(color) {$/;"	f
 i	node_modules/negotiator/lib/encoding.js	/^      i: i$/;"	p	class:accepts
-identifyPiece	client/modules/isLegal.js	/^function identifyPiece(piece) {$/;"	f
 identity	node_modules/brace-expansion/index.js	/^function identity(e) {$/;"	f
 ignore	node_modules/nodemon/lib/config/index.js	/^  config.options = { ignore: [], watch: [], monitor: [] };$/;"	p	class:config.options
 ignore	node_modules/nodemon/lib/rules/index.js	/^  ignore: {$/;"	p	class:module.exports
@@ -673,7 +668,6 @@ is	node_modules/@sindresorhus/is/dist/index.js	/^function is(value) {$/;"	f
 isBinary	node_modules/socket.io-parser/dist/is-binary.js	/^function isBinary(obj) {$/;"	f
 isChildProcess	node_modules/end-of-stream/index.js	/^var isChildProcess = function(stream) {$/;"	f
 isChownErrOk	node_modules/write-file-atomic/index.js	/^function isChownErrOk (err) {$/;"	f
-isEmpty	client/modules/isLegal.js	/^function isEmpty(position, location) {$/;"	f
 isErrorResponse	node_modules/http-cache-semantics/index.js	/^function isErrorResponse(response) {$/;"	f
 isExtglob	node_modules/is-extglob/index.js	/^module.exports = function isExtglob(str) {$/;"	f
 isExtglob	node_modules/is-glob/index.js	/^var isExtglob = require('is-extglob');$/;"	v
@@ -681,14 +675,12 @@ isFS	node_modules/pump/index.js	/^var isFS = function (stream) {$/;"	f	function:
 isGlob	node_modules/glob-parent/index.js	/^var isGlob = require('is-glob');$/;"	v
 isGlob	node_modules/picomatch/lib/scan.js	/^      token = { value: '', depth: 0, isGlob: false };$/;"	p	class:token
 isGlob	node_modules/picomatch/lib/scan.js	/^  let token = { value: '', depth: 0, isGlob: false };$/;"	p	class:let
-isInBoard	client/modules/isLegal.js	/^function isInBoard(position) {$/;"	f
 isLeftInCheck	client/modules/isLegal.js	/^function isLeftInCheck(position, initial, final) {$/;"	f
 isLooseTypedArray	node_modules/is-typedarray/index.js	/^function isLooseTypedArray(arr) {$/;"	f
 isNotEnemyTurn	client/modules/isLegal.js	/^function isNotEnemyTurn(playerColor) {$/;"	f
 isNumber	node_modules/minimist/index.js	/^function isNumber (x) {$/;"	f
 isOriginAllowed	node_modules/cors/lib/index.js	/^  function isOriginAllowed(origin, allowedOrigin) {$/;"	f
 isPadded	node_modules/brace-expansion/index.js	/^function isPadded(el) {$/;"	f
-isPiece	client/modules/isLegal.js	/^function isPiece(position, location, color, type) {$/;"	f
 isQuality	node_modules/negotiator/lib/charset.js	/^function isQuality(spec) {$/;"	f
 isQuality	node_modules/negotiator/lib/encoding.js	/^function isQuality(spec) {$/;"	f
 isQuality	node_modules/negotiator/lib/language.js	/^function isQuality(spec) {$/;"	f
@@ -1266,7 +1258,7 @@ undefsafe	node_modules/undefsafe/lib/undefsafe.js	/^function undefsafe(obj, path
 unescapeBraces	node_modules/brace-expansion/index.js	/^function unescapeBraces(str) {$/;"	f
 unmask	node_modules/ws/lib/buffer-util.js	/^    unmask: _unmask$/;"	p	class:module.exports
 unsafe	node_modules/ini/ini.js	/^function unsafe (val, doUnesc) {$/;"	f	function:function.decode
-up	client/modules/isLegal.js	/^    'up': [0, 1],  \/\/ do not increment column, but increment row$/;"	p	class:const
+up	client/modules/chesslogic.js	/^    'up': [0, 1],  \/\/ do not increment column, but increment row$/;"	p	class:export
 upgrade	node_modules/http-cache-semantics/index.js	/^    upgrade: true,$/;"	p	class:const
 upper	node_modules/picomatch/lib/constants.js	/^  upper: 'A-Z',$/;"	p	class:const
 urlObjectToRequestOptions	node_modules/cacheable-request/src/index.js	/^function urlObjectToRequestOptions(url) {$/;"	f
@@ -1306,7 +1298,7 @@ version	node_modules/nodemon/lib/utils/index.js	/^var version = process.versions
 version	node_modules/nodemon/lib/version.js	/^function version(callback) {$/;"	f
 version	node_modules/package-json/index.js	/^		version: 'latest',$/;"	p	class:options
 volatile	node_modules/socket.io-adapter/dist/index.js	/^            volatile: flags.volatile,$/;"	p	class:const
-w	client/modules/isLegal.js	/^  const color = {'w': 'white', 'b': 'black'};$/;"	p	class:const
+w	client/modules/chesslogic.js	/^  const color = {'w': 'white', 'b': 'black'};$/;"	p	class:export
 w	node_modules/ms/index.js	/^var w = d * 7;$/;"	v
 waitForSubProcesses	node_modules/nodemon/lib/monitor/run.js	/^function waitForSubProcesses(pid, callback) {$/;"	f
 watch	node_modules/nodemon/lib/monitor/run.js	/^var watch = require('.\/watch').watch;$/;"	v
@@ -1315,6 +1307,7 @@ watcher	node_modules/chokidar/lib/nodefs-handler.js	/^      watcher: fs.watchFil
 watchers	node_modules/nodemon/lib/monitor/watch.js	/^var watchers = [];$/;"	v
 white	client/modules/ChessGame.js	/^    let baseRow = {'white': 0, 'black': 7};$/;"	p	class:let
 white	client/modules/ChessGame.js	/^    this.canCastle = {'white': {'left': true, 'right': true},$/;"	p	class:canCastle
+white	client/modules/inCheck.js	/^const oppositeColor = {'white': 'black', 'black': 'white'};$/;"	p	class:const
 white	client/modules/isLegal.js	/^	'white': 1,$/;"	p	class:const
 whitespace	node_modules/ini/ini.js	/^      whitespace: false,$/;"	p	class:var.opt
 withFileTypes	node_modules/readdirp/index.js	/^    this._rdOptions = { encoding: 'utf8', withFileTypes: this._isDirent };$/;"	p	class:_rdOptions

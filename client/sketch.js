@@ -21,6 +21,7 @@ let defaultFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 let awaitingPromotion = false;
 
 // Board colours
+const backcol = [204, 68, 0];
 const darkcol = [128, 64, 0];
 const lightcol = [255, 166, 77];
 
@@ -119,7 +120,7 @@ function sketch (p) {
 
   function drawBoard() {
     // draw the board without pieces
-    p.background(204, 68, 0);
+    p.background(...backcol);
     p.strokeWeight(0);
     p.fill(...lightcol);
     p.square(padding, padding, boardsize)

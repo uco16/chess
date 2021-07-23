@@ -7,6 +7,9 @@ import inputPromotion from './modules/promotion.js';
 // debugging
 let verbose=true;
 
+// move sound
+const moveSound = new Audio('./sounds/move.mp3');
+
 // default variables
 let size = document.getElementById('chessboard').clientWidth;
 let padding = size/16;  // width of the edge of the board
@@ -198,6 +201,7 @@ function sketch (p) {
     drawBoard();
     drawUnselectedPieces();
     drawPiece(game.getPiece(final));
+    moveSound.play();
   }
 
   function promote(square, promotionOption) {

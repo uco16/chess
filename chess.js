@@ -14,9 +14,17 @@ function handleRequest(req, res) {
   if (pathname == '/') {
     pathname = '/index.html';
   }
-  
+
   // find file extension
   var ext = path.extname(pathname);
+
+  if (ext === '') {
+    // if user enters URL '/play', serve './play.html'
+    ext = '.html';
+    pathname += ext;
+  }
+
+  console.log('requested pathname:', pathname, "extension:", ext);
   var typeExt = {
     '.html': 'text/html',
     '.js':   'text/javascript',

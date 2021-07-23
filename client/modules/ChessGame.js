@@ -3,6 +3,7 @@ import ChessPiece from './ChessPiece.js';
 import isLegal from './isLegal.js';
 
 const defaultFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+const oppositeColor = {'white': 'black', 'black': 'white'};
 
 export default class ChessGame {
   // keep track and manipulate ChessPiece objects
@@ -28,6 +29,9 @@ export default class ChessGame {
     this.halfmoveClock = halfmoveClock;
     this.fullmoveNumberFEN = parseInt(fullmoveNumber);
     this.enPassantTargetFEN = enPassantTarget;
+
+    const colors = {'w': 'white', 'b': 'black'};
+    this.activeColor = colors[activeColorFirst];
   }
 
   createPiece(pos, color, type) {
@@ -95,6 +99,7 @@ export default class ChessGame {
 
     this.setPiece(final, piece);
     this.movesPlayed.push([initial, final]);
+    this.activeColor = oppositeColor[this.activeColor];
 
     if (targetPiece || piece.type==='pawn') {
       // was pawn move or capture: reset halfmoveClock
@@ -199,11 +204,6 @@ export default class ChessGame {
     return piece_placement;
   }
 
-  activeColor() {
-    let numMovesPlayed = this.movesPlayed.length;
-    return ['white', 'black'][numMovesPlayed%2];
-  }
-
   castlingAvailability() {
     //this.canCastle = {'white': {'left': true, 'right': true},
     //                  'black': {'left': true, 'right': true}}
@@ -243,7 +243,7 @@ export default class ChessGame {
     // see 16.1 on https://www.thechessdrum.net/PGN_Reference.txt
     // piecePlacement + activeColor[0] + castlingAvailability + enPassantTarget + halfmoveClock + fullmoveNumber
     
-    return [this.piecePlacement(), this.activeColor()[0], this.castlingAvailability(),
+    return [this.piecePlacement(), this.activeColor[0], this.castlingAvailability(),
             this.enPassantTarget(), this.halfmoveClock, this.fullmoveNumber()].join(' ');
   }
 

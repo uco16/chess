@@ -22,8 +22,9 @@ httpServer.listen(port, hostname, () => {
 
 
 function handleRequest(req, res) {
+  let verbose = false;
   var pathname = req.url;
-  console.log('requested pathname:', pathname);
+  if (verbose) {console.log('requested pathname:', pathname);}
 
   // default to index.html
   if (pathname == '/') {
@@ -54,7 +55,7 @@ function handleRequest(req, res) {
     pathname = soundDir + pathname.substring(1);
   }
 
-  console.log('served pathname:', pathname);
+  if (verbose) {console.log('served pathname:', pathname);}
 
   // User file system module
   fs.readFile(__dirname + pathname,
@@ -66,7 +67,7 @@ function handleRequest(req, res) {
         return res.end('Error loading ' + pathname);
       }
       // Otherwise, send the data, the contents of the file
-      console.log('sending content of type', contentType);
+      if (verbose) {console.log('sending content of type', contentType);}
       res.writeHead(200,{ 'Content-Type': contentType });
       res.end(data);
     }
@@ -78,7 +79,7 @@ let queue = [];	    // sockets waiting for opponents
 
 function leaveQueue(socket) {
   queue = queue.filter((client) => {return client != socket});
-  console.log(`User ${socket.id} left queue.`);
+  //console.log(`User ${socket.id} left queue.`);
 }
 
 function joinQueue(socket) {
@@ -89,7 +90,7 @@ function joinQueue(socket) {
   } else { 
     // no one is in queue
     queue.push(socket); // add socket to queue
-    console.log(`User ${socket.id} joined queue.`);
+    // console.log(`User ${socket.id} joined queue.`);
   }
 }
 
@@ -101,11 +102,11 @@ function match(socket1, socket2) {
 
   // set up the communication of moves between the two players
   socket1.on('move', (...args) => {
-    console.log(`server: received move from ${socket1.id} and sending to ${socket2.id}`);
+    console.log(`Received move from ${socket1.id} and sending to ${socket2.id}.`);
     io.to(socket2.id).emit('move', ...args);
   });
   socket2.on('move', (...args) => {
-    console.log(`server: received move from ${socket2.id} and sending to ${socket1.id}`);
+    console.log(`Received move from ${socket2.id} and sending to ${socket1.id}.`);
     io.to(socket1.id).emit('move', ...args);
   });
 }

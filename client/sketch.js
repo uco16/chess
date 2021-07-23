@@ -158,8 +158,8 @@ function sketch (p) {
       drawUnselectedPieces();
 
       if (!awaitingPromotion &&
-	isLegal(startPos, endPos, game.strRep(),
-		  game.previousMoveFinal, playerColor, game.canCastle[playerColor])) {
+	isLegal(startPos, endPos, game.strRep(), game.previousMoveFinal,
+	        playerColor, game.canCastle[playerColor], game.activeColor)) {
 	handleMove(startPos, endPos);
 	if (verbose) {console.log(game.toFEN());}
       }
@@ -192,7 +192,9 @@ function sketch (p) {
     if (playerColor==='white') { var opponentColor='black'; }
     else { opponentColor='white'; }
     // check if player's move has left the opponent in checkmate
-    console.log("opponent in checkmate?:", isCheckmate(game.strRep(), opponentColor));
+    console.log("opponent in checkmate?:", 
+                isCheckmate(game.strRep(), opponentColor, game.previousMoveFinal, 
+                            game.canCastle[opponentColor], game.activeColor));
 
     addtoMoveList(startPos, endPos, initialPieceType, finalPieceType, inCheck(game.strRep(), opponentColor));
   }
@@ -276,9 +278,10 @@ socket.on('match', (color, FEN) => {
   new p5(sketch, 'chessboard');
 
   // if the game starts from a position where it is black's turn to move, 
-  // add one move "1. ..." to the movelist
+  // add one empty move (i.e. "1. ...") to the movelist
   if (FEN.split(' ')[1]==='b') { addtoMoveList(); };
 });
+
 // only tell the server that you are ready for match AFTER you have defined what to do
 // when the server matches you
 socket.emit('readyForMatch');

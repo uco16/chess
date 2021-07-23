@@ -1,5 +1,5 @@
-import { findPieces, isPiece, identifyPiece, isInBoard, 
-         firstPiece } from './chesslogic.js';
+import { findPieces, isPiece, identifyPiece, firstPiece } from './chesslogic.js';
+import {knightSquares} from './patterns.js';
 
 const oppositeColor = {'white': 'black', 'black': 'white'};
 
@@ -13,10 +13,10 @@ export default function inCheck(position, playerColor) {
 
   // all following functions check if king is under attack by other player
   
+  // knights
   if (attackedByKnight(position, kingPos)) {
     return true;
   }
-  // knights
 
   // columns: rooks & queens
   for (const direction of ['up', 'down', 'left', 'right']) {
@@ -68,20 +68,13 @@ export default function inCheck(position, playerColor) {
 // --- auxiliary functions ---
 
 function attackedByKnight(position, kingPos) {
-  let knightsquares = [[kingPos[0]-1, kingPos[1]+2], 
-		       [kingPos[0]-1, kingPos[1]-2],
-		       [kingPos[0]+1, kingPos[1]+2],
-		       [kingPos[0]+1, kingPos[1]-2],
-		       [kingPos[0]-2, kingPos[1]+1],
-		       [kingPos[0]-2, kingPos[1]-1],
-		       [kingPos[0]+2, kingPos[1]+1],
-		       [kingPos[0]+2, kingPos[1]-1]]
 
   let kingColor = identifyPiece(position[kingPos[0]][kingPos[1]])[0];
   let attackerColor = oppositeColor[kingColor];
 
-  for (let i=0; i<8; i++) {
-    if (isInBoard(knightsquares[i]) && isPiece(position, knightsquares[i], attackerColor, 'knight')) {
+  let possibleKnightSquares = knightSquares(kingPos);
+  for (let i=0; i<possibleKnightSquares.length; i++) {
+    if (isPiece(position, possibleKnightSquares[i], attackerColor, 'knight')) {
       return true;
     }
   }

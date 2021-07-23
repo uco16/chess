@@ -97,3 +97,31 @@ export function firstPiece(position, square, direction) {
   // no piece in line of sight in column/row direction from square
   return null;
 }
+
+export function getDiag(coordinates) {
+  // returns all squares that are on the diagonals of coordinates
+  let squares = [coordinates];
+  for (let increment of [[1,1], [1,-1], [-1,1], [-1,-1]]) {
+    for (let sq=arraysAdd(coordinates, increment); isInBoard(sq); sq = arraysAdd(sq, increment)) {
+      squares.push(sq);
+    }
+  }
+  return squares;
+}
+
+export function getRow(n) {
+  // all squares on a given row
+  let squares = [];
+  for (let col=0; col<8; col++) {
+    squares.push([col, n]);
+  }
+  return squares;
+}
+export function getCol(n) {
+  // all squares on a given column
+  let squares = [];
+  for (let row=0; row<8; row++) {
+    squares.push([n, row]);
+  }
+  return squares;
+}

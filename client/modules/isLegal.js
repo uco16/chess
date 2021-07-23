@@ -1,5 +1,4 @@
 import { arraysEqual, copyMatrix, arraysAdd} from './jslogic.js';
-import { numMovesPlayed } from './movelist.js';
 import { chessPieceTypes, findPieces, isPiece, isEmpty,
          identifyPiece, isInBoard, firstPiece } from './chesslogic.js';
 import inCheck from './inCheck.js';
@@ -8,13 +7,14 @@ import inCheck from './inCheck.js';
 
 // main script that will be exported and used by the sketch to decide
 // whether or not a given move by the player is legal
-export default function isLegal(startPos, endPos, pieces, previousMoveFinal, playerColor, canCastle) {
+export default function isLegal(startPos, endPos, pieces, previousMoveFinal,
+				playerColor, canCastle, activeColor) {
   // check if move is legal in given position
   //
   // can only move on your own turn (or before start of game)
   // canCastle: dictionary of form {'left': boolean, 'right': boolean}
   //
-  if (!isNotEnemyTurn(playerColor)) {
+  if (activeColor!==playerColor) {
     console.log("Not your turn.");
     return false;
   }
@@ -46,12 +46,11 @@ export default function isLegal(startPos, endPos, pieces, previousMoveFinal, pla
   return true;
 }
 
-function isNotEnemyTurn(playerColor) {
-  let n = numMovesPlayed();
+function isNotEnemyTurn(playerColor, numMovesPlayed) {
   if (playerColor == 'white') {
-    return (n % 2 == 0);
+    return (numMovesPlayed % 2 == 0);
   } else {
-    return (n % 2 == 1);
+    return (numMovesPlayed % 2 == 1);
   }
 }
 

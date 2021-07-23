@@ -224,6 +224,7 @@ ascii	node_modules/picomatch/lib/constants.js	/^  ascii: '\\\\x00-\\\\x7F',$/;"	
 assign	node_modules/cors/lib/index.js	/^  var assign = require('object-assign');$/;"	v
 attach	node_modules/engine.io/lib/engine.io.js	/^function attach(server, options) {$/;"	f
 attackedByKnight	client/modules/inCheck.js	/^function attackedByKnight(position, kingPos) {$/;"	f
+b	client/modules/ChessGame.js	/^    const colors = {'w': 'white', 'b': 'black'};$/;"	p	class:const
 b	client/modules/chesslogic.js	/^  const color = {'w': 'white', 'b': 'black'};$/;"	p	class:export
 backslash	node_modules/glob-parent/index.js	/^var backslash = \/\\\\\/g;$/;"	v
 balanced	node_modules/balanced-match/index.js	/^function balanced(a, b, str) {$/;"	f
@@ -234,6 +235,7 @@ bishop	client/modules/ChessPiece.js	/^      'bishop': 'B',$/;"	p	class:strRep
 bishop	client/modules/isLegal.js	/^    'bishop': isValidBishopPattern,$/;"	p	class:const
 bishop	client/modules/movelist.js	/^    'bishop': 'B',$/;"	p	class:const
 black	client/modules/ChessGame.js	/^    let baseRow = {'white': 0, 'black': 7};$/;"	p	class:let
+black	client/modules/ChessGame.js	/^const oppositeColor = {'white': 'black', 'black': 'white'};$/;"	p	class:const
 black	client/modules/inCheck.js	/^const oppositeColor = {'white': 'black', 'black': 'white'};$/;"	p	class:const
 black	client/modules/isLegal.js	/^	'black': 6,$/;"	p	class:const
 blank	node_modules/picomatch/lib/constants.js	/^  blank: ' \\\\t',$/;"	p	class:const
@@ -677,7 +679,7 @@ isGlob	node_modules/picomatch/lib/scan.js	/^      token = { value: '', depth: 0,
 isGlob	node_modules/picomatch/lib/scan.js	/^  let token = { value: '', depth: 0, isGlob: false };$/;"	p	class:let
 isLeftInCheck	client/modules/isLegal.js	/^function isLeftInCheck(position, initial, final) {$/;"	f
 isLooseTypedArray	node_modules/is-typedarray/index.js	/^function isLooseTypedArray(arr) {$/;"	f
-isNotEnemyTurn	client/modules/isLegal.js	/^function isNotEnemyTurn(playerColor) {$/;"	f
+isNotEnemyTurn	client/modules/isLegal.js	/^function isNotEnemyTurn(playerColor, numMovesPlayed) {$/;"	f
 isNumber	node_modules/minimist/index.js	/^function isNumber (x) {$/;"	f
 isOriginAllowed	node_modules/cors/lib/index.js	/^  function isOriginAllowed(origin, allowedOrigin) {$/;"	f
 isPadded	node_modules/brace-expansion/index.js	/^function isPadded(el) {$/;"	f
@@ -712,6 +714,7 @@ king	client/modules/ChessGame.js	/^      'king': 'K',$/;"	p	class:piecePlacement
 king	client/modules/ChessPiece.js	/^      'king': 'K',$/;"	p	class:strRep
 king	client/modules/isLegal.js	/^    'king': isValidKingPattern,$/;"	p	class:const
 king	client/modules/movelist.js	/^    'king': 'K',$/;"	p	class:const
+kingSquares	client/modules/patterns.js	/^function kingSquares(position) {$/;"	f
 knight	client/modules/ChessGame.js	/^      'knight': 'N',$/;"	p	class:piecePlacement
 knight	client/modules/ChessPiece.js	/^      'knight': 'N',$/;"	p	class:strRep
 knight	client/modules/isLegal.js	/^    'knight': isValidKnightPattern,$/;"	p	class:const
@@ -957,6 +960,7 @@ pawn	client/modules/ChessPiece.js	/^      'pawn': 'P',$/;"	p	class:strRep
 pawn	client/modules/isLegal.js	/^    'pawn': isValidPawnPattern,$/;"	p	class:const
 pawn	client/modules/movelist.js	/^    'pawn': '',$/;"	p	class:const
 pawn	client/sketch.js	/^      'pawn': p.loadImage('client\/pieces\/pawn.png'),$/;"	p	class:pieceImages
+pawnSquares	client/modules/patterns.js	/^function pawnSquares(position, color) {$/;"	f
 persistent	node_modules/chokidar/lib/nodefs-handler.js	/^  const options = {persistent: opts.persistent};$/;"	p	class:const
 pidsForTree	node_modules/pstree.remy/lib/utils.js	/^function pidsForTree(tree, pid) {$/;"	f
 pieceImg	client/sketch.js	/^  function pieceImg(piece) {$/;"	f	function:sketch
@@ -1298,6 +1302,7 @@ version	node_modules/nodemon/lib/utils/index.js	/^var version = process.versions
 version	node_modules/nodemon/lib/version.js	/^function version(callback) {$/;"	f
 version	node_modules/package-json/index.js	/^		version: 'latest',$/;"	p	class:options
 volatile	node_modules/socket.io-adapter/dist/index.js	/^            volatile: flags.volatile,$/;"	p	class:const
+w	client/modules/ChessGame.js	/^    const colors = {'w': 'white', 'b': 'black'};$/;"	p	class:const
 w	client/modules/chesslogic.js	/^  const color = {'w': 'white', 'b': 'black'};$/;"	p	class:export
 w	node_modules/ms/index.js	/^var w = d * 7;$/;"	v
 waitForSubProcesses	node_modules/nodemon/lib/monitor/run.js	/^function waitForSubProcesses(pid, callback) {$/;"	f
@@ -1307,6 +1312,7 @@ watcher	node_modules/chokidar/lib/nodefs-handler.js	/^      watcher: fs.watchFil
 watchers	node_modules/nodemon/lib/monitor/watch.js	/^var watchers = [];$/;"	v
 white	client/modules/ChessGame.js	/^    let baseRow = {'white': 0, 'black': 7};$/;"	p	class:let
 white	client/modules/ChessGame.js	/^    this.canCastle = {'white': {'left': true, 'right': true},$/;"	p	class:canCastle
+white	client/modules/ChessGame.js	/^const oppositeColor = {'white': 'black', 'black': 'white'};$/;"	p	class:const
 white	client/modules/inCheck.js	/^const oppositeColor = {'white': 'black', 'black': 'white'};$/;"	p	class:const
 white	client/modules/isLegal.js	/^	'white': 1,$/;"	p	class:const
 whitespace	node_modules/ini/ini.js	/^      whitespace: false,$/;"	p	class:var.opt

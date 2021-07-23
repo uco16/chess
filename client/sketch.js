@@ -19,8 +19,10 @@ let boardsize = size - 2 * padding;
 let sqs = boardsize / 8;
 let pcs = sqs/1.5;
 let playerColor;
+let opponentColor;
 let defaultFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 let awaitingPromotion = false;
+
 
 // Board colours
 const backcol = [204, 68, 0];
@@ -49,7 +51,9 @@ function sketch (p) {
     }
 
     // add to move list
-    addtoMoveList(initial, final, iType, fType, inCheck(game.strRep(), playerColor));
+    addtoMoveList(initial, final, iType, fType, inCheck(game.strRep(), playerColor),
+                  isCheckmate(game.strRep(), playerColor, game.previousMoveFinal, 
+			      game.canCastle[playerColor], game.activeColor));
   });
 
   p.preload = () => {
@@ -189,14 +193,10 @@ function sketch (p) {
       sendMove(startPos, endPos, initialPieceType, finalPieceType);  // send move to server
     }
 
-    if (playerColor==='white') { var opponentColor='black'; }
-    else { opponentColor='white'; }
-    // check if player's move has left the opponent in checkmate
-    console.log("opponent in checkmate?:", 
-                isCheckmate(game.strRep(), opponentColor, game.previousMoveFinal, 
-                            game.canCastle[opponentColor], game.activeColor));
-
-    addtoMoveList(startPos, endPos, initialPieceType, finalPieceType, inCheck(game.strRep(), opponentColor));
+    addtoMoveList(startPos, endPos, initialPieceType, finalPieceType, 
+                  inCheck(game.strRep(), opponentColor),
+                  isCheckmate(game.strRep(), opponentColor, game.previousMoveFinal, 
+                              game.canCastle[opponentColor], game.activeColor));
   }
 
   function sendMove(initial, final, ...args) {
@@ -273,6 +273,7 @@ function ColRowtoXY(col, row) {
 
 socket.on('match', (color, FEN) => {
   playerColor = color;
+  opponentColor = {'white': 'black', 'black': 'white'}[playerColor];
   defaultFEN = FEN;
   if (verbose) {console.log("sketch: match, start game with colour " + playerColor);}
   new p5(sketch, 'chessboard');

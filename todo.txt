@@ -1,7 +1,5 @@
-- checkmate
-- check (DONE) and checkmate labels in movelist
-- position repeated three times: draw
 - win / lose / draw screen at the end
+- position repeated three times: draw
 - offer draw button
 - forfeit button
 - looking for opponent

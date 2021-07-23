@@ -10,7 +10,7 @@ export function clearMoveList() {
   }
 }
 
-export function addtoMoveList(initial, final, iType, fType, isCheck) {
+export function addtoMoveList(initial, final, iType, fType, isCheck, isCheckMate) {
   let moves = document.getElementById('moves');
   // check if isScrolledDown BEFORE we add another move to the list
   let isScrolledDown = (moves.scrollHeight - moves.clientHeight <= moves.scrollTop + 1);
@@ -25,7 +25,12 @@ export function addtoMoveList(initial, final, iType, fType, isCheck) {
   // add move to the relevant list item inside a span
 
   let checkMarker = '';
-  if (isCheck) {checkMarker = '+';}
+  if (isCheck) {
+    checkMarker = '+';
+  }
+  if (isCheckMate) {
+    checkMarker = '#';
+  }
   let move = document.createElement('span');
 
   if (initial !== undefined) {

@@ -18,6 +18,7 @@ let defaultFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 let awaitingPromotion = false;
 
 // Board colours
+const backcol = [204, 68, 0];
 const darkcol = [128, 64, 0];
 const lightcol = [255, 166, 77];
 
@@ -116,7 +117,7 @@ function sketch (p) {
 
   function drawBoard() {
     // draw the board without pieces
-    p.background(204, 68, 0);
+    p.background(...backcol);
     p.strokeWeight(0);
     p.fill(...lightcol);
     p.square(padding, padding, boardsize)
@@ -125,12 +126,44 @@ function sketch (p) {
     let col;
     for (col = 0; col < 8; col++) {
       for (row = 0; row < 8; row++) {
-	if ((row + col) % 2 == 0) {
-	  p.square(...ColRowtoXY(col, row), sqs);
-	}
+    if ((row + col) % 2 == 0) {
+      p.square(...ColRowtoXY(col, row), sqs);
+    }
       }
     }
+    // add numbers and letters to border
+    labelBoard();
   }
+
+  function labelBoard() {
+    // label rows and columns with numbers and letters respetively 
+    p.textSize(sqs * 0.4)
+    p.fill(133, 45, 1)
+    p.textFont('Times New Roman')
+    let colNum;
+    let rowLet;
+    for (colNum = 0; colNum < 8; colNum++) {
+      let x;
+      //  rows and columns switched for black
+      if (playerColor == 'white') {
+        x = padding + (colNum + 0.5) * sqs;
+      }
+      else {
+        x = padding + (7 - colNum + 0.5) * sqs;
+      }
+      
+      p.textAlign(p.CENTER , p.CENTER)
+      // label columns with numbers
+      p.text((8 - colNum).toString(), padding/2, x);
+      p.text((8 - colNum).toString(), size - padding/2, x);
+      
+      // convert number to letter and label row
+      rowLet = String.fromCharCode(97 + colNum);
+      p.text(rowLet, x, padding/2);
+      p.text(rowLet, x, size - padding/2);
+    }
+  }
+
 
   p.mousePressed = () => {
     // mouse down selects/grabs piece of own colour

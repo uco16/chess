@@ -39,6 +39,9 @@ function sketch (p) {
   let selectedPiece = null;
   let pieceImages;
   let game;
+  
+  // has mouse left starting position?
+  let leftStartPos = false
 
   // const socket = io();
   // io from socket.io not explicitly imported since we just include the script in index.html
@@ -91,7 +94,7 @@ function sketch (p) {
   }
 
   p.draw = () => {
-    if (selectedPiece != null) {
+    if (selectedPiece !== null) {
       drawBoard();
       drawUnselectedPieces();
       dragPiece(selectedPiece);
@@ -124,14 +127,14 @@ function sketch (p) {
     p.image(pieceImg(piece), x+(sqs-pcs)/2, y+(sqs-pcs)/2, pcs, pcs);
   }
 
-  // has mouse left starting position?
-  let leftStartPos = false
   
   function dragPiece(piece) {
     let [x, y] = [p.mouseX - pcs/2, p.mouseY - pcs/1.6];
     p.image(pieceImg(piece), x, y, pcs, pcs);
     
-    // check if mouse has left starting position
+    // check if mouse has left starting position, 
+    // i.e. if current mouse position is different from the position where the
+    // selected piece was picked up
     if (!arraysEqual(mousePos(), selectedPiece.position)) {
       leftStartPos = true;
     }
@@ -192,18 +195,17 @@ function sketch (p) {
     if (0 <= col && col < 8 && 0 <= row && row < 8) {
       let pieceUnderMouse = game.getPiece(mousePos());
       if (selectedPiece) { 
-        // click back on starting square, no move is played
         if (arraysEqual(mousePos(), selectedPiece.position)) {
+	  // user clicked back on starting square, no move is played
           selectedPiece = null;
           drawBoard();
           drawUnselectedPieces();
           leftStartPos = false;
         }
       }
-      // select piece if none already selected
       else if (pieceUnderMouse != null && pieceUnderMouse.color == playerColor) {
-	      selectedPiece = pieceUnderMouse;
-        console.log('selecting piece');
+	// select piece if none already selected
+	selectedPiece = pieceUnderMouse;
       }
     }
   }
@@ -222,15 +224,12 @@ function sketch (p) {
           handleMove(startPos, endPos);
           if (verbose) {console.log(game.toFEN());}
         }
-        drawPiece(selectedPiece);  // need to draw piece in case the move was not legal
+        drawPiece(selectedPiece);
         selectedPiece = null;
-        console.log('released')
       }  
       else if (leftStartPos) {
-        console.log('released');
+	drawPiece(selectedPiece);
         selectedPiece = null;
-        drawBoard();
-        drawUnselectedPieces();
       }
       leftStartPos = false;
     }

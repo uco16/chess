@@ -5,6 +5,7 @@ import isCheckmate from './modules/isCheckmate.js';
 import {addtoMoveList} from './modules/movelist.js';
 import ChessGame from './modules/ChessGame.js';
 import inputPromotion from './modules/promotion.js';
+import {arraysEqual} from './modules/jslogic.js';
 
 // debugging
 let verbose=true;
@@ -90,7 +91,7 @@ function sketch (p) {
   }
 
   p.draw = () => {
-    if (p.mouseIsPressed && selectedPiece != null) {
+    if (selectedPiece != null) {
       drawBoard();
       drawUnselectedPieces();
       dragPiece(selectedPiece);
@@ -123,9 +124,17 @@ function sketch (p) {
     p.image(pieceImg(piece), x+(sqs-pcs)/2, y+(sqs-pcs)/2, pcs, pcs);
   }
 
+  // has mouse left starting position?
+  let leftStartPos = false
+  
   function dragPiece(piece) {
     let [x, y] = [p.mouseX - pcs/2, p.mouseY - pcs/1.6];
     p.image(pieceImg(piece), x, y, pcs, pcs);
+    
+    // check if mouse has left starting position
+    if (!arraysEqual(mousePos(), selectedPiece.position)) {
+      leftStartPos = true;
+    }
   }
 
   function drawBoard() {
@@ -174,16 +183,27 @@ function sketch (p) {
       p.text(rowLet, x, size - padding/2);
     }
   }
-
-
+  
   p.mousePressed = () => {
     // mouse down selects/grabs piece of own colour
     let col, row;
     [col, row] = mousePos();
+    
     if (0 <= col && col < 8 && 0 <= row && row < 8) {
-      let pieceUnderMouse = game.getPiece([col, row]);
-      if (pieceUnderMouse != null && pieceUnderMouse.color == playerColor) {
-	selectedPiece = pieceUnderMouse;
+      let pieceUnderMouse = game.getPiece(mousePos());
+      if (selectedPiece) { 
+        // click back on starting square, no move is played
+        if (arraysEqual(mousePos(), selectedPiece.position)) {
+          selectedPiece = null;
+          drawBoard();
+          drawUnselectedPieces();
+          leftStartPos = false;
+        }
+      }
+      // select piece if none already selected
+      else if (pieceUnderMouse != null && pieceUnderMouse.color == playerColor) {
+	      selectedPiece = pieceUnderMouse;
+        console.log('selecting piece');
       }
     }
   }
@@ -194,15 +214,25 @@ function sketch (p) {
       const endPos = mousePos();
       drawBoard();
       drawUnselectedPieces();
-
-      if (!awaitingPromotion &&
-	isLegal(startPos, endPos, game.strRep(), game.previousMoveFinal,
-	        playerColor, game.canCastle[playerColor], game.activeColor)) {
-	handleMove(startPos, endPos);
-	if (verbose) {console.log(game.toFEN());}
+      // if mouse clicked or dragged 
+      if (!arraysEqual(mousePos(), startPos)) {
+        if (!awaitingPromotion &&
+            isLegal(startPos, endPos, game.strRep(), game.previousMoveFinal,
+                    playerColor, game.canCastle[playerColor], game.activeColor)) {
+          handleMove(startPos, endPos);
+          if (verbose) {console.log(game.toFEN());}
+        }
+        drawPiece(selectedPiece);  // need to draw piece in case the move was not legal
+        selectedPiece = null;
+        console.log('released')
+      }  
+      else if (leftStartPos) {
+        console.log('released');
+        selectedPiece = null;
+        drawBoard();
+        drawUnselectedPieces();
       }
-      drawPiece(selectedPiece);  // need to draw piece in case the move was not legal
-      selectedPiece = null;
+      leftStartPos = false;
     }
   }
 

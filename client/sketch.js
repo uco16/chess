@@ -22,6 +22,10 @@ const backcol = [204, 68, 0];
 const darkcol = [128, 64, 0];
 const lightcol = [255, 166, 77];
 
+// board lettering
+const letterCol = [133, 45, 1];
+const font = 'Times New Roman';
+
 function sketch (p) {  
   // "instance mode" https://github.com/processing/p5.js/wiki/p5.js-overview#instantiation--namespace
   let selectedPiece = null;
@@ -126,9 +130,9 @@ function sketch (p) {
     let col;
     for (col = 0; col < 8; col++) {
       for (row = 0; row < 8; row++) {
-    if ((row + col) % 2 == 0) {
-      p.square(...ColRowtoXY(col, row), sqs);
-    }
+	if ((row + col) % 2 === 0) {
+	  p.square(...ColRowtoXY(col, row), sqs);
+	}
       }
     }
     // add numbers and letters to border
@@ -136,16 +140,14 @@ function sketch (p) {
   }
 
   function labelBoard() {
-    // label rows and columns with numbers and letters respetively 
-    p.textSize(sqs * 0.4)
-    p.fill(133, 45, 1)
-    p.textFont('Times New Roman')
-    let colNum;
-    let rowLet;
-    for (colNum = 0; colNum < 8; colNum++) {
+    // label rows and columns with numbers and letters respectively 
+    p.textSize(sqs * 0.4);
+    p.fill(...letterCol);
+    p.textFont(...font);
+    for (let colNum = 0; colNum < 8; colNum++) {
       let x;
       //  rows and columns switched for black
-      if (playerColor == 'white') {
+      if (playerColor === 'white') {
         x = padding + (colNum + 0.5) * sqs;
       }
       else {
@@ -158,7 +160,7 @@ function sketch (p) {
       p.text((8 - colNum).toString(), size - padding/2, x);
       
       // convert number to letter and label row
-      rowLet = String.fromCharCode(97 + colNum);
+      let rowLet = String.fromCharCode(97 + colNum);
       p.text(rowLet, x, padding/2);
       p.text(rowLet, x, size - padding/2);
     }

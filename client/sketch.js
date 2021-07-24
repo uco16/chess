@@ -5,6 +5,7 @@ import isCheckmate from './modules/isCheckmate.js';
 import {addtoMoveList} from './modules/movelist.js';
 import ChessGame from './modules/ChessGame.js';
 import inputPromotion from './modules/promotion.js';
+import {displayEndscreen} from './modules/endscreen.js';
 
 // debugging
 let verbose=true;
@@ -54,10 +55,15 @@ function sketch (p) {
       promote(final, promotionOption);
     }
 
-    // add to move list
+    // check if this move from the opponent puts the player in checkmate
+    let playerCheckmated = isCheckmate(game.strRep(), playerColor, game.previousMoveFinal, 
+				       game.canCastle[playerColor], game.activeColor);
     addtoMoveList(initial, final, iType, fType, inCheck(game.strRep(), playerColor),
-                  isCheckmate(game.strRep(), playerColor, game.previousMoveFinal, 
-			      game.canCastle[playerColor], game.activeColor));
+		  playerCheckmated);
+
+    if (playerCheckmated) {
+      concludeGame('loss');
+    }
   });
 
   p.preload = () => {
@@ -227,10 +233,15 @@ function sketch (p) {
       sendMove(startPos, endPos, initialPieceType, finalPieceType);  // send move to server
     }
 
+
+    // check if move left opponent in checkmate
+    let opponentCheckmated = isCheckmate(game.strRep(), opponentColor, game.previousMoveFinal, 
+					 game.canCastle[opponentColor], game.activeColor);
     addtoMoveList(startPos, endPos, initialPieceType, finalPieceType, 
-                  inCheck(game.strRep(), opponentColor),
-                  isCheckmate(game.strRep(), opponentColor, game.previousMoveFinal, 
-                              game.canCastle[opponentColor], game.activeColor));
+                  inCheck(game.strRep(), opponentColor), opponentCheckmated);
+    if (opponentCheckmated) {
+      concludeGame('win');
+    }
   }
 
   function sendMove(initial, final, ...args) {
@@ -303,6 +314,11 @@ function ColRowtoXY(col, row) {
     y = padding + row*sqs;
   }
   return [x, y];
+}
+
+function concludeGame(gameOutcome) {
+  // handle win/loss/draw
+  displayEndscreen(gameOutcome);
 }
 
 socket.on('match', (color, FEN) => {

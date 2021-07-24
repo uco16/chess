@@ -323,6 +323,7 @@ concat	node_modules/ws/lib/buffer-util.js	/^function concat(list, totalLength) {
 concatMap	node_modules/brace-expansion/index.js	/^var concatMap = require('concat-map');$/;"	v
 concatMap	node_modules/concat-map/example/map.js	/^var concatMap = require('..\/');$/;"	v
 concatMap	node_modules/concat-map/test/map.js	/^var concatMap = require('..\/');$/;"	v
+concludeGame	client/sketch.js	/^function concludeGame(gameOutcome) {$/;"	f
 config	node_modules/nodemon/lib/monitor/run.js	/^var config = require('..\/config');$/;"	v
 config	node_modules/nodemon/lib/monitor/watch.js	/^var config = require('..\/config');$/;"	v
 config	node_modules/nodemon/lib/nodemon.js	/^var config = require('.\/config');$/;"	v
@@ -455,6 +456,7 @@ dot	node_modules/chokidar/lib/constants.js	/^exports.ANYMATCH_OPTS = {dot: true}
 dot	node_modules/nodemon/lib/monitor/match.js	/^    dot: true,$/;"	p	class:match.minimatchOpts
 dotSplit	node_modules/ini/ini.js	/^function dotSplit (str) {$/;"	f	function:function
 dragPiece	client/sketch.js	/^  function dragPiece(piece) {$/;"	f	function:sketch
+draw	client/modules/endscreen.js	/^  const outcomeMessages = {'win': 'You won!', 'loss': 'You lost.', 'draw': 'Draw.'};$/;"	p	class:const
 drawBoard	client/sketch.js	/^  function drawBoard() {$/;"	f	function:sketch
 drawPiece	client/sketch.js	/^  function drawPiece(piece) {$/;"	f	function:sketch
 drawUnselectedPieces	client/sketch.js	/^  function drawUnselectedPieces() {$/;"	f	function:sketch
@@ -770,6 +772,7 @@ loose	node_modules/package-json/node_modules/semver/semver.js	/^      loose: !!o
 loose	node_modules/semver-diff/node_modules/semver/bin/semver.js	/^  var options = { loose: loose, includePrerelease: includePrerelease, rtl: rtl }$/;"	p	class:var.options
 loose	node_modules/semver-diff/node_modules/semver/semver.js	/^      loose: !!options,$/;"	p	class:options
 loose	node_modules/semver/semver.js	/^      loose: !!options,$/;"	p	class:options
+loss	client/modules/endscreen.js	/^  const outcomeMessages = {'win': 'You won!', 'loss': 'You lost.', 'draw': 'Draw.'};$/;"	p	class:const
 lower	node_modules/picomatch/lib/constants.js	/^  lower: 'a-z',$/;"	p	class:const
 lstat	node_modules/chokidar/index.js	/^  const options = {type: EV_ALL, alwaysStat: true, lstat: true, ...opts};$/;"	p	class:const
 lte	node_modules/brace-expansion/index.js	/^function lte(i, y) {$/;"	f
@@ -1330,6 +1333,7 @@ white	client/modules/ChessGame.js	/^const oppositeColor = {'white': 'black', 'bl
 white	client/modules/inCheck.js	/^const oppositeColor = {'white': 'black', 'black': 'white'};$/;"	p	class:const
 white	client/modules/isLegal.js	/^	'white': 1,$/;"	p	class:const
 whitespace	node_modules/ini/ini.js	/^      whitespace: false,$/;"	p	class:var.opt
+win	client/modules/endscreen.js	/^  const outcomeMessages = {'win': 'You won!', 'loss': 'You lost.', 'draw': 'Draw.'};$/;"	p	class:const
 withFileTypes	node_modules/readdirp/index.js	/^    this._rdOptions = { encoding: 'utf8', withFileTypes: this._isDirent };$/;"	p	class:_rdOptions
 word	node_modules/picomatch/lib/constants.js	/^  word: 'A-Za-z0-9_',$/;"	p	class:const
 wrapConversion	node_modules/color-convert/route.js	/^function wrapConversion(toModel, graph) {$/;"	f

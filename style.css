@@ -309,7 +309,8 @@ header a, header a:visited, .menu-item, .menu-item:visited {
     padding: 1em;
     border: solid 2px brown;
 
-    display: flex;
+    display: none;
+    /* display: flex; will be toggled with javascript */
     flex-direction: column;
     justify-content: center;
     align-items: center;

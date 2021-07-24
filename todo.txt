@@ -1,7 +1,5 @@
-- checkmate
-- check (DONE) and checkmate labels in movelist
-- position repeated three times: draw
 - win / lose / draw screen at the end
+- position repeated three times: draw
 - offer draw button
 - forfeit button
 - looking for opponent
@@ -22,3 +20,4 @@
 - add some more FEN strings
 - devise some test cases
 - click to move as well as drag
+- write script to move .js file and change all import statements in other js files

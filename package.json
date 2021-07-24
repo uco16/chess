@@ -10,7 +10,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node chess.js",
+    "devstart": "nodemon chess.js"
   },
   "repository": {
     "type": "git",

@@ -10,12 +10,12 @@ document.write(`
   </div>
 
   <span class="hp-title">
-    <a href="./index.html">Chess</a>
+    <a href="./">Chess</a>
   </span>
 
   <nav class="toolbar">
     <a class="tab">About</a>
-    <a class="tab" href="/play.html">New Game</a>
+    <a class="tab" href="/play">New Game</a>
     <input type="textbox" id="name_selector" placeholder="Choose Name">
   </nav>
   </div>

@@ -1,11 +1,16 @@
 // imports from custom client-side functions
-import isLegal, {inCheck} from './modules/isLegal.js';
+import isLegal from './modules/isLegal.js';
+import inCheck from './modules/inCheck.js';
+import isCheckmate from './modules/isCheckmate.js';
 import {addtoMoveList} from './modules/movelist.js';
 import ChessGame from './modules/ChessGame.js';
 import inputPromotion from './modules/promotion.js';
 
 // debugging
 let verbose=true;
+
+// move sound
+const moveSound = new Audio('move.mp3');
 
 // default variables
 let size = document.getElementById('chessboard').clientWidth;
@@ -14,8 +19,10 @@ let boardsize = size - 2 * padding;
 let sqs = boardsize / 8;
 let pcs = sqs/1.5;
 let playerColor;
+let opponentColor;
 let defaultFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 let awaitingPromotion = false;
+
 
 // Board colours
 const backcol = [204, 68, 0];
@@ -36,7 +43,7 @@ function sketch (p) {
   // io from socket.io not explicitly imported since we just include the script in index.html
   // explicitly importing and setting sketch.js to a module seems to break socket.io?
 
-  // define what to do when move is received
+  // define what to do when opponent's move is received
   socket.on('move', (initial, final, iType, fType, promotionOption) => { 
     if (verbose) {console.log('received move', [initial, final], [iType, fType], promotionOption);}
 
@@ -48,7 +55,9 @@ function sketch (p) {
     }
 
     // add to move list
-    addtoMoveList(initial, final, iType, fType, inCheck(game.strRep(), playerColor));
+    addtoMoveList(initial, final, iType, fType, inCheck(game.strRep(), playerColor),
+                  isCheckmate(game.strRep(), playerColor, game.previousMoveFinal, 
+			      game.canCastle[playerColor], game.activeColor));
   });
 
   p.preload = () => {
@@ -187,8 +196,8 @@ function sketch (p) {
       drawUnselectedPieces();
 
       if (!awaitingPromotion &&
-	isLegal(startPos, endPos, game.strRep(),
-		  game.previousMoveFinal, playerColor, game.canCastle[playerColor])) {
+	isLegal(startPos, endPos, game.strRep(), game.previousMoveFinal,
+	        playerColor, game.canCastle[playerColor], game.activeColor)) {
 	handleMove(startPos, endPos);
 	if (verbose) {console.log(game.toFEN());}
       }
@@ -218,9 +227,10 @@ function sketch (p) {
       sendMove(startPos, endPos, initialPieceType, finalPieceType);  // send move to server
     }
 
-    if (playerColor==='white') { var opponentColor='black'; }
-    else { opponentColor='white'; }
-    addtoMoveList(startPos, endPos, initialPieceType, finalPieceType, inCheck(game.strRep(), opponentColor));
+    addtoMoveList(startPos, endPos, initialPieceType, finalPieceType, 
+                  inCheck(game.strRep(), opponentColor),
+                  isCheckmate(game.strRep(), opponentColor, game.previousMoveFinal, 
+                              game.canCastle[opponentColor], game.activeColor));
   }
 
   function sendMove(initial, final, ...args) {
@@ -233,6 +243,7 @@ function sketch (p) {
     drawBoard();
     drawUnselectedPieces();
     drawPiece(game.getPiece(final));
+    moveSound.play();
   }
 
   function promote(square, promotionOption) {
@@ -296,14 +307,16 @@ function ColRowtoXY(col, row) {
 
 socket.on('match', (color, FEN) => {
   playerColor = color;
+  opponentColor = {'white': 'black', 'black': 'white'}[playerColor];
   defaultFEN = FEN;
   if (verbose) {console.log("sketch: match, start game with colour " + playerColor);}
   new p5(sketch, 'chessboard');
 
   // if the game starts from a position where it is black's turn to move, 
-  // add one move "1. ..." to the movelist
+  // add one empty move (i.e. "1. ...") to the movelist
   if (FEN.split(' ')[1]==='b') { addtoMoveList(); };
 });
+
 // only tell the server that you are ready for match AFTER you have defined what to do
 // when the server matches you
 socket.emit('readyForMatch');

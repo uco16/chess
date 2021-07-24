@@ -143,11 +143,7 @@ export default class ChessGame {
   promote(coordinates, promotionChoice) {
     let pawnColor = this.getPiece(coordinates).color;
     this.deletePiece(coordinates);  // delete the pawn that is at 'coordinates'
-    let name = promotionChoice;
-    if (promotionChoice==="knight" || promotionChoice==="bishop") {
-      name += '_left';
-    }
-    this.createPiece(coordinates, pawnColor, name);
+    this.createPiece(coordinates, pawnColor, promotionChoice);
   }
 
   strRep() {

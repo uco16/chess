@@ -58,6 +58,7 @@ function sketch (p) {
       promote(final, promotionOption);
     }
 
+    if (verbose) {console.log(game.toFEN());}
     // add to move list
     addtoMoveList(initial, final, iType, fType, inCheck(game.strRep(), playerColor),
                   isCheckmate(game.strRep(), playerColor, game.previousMoveFinal, 
@@ -222,7 +223,6 @@ function sketch (p) {
             isLegal(startPos, endPos, game.strRep(), game.previousMoveFinal,
                     playerColor, game.canCastle[playerColor], game.activeColor)) {
           handleMove(startPos, endPos);
-          if (verbose) {console.log(game.toFEN());}
         }
         drawPiece(selectedPiece);
         selectedPiece = null;
@@ -256,6 +256,7 @@ function sketch (p) {
       sendMove(startPos, endPos, initialPieceType, finalPieceType);  // send move to server
     }
 
+    if (verbose) {console.log(game.toFEN());}
     addtoMoveList(startPos, endPos, initialPieceType, finalPieceType, 
                   inCheck(game.strRep(), opponentColor),
                   isCheckmate(game.strRep(), opponentColor, game.previousMoveFinal, 

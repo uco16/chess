@@ -9,7 +9,7 @@ const soundDir = '/client/sounds/';
 
 // chess positions
 const positions = require('./positions.json');
-const defaultPosition = positions['knight_error'];
+const defaultPosition = positions['promotion'];
 
 const hostname = '0.0.0.0';
 const port = 8000;

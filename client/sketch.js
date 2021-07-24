@@ -152,7 +152,7 @@ function sketch (p) {
     // label rows and columns with numbers and letters respectively 
     p.textSize(sqs * 0.4);
     p.fill(...letterCol);
-    p.textFont(...font);
+    p.textFont(font);
     for (let colNum = 0; colNum < 8; colNum++) {
       let x;
       //  rows and columns switched for black

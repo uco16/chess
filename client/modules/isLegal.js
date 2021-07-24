@@ -13,9 +13,10 @@ export default function isLegal(startPos, endPos, pieces, previousMoveFinal,
   //
   // can only move on your own turn (or before start of game)
   // canCastle: dictionary of form {'left': boolean, 'right': boolean}
-  //
+
+  let verbose = false;
   if (activeColor!==playerColor) {
-    console.log("Not your turn.");
+    if (verbose) {console.log("Not your turn.");}
     return false;
   }
   // end position has to be different to start position
@@ -39,7 +40,7 @@ export default function isLegal(startPos, endPos, pieces, previousMoveFinal,
 
   // player cannot be left in check after move
   if (isLeftInCheck(pieces, startPos, endPos)) {
-    console.log("This move leaves you in check.")
+    if (verbose) {console.log("This move leaves you in check.");}
     return false;
   }
 

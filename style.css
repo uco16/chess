@@ -7,6 +7,10 @@
   --transition-time: 0.4s;
 }
 
+input[type='button'] {
+  cursor: pointer;
+}
+
 /* header */
 
 header {
@@ -168,23 +172,26 @@ header a, header a:visited, .menu-item, .menu-item:visited {
   transition: 150ms opacity linear;
 }
 
-.toolbar input {
-  border: none;
-}
-
-#name_selector {
-  margin-left: auto;
-  height: 2em;
-  border: none;
-  margin: auto 2rem auto auto;
-  padding: 0 1em;
-  width: 6.5em;
-}
-
 .tab:hover {
   opacity: 1;
 }
 
+.toolbar img {
+  margin: auto 2em auto 0;
+  height: 30px;
+  width: 30px;
+}
+.toolbar img:hover {
+  cursor: pointer;
+}
+
+.toolbar input {
+  height: 2em;
+  border: none;
+  margin: auto 1rem auto auto;
+  padding: 0 1em;
+  width: 6.5em;
+}
 
 
 /* Mobile first */
@@ -210,6 +217,8 @@ header a, header a:visited, .menu-item, .menu-item:visited {
     width: 75%;
     display: block;
     max-width: 92vh;  /* ensure board size is smaller than screen size */
+
+    position: relative; /* to place win/move window inside chess board */
   }
 
   .asideboard {
@@ -245,7 +254,9 @@ header a, header a:visited, .menu-item, .menu-item:visited {
     display: flex;
     justify-content: center;
     margin-top: 0.5em;
+  }
 
+  #promotion .options {
     display: none;
   }
 
@@ -285,5 +296,31 @@ header a, header a:visited, .menu-item, .menu-item:visited {
 
   #moves li span:nth-child(2) {
     margin-left: 0.4em;
+  }
+
+  #endscreen {
+    position: absolute;
+    margin: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background: white;
+    padding: 1em;
+    border: solid 2px brown;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #endscreen .options {
+    flex-wrap: wrap;
+  }
+
+  #endscreen input[type=button] {
+    flex: 45%;
+    margin: 1%;
   }
 }

@@ -1,10 +1,11 @@
 - win / lose / draw screen at the end
+- mute button
+- copy URL link in win/lose screen, so you can save the game
 - position repeated three times: draw
-- offer draw button
-- forfeit button
+- offer draw button (with: are you sure?)
+- forfeit button (with: are you sure?)
 - looking for opponent
 - timer
-- label chessboard
 - right click on drag to cancel the move
 - names and rating of you and opponent
 - name of the one who is due to move is glowing
@@ -19,5 +20,7 @@
 - put knights the correct way (NOT DONE), and while you're at it, fix the rendering to make it more object-oriented (i.e. the sketch should keep track of images, not the objects (DONE)).
 - add some more FEN strings
 - devise some test cases
-- click to move as well as drag
 - write script to move .js file and change all import statements in other js files
+
+VERITY:
+- click to move as well as drag

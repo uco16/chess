@@ -719,6 +719,7 @@ knight	client/modules/ChessGame.js	/^      'knight': 'N',$/;"	p	class:piecePlace
 knight	client/modules/ChessPiece.js	/^      'knight': 'N',$/;"	p	class:strRep
 knight	client/modules/isLegal.js	/^    'knight': isValidKnightPattern,$/;"	p	class:const
 knight	client/modules/movelist.js	/^    'knight': 'N',$/;"	p	class:const
+labelBoard	client/sketch.js	/^  function labelBoard() {$/;"	f	function:sketch
 language	node_modules/negotiator/index.js	/^Negotiator.prototype.language = function language(available) {$/;"	m	class:Negotiator
 languages	node_modules/negotiator/index.js	/^Negotiator.prototype.languages = function languages(available) {$/;"	m	class:Negotiator
 left	node_modules/ansi-align/index.js	/^ansiAlign.left = function left (text) {$/;"	f

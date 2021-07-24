@@ -29,6 +29,10 @@ const backcol = [204, 68, 0];
 const darkcol = [128, 64, 0];
 const lightcol = [255, 166, 77];
 
+// board lettering
+const letterCol = [133, 45, 1];
+const font = 'Times New Roman';
+
 function sketch (p) {  
   // "instance mode" https://github.com/processing/p5.js/wiki/p5.js-overview#instantiation--namespace
   let selectedPiece = null;
@@ -135,12 +139,42 @@ function sketch (p) {
     let col;
     for (col = 0; col < 8; col++) {
       for (row = 0; row < 8; row++) {
-	if ((row + col) % 2 == 0) {
+	if ((row + col) % 2 === 0) {
 	  p.square(...ColRowtoXY(col, row), sqs);
 	}
       }
     }
+    // add numbers and letters to border
+    labelBoard();
   }
+
+  function labelBoard() {
+    // label rows and columns with numbers and letters respectively 
+    p.textSize(sqs * 0.4);
+    p.fill(...letterCol);
+    p.textFont(...font);
+    for (let colNum = 0; colNum < 8; colNum++) {
+      let x;
+      //  rows and columns switched for black
+      if (playerColor === 'white') {
+        x = padding + (colNum + 0.5) * sqs;
+      }
+      else {
+        x = padding + (7 - colNum + 0.5) * sqs;
+      }
+      
+      p.textAlign(p.CENTER , p.CENTER)
+      // label columns with numbers
+      p.text((8 - colNum).toString(), padding/2, x);
+      p.text((8 - colNum).toString(), size - padding/2, x);
+      
+      // convert number to letter and label row
+      let rowLet = String.fromCharCode(97 + colNum);
+      p.text(rowLet, x, padding/2);
+      p.text(rowLet, x, size - padding/2);
+    }
+  }
+
 
   p.mousePressed = () => {
     // mouse down selects/grabs piece of own colour

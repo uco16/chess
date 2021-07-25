@@ -149,9 +149,8 @@ header {
   font-weight: bold;
 }
 
-header a, header a:visited, .menu-item, .menu-item:visited {
+a, a:visited, .menu-item, .menu-item:visited {
   text-decoration: none;
-  /*letter-spacing: 1px;*/
   color: black;
 }
 
@@ -193,8 +192,38 @@ header a, header a:visited, .menu-item, .menu-item:visited {
   width: 6.5em;
 }
 
+/* Index */
+.tile {
+  border: 1px solid #cecdcd;
+  height: 20em;
+  width: 15em;
+  margin: 6%;
+  margin-top: 20vh;
+  border-radius: 30px;
 
-/* Mobile first */
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+  transition: box-shadow 0.3s;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  position: relative;
+}
+
+.tile:hover {
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+ 
+}
+
+.tile.unavailable {
+  background-color: #e6e6e6;
+  opacity: 0.8;
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+}
+
+/* Play */
 
 #chessboard {
   width: 100%;
@@ -241,12 +270,12 @@ header a, header a:visited, .menu-item, .menu-item:visited {
 
   h2 {
     font-size: 1.5em;
-    padding-bottom: 0.1em;
     text-transform: capitalize;
-    border-bottom: 2px solid brown;
   }
 
   .asideboard h2 {
+    padding-bottom: 0.1em;
+    border-bottom: 2px solid brown;
     text-align: center;
   }
 

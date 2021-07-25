@@ -236,6 +236,7 @@ function sketch (p) {
       }
       leftStartPos = false;
       
+      // right click to cancel move
       if (p.mouseButton === p.RIGHT) {
         selectedPiece = null;
         drawUnselectedPieces();

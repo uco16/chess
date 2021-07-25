@@ -35,6 +35,25 @@ const lightcol = [255, 166, 77];
 const letterCol = [133, 45, 1];
 const font = 'Times New Roman';
 
+// ----- main -------
+socket.on('match', (color, FEN) => {
+  playerColor = color;
+  opponentColor = {'white': 'black', 'black': 'white'}[playerColor];
+  defaultFEN = FEN;
+  if (verbose) {console.log("sketch: match, start game with colour " + playerColor);}
+  new p5(sketch, 'chessboard');
+
+  // if the game starts from a position where it is black's turn to move, 
+  // add one empty move (i.e. "1. ...") to the movelist
+  if (FEN.split(' ')[1]==='b') { addtoMoveList(); };
+});
+
+// only tell the server that you are ready for match AFTER you have defined what to do
+// when the server matches you
+socket.emit('readyForMatch');
+
+// auxiliary functions
+
 function sketch (p) {  
   // "instance mode" https://github.com/processing/p5.js/wiki/p5.js-overview#instantiation--namespace
   let selectedPiece = null;
@@ -49,11 +68,11 @@ function sketch (p) {
   // explicitly importing and setting sketch.js to a module seems to break socket.io?
 
   socket.on('resign', () => {
-    console.log('Opponent resigned, stopping sketch loop.');
+    if (verbose) {console.log('Opponent resigned, stopping sketch loop.');};
     p.noLoop();
   });
   socket.on('draw', () => {
-    console.log('The game ended in a draw. Stopping sketch loop.');
+    if (verbose) {console.log('The game ended in a draw. Stopping sketch loop.');};
     p.noLoop();
   })
 
@@ -77,7 +96,7 @@ function sketch (p) {
 		  playerCheckmated);
 
     if (playerCheckmated) {
-      console.log('stopping loop');
+      if (verbose) {console.log('stopping loop');};
       p.noLoop();
       concludeGame('loss');
     }
@@ -111,12 +130,12 @@ function sketch (p) {
 
     // make resign and draw buttons stop the sketch
     resignButton.addEventListener('click', () => {
-      console.log('resigned: stopping sketch loop');
+      if (verbose) {console.log('resigned: stopping sketch loop');};
       p.noLoop();
     });
     drawButton.addEventListener('click', () => {
       if (drawButton.textContent==='Accept Draw') {
-	console.log('accepted draw: stopping sketch loop');
+	if (verbose) {console.log('accepted draw: stopping sketch loop');};
 	p.noLoop();
       }
     });
@@ -297,11 +316,10 @@ function sketch (p) {
     // check if move left opponent in checkmate
     let opponentCheckmated = isCheckmate(game.strRep(), opponentColor, game.enPassantTarget(), 
 					 game.canCastle[opponentColor], game.activeColor);
-    console.log(opponentCheckmated);
     addtoMoveList(startPos, endPos, initialPieceType, finalPieceType, 
                   inCheck(game.strRep(), opponentColor), opponentCheckmated);
     if (opponentCheckmated) {
-      console.log('stopping loop');
+      if (verbose) {console.log('stopping loop');};
       p.noLoop();
       concludeGame('win');
     }
@@ -371,18 +389,3 @@ function ColRowtoXY(col, row) {
   return [x, y];
 }
 
-socket.on('match', (color, FEN) => {
-  playerColor = color;
-  opponentColor = {'white': 'black', 'black': 'white'}[playerColor];
-  defaultFEN = FEN;
-  if (verbose) {console.log("sketch: match, start game with colour " + playerColor);}
-  new p5(sketch, 'chessboard');
-
-  // if the game starts from a position where it is black's turn to move, 
-  // add one empty move (i.e. "1. ...") to the movelist
-  if (FEN.split(' ')[1]==='b') { addtoMoveList(); };
-});
-
-// only tell the server that you are ready for match AFTER you have defined what to do
-// when the server matches you
-socket.emit('readyForMatch');

@@ -6,14 +6,17 @@
 !_TAG_PROGRAM_VERSION	5.8	//
 #chessboard 	style.css	/^  #chessboard {$/;"	i
 #chessboard 	style.css	/^#chessboard {$/;"	i
+#endscreen 	style.css	/^  #endscreen {$/;"	i
+#endscreen .options 	style.css	/^  #endscreen .options {$/;"	i
+#endscreen input	style.css	/^  #endscreen input[type=button] {$/;"	i
 #menu-dimming 	style.css	/^#menu-dimming {$/;"	i
 #menu-drawer 	style.css	/^#menu-drawer {$/;"	i
 #menu-drawer.drawn 	style.css	/^#menu-drawer.drawn {$/;"	i
 #menu-drawer.shutting 	style.css	/^#menu-drawer.shutting {$/;"	i
 #moves 	style.css	/^  #moves {$/;"	i
 #moves li span:nth-child	style.css	/^  #moves li span:nth-child(2) {$/;"	i
-#name_selector 	style.css	/^#name_selector {$/;"	i
 #promotion 	style.css	/^  #promotion {$/;"	i
+#promotion .options 	style.css	/^  #promotion .options {$/;"	i
 (	node_modules/is-glob/index.js	/^var chars = { '{': '}', '(': ')', '[': ']'};$/;"	p	class:chars
 .asideboard 	style.css	/^  .asideboard {$/;"	c
 .asideboard h2 	style.css	/^  .asideboard h2 {$/;"	c
@@ -40,6 +43,8 @@
 .tab:hover 	style.css	/^.tab:hover {$/;"	c
 .toolbar 	style.css	/^  .toolbar {$/;"	c
 .toolbar 	style.css	/^.toolbar {$/;"	c
+.toolbar img 	style.css	/^.toolbar img {$/;"	c
+.toolbar img:hover 	style.css	/^.toolbar img:hover {$/;"	c
 .toolbar input 	style.css	/^.toolbar input {$/;"	c
 .window 	style.css	/^  .window {$/;"	c
 0	node_modules/chalk/source/index.js	/^	0: 'None',$/;"	p	class:chalk.Level
@@ -251,6 +256,8 @@ bus	node_modules/nodemon/lib/monitor/watch.js	/^var bus = utils.bus;$/;"	v
 bus	node_modules/nodemon/lib/nodemon.js	/^var bus = utils.bus;$/;"	v
 bus	node_modules/nodemon/lib/utils/log.js	/^var bus = require('.\/bus');$/;"	v
 bus.emit	node_modules/nodemon/lib/utils/bus.js	/^  bus.emit = function (event, data) {$/;"	f
+button	style.css	/^  #endscreen input[type=button] {$/;"	s
+button	style.css	/^input[type='button'] {$/;"	s
 byteArray	node_modules/engine.io/lib/parser-v3/utf8.js	/^var byteArray;$/;"	v
 byteCount	node_modules/engine.io/lib/parser-v3/utf8.js	/^var byteCount;$/;"	v
 byteIndex	node_modules/engine.io/lib/parser-v3/utf8.js	/^var byteIndex;$/;"	v
@@ -316,6 +323,7 @@ concat	node_modules/ws/lib/buffer-util.js	/^function concat(list, totalLength) {
 concatMap	node_modules/brace-expansion/index.js	/^var concatMap = require('concat-map');$/;"	v
 concatMap	node_modules/concat-map/example/map.js	/^var concatMap = require('..\/');$/;"	v
 concatMap	node_modules/concat-map/test/map.js	/^var concatMap = require('..\/');$/;"	v
+concludeGame	client/sketch.js	/^function concludeGame(gameOutcome) {$/;"	f
 config	node_modules/nodemon/lib/monitor/run.js	/^var config = require('..\/config');$/;"	v
 config	node_modules/nodemon/lib/monitor/watch.js	/^var config = require('..\/config');$/;"	v
 config	node_modules/nodemon/lib/nodemon.js	/^var config = require('.\/config');$/;"	v
@@ -392,6 +400,7 @@ createWebSocketStream	node_modules/ws/lib/stream.js	/^function createWebSocketSt
 createWritableStdioStream	node_modules/undefsafe/node_modules/debug/src/node.js	/^function createWritableStdioStream (fd) {$/;"	f
 createWriteStream	node_modules/graceful-fs/graceful-fs.js	/^  function createWriteStream (path, options) {$/;"	f	function:function.ReadStream$open.WriteStream$open
 crypto	node_modules/base64id/lib/base64id.js	/^var crypto = require('crypto');$/;"	v
+cursor: pointer	style.css	/^  cursor: pointer;$/;"	s
 d	node_modules/ms/index.js	/^var d = h * 24;$/;"	v
 d	node_modules/undefsafe/node_modules/ms/index.js	/^var d = h * 24;$/;"	v
 data	node_modules/engine.io-parser/lib/commons.js	/^const ERROR_PACKET = { type: "error", data: "parser error" };$/;"	p	class:const
@@ -447,6 +456,7 @@ dot	node_modules/chokidar/lib/constants.js	/^exports.ANYMATCH_OPTS = {dot: true}
 dot	node_modules/nodemon/lib/monitor/match.js	/^    dot: true,$/;"	p	class:match.minimatchOpts
 dotSplit	node_modules/ini/ini.js	/^function dotSplit (str) {$/;"	f	function:function
 dragPiece	client/sketch.js	/^  function dragPiece(piece) {$/;"	f	function:sketch
+draw	client/modules/endscreen.js	/^  const outcomeMessages = {'win': 'You won!', 'loss': 'You lost.', 'draw': 'Draw.'};$/;"	p	class:const
 drawBoard	client/sketch.js	/^  function drawBoard() {$/;"	f	function:sketch
 drawPiece	client/sketch.js	/^  function drawPiece(piece) {$/;"	f	function:sketch
 drawUnselectedPieces	client/sketch.js	/^  function drawUnselectedPieces() {$/;"	f	function:sketch
@@ -550,6 +560,7 @@ filterPatterns	node_modules/to-regex-range/index.js	/^function filterPatterns(ar
 fin	node_modules/ws/lib/sender.js	/^        fin: options.fin,$/;"	p
 findAppScript	node_modules/nodemon/lib/config/load.js	/^function findAppScript() {$/;"	f
 findPackage	node_modules/nodemon/lib/version.js	/^function findPackage(dir) {$/;"	f
+flex: 45	style.css	/^    flex: 45%;$/;"	s
 float	node_modules/boxen/index.js	/^		float: 'left',$/;"	p	class:options
 fmtLong	node_modules/ms/index.js	/^function fmtLong(ms) {$/;"	f
 fmtLong	node_modules/undefsafe/node_modules/ms/index.js	/^function fmtLong(ms) {$/;"	f
@@ -660,6 +671,7 @@ info	node_modules/nodemon/lib/utils/log.js	/^  info: 'yellow',$/;"	p	class:codin
 init	node_modules/nodemon/node_modules/debug/src/node.js	/^function init(debug) {$/;"	f
 init	node_modules/undefsafe/node_modules/debug/src/node.js	/^function init (debug) {$/;"	f
 initAsClient	node_modules/ws/lib/websocket.js	/^function initAsClient(websocket, address, protocols, options) {$/;"	f
+input	style.css	/^input[type='button'] {$/;"	s
 inspectorLog	node_modules/undefsafe/node_modules/debug/src/inspector-log.js	/^function inspectorLog() {$/;"	f
 installArchSpecificPackage	node_modules/node-bin-setup/index.js	/^function installArchSpecificPackage(version, require) {$/;"	f
 intersects	node_modules/make-dir/node_modules/semver/semver.js	/^Comparator.prototype.intersects = function (comp, options) {$/;"	m	class:Comparator
@@ -760,6 +772,7 @@ loose	node_modules/package-json/node_modules/semver/semver.js	/^      loose: !!o
 loose	node_modules/semver-diff/node_modules/semver/bin/semver.js	/^  var options = { loose: loose, includePrerelease: includePrerelease, rtl: rtl }$/;"	p	class:var.options
 loose	node_modules/semver-diff/node_modules/semver/semver.js	/^      loose: !!options,$/;"	p	class:options
 loose	node_modules/semver/semver.js	/^      loose: !!options,$/;"	p	class:options
+loss	client/modules/endscreen.js	/^  const outcomeMessages = {'win': 'You won!', 'loss': 'You lost.', 'draw': 'Draw.'};$/;"	p	class:const
 lower	node_modules/picomatch/lib/constants.js	/^  lower: 'a-z',$/;"	p	class:const
 lstat	node_modules/chokidar/index.js	/^  const options = {type: EV_ALL, alwaysStat: true, lstat: true, ...opts};$/;"	p	class:const
 lte	node_modules/brace-expansion/index.js	/^function lte(i, y) {$/;"	f
@@ -773,6 +786,7 @@ makeRe	node_modules/minimatch/minimatch.js	/^Minimatch.prototype.makeRe = makeRe
 map	node_modules/engine.io/lib/parser-v3/index.js	/^function map(ary, each, done) {$/;"	f
 margin-left: 0.4em	style.css	/^    margin-left: 0.4em;$/;"	s
 margin: 0	style.css	/^  margin: 0;$/;"	s
+margin: 1	style.css	/^    margin: 1%;$/;"	s
 mask	node_modules/ws/lib/buffer-util.js	/^    mask: _mask,$/;"	p	class:module.exports
 match	node_modules/nodemon/lib/monitor/match.js	/^function match(files, monitor, ext) {$/;"	f
 match	node_modules/nodemon/lib/monitor/watch.js	/^var match = require('.\/match');$/;"	v
@@ -1252,6 +1266,8 @@ type	node_modules/picomatch/lib/parse.js	/^  const bos = { type: 'bos', value: '
 type	node_modules/socket.io-parser/dist/index.js	/^            type: Number(str.charAt(0)),$/;"	p	class:const
 type	node_modules/socket.io/dist/broadcast-operator.js	/^            type: socket_io_parser_1.PacketType.EVENT,$/;"	p	class:const
 type	node_modules/socket.io/dist/socket.js	/^            type: socket_io_parser_1.PacketType.EVENT,$/;"	p	class:const
+type	style.css	/^  #endscreen input[type=button] {$/;"	s
+type	style.css	/^input[type='button'] {$/;"	s
 typesMatch	node_modules/nodemon/lib/utils/merge.js	/^function typesMatch(a, b) {$/;"	f
 ucs2decode	node_modules/engine.io/lib/parser-v3/utf8.js	/^function ucs2decode(string) {$/;"	f
 ucs2encode	node_modules/engine.io/lib/parser-v3/utf8.js	/^function ucs2encode(array) {$/;"	f
@@ -1317,6 +1333,7 @@ white	client/modules/ChessGame.js	/^const oppositeColor = {'white': 'black', 'bl
 white	client/modules/inCheck.js	/^const oppositeColor = {'white': 'black', 'black': 'white'};$/;"	p	class:const
 white	client/modules/isLegal.js	/^	'white': 1,$/;"	p	class:const
 whitespace	node_modules/ini/ini.js	/^      whitespace: false,$/;"	p	class:var.opt
+win	client/modules/endscreen.js	/^  const outcomeMessages = {'win': 'You won!', 'loss': 'You lost.', 'draw': 'Draw.'};$/;"	p	class:const
 withFileTypes	node_modules/readdirp/index.js	/^    this._rdOptions = { encoding: 'utf8', withFileTypes: this._isDirent };$/;"	p	class:_rdOptions
 word	node_modules/picomatch/lib/constants.js	/^  word: 'A-Za-z0-9_',$/;"	p	class:const
 wrapConversion	node_modules/color-convert/route.js	/^function wrapConversion(toModel, graph) {$/;"	f

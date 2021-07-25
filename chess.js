@@ -12,7 +12,7 @@ const positions = require('./positions.json');
 const defaultPosition = positions['fool'];
 
 const hostname = '0.0.0.0';
-const port = 8000;
+const port = process.env.PORT || 8000;
 
 // --- main ----
 httpServer.listen(port, hostname, () => {

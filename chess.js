@@ -9,7 +9,7 @@ const soundDir = '/client/sounds/';
 
 // chess positions
 const positions = require('./positions.json');
-const defaultPosition = positions['fool'];
+const defaultPosition = positions['initial'];
 
 const hostname = '0.0.0.0';
 const port = process.env.PORT || 8000;

@@ -216,7 +216,7 @@ header a, header a:visited, .menu-item, .menu-item:visited {
   #chessboard {
     width: 75%;
     display: block;
-    max-width: 92vh;  /* ensure board size is smaller than screen size */
+    max-width: 89vh;  /* ensure board size is smaller than screen size */
 
     position: relative; /* to place win/move window inside chess board */
   }

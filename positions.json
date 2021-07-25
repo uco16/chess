@@ -5,5 +5,6 @@
     "fool": "rnbqkbnr/pppp1ppp/8/4p3/6P1/5P2/PPPPP2P/RNBQKBNR/ b KQkq g3 0 3", 
     "promotion": "rnbqkr2/3pbpPP/2p1pn2/8/8/2NP4/ppPBPP2/2RQKBNR/ w Kq - 0 16",
     "promotion1": "rnbqkb1r/2ppppPP/5n2/8/8/2N5/ppPPPP2/R1BQKBNR/ b KQkq - 0 12",
-    "knight_error": "rnbqkb2/2ppppPP/5n2/8/8/2N5/p1PPPP2/RqBQKBNR/ b KQkq - 0 14"
+    "knight_error": "rnbqkb2/2ppppPP/5n2/8/8/2N5/p1PPPP2/RqBQKBNR/ b KQkq - 0 14",
+    "en-passant": "rnbqkbnr/pppp1pp1/7p/3Pp3/8/8/PPP1PPPP/RNBQKBNR/ w KQkq e6 0 4"
 }

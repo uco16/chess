@@ -7,7 +7,7 @@ import inCheck from './inCheck.js';
 
 // main script that will be exported and used by the sketch to decide
 // whether or not a given move by the player is legal
-export default function isLegal(startPos, endPos, pieces, previousMoveFinal,
+export default function isLegal(startPos, endPos, pieces, enPassantTarget,
 				playerColor, canCastle, activeColor) {
   // check if move is legal in given position
   //
@@ -34,7 +34,7 @@ export default function isLegal(startPos, endPos, pieces, previousMoveFinal,
     return false;
   }
   // piece has to move in a valid way
-  if (!isValidPattern(pieces, startPos, endPos, previousMoveFinal, canCastle)) {
+  if (!isValidPattern(pieces, startPos, endPos, enPassantTarget, canCastle)) {
     return false;
   }
 
@@ -55,7 +55,7 @@ function isNotEnemyTurn(playerColor, numMovesPlayed) {
   }
 }
 
-function isValidPattern(position, initial, final, previousMoveFinal, canCastle) {
+function isValidPattern(position, initial, final, enPassantTarget, canCastle) {
   // assumptions:
   //  position: 8x8 matrix with chess pieces as entries
   //
@@ -80,7 +80,7 @@ function isValidPattern(position, initial, final, previousMoveFinal, canCastle) 
   };
 
   if (type === 'pawn') {
-    var moveData = [position, initial, final, previousMoveFinal];
+    var moveData = [position, initial, final, enPassantTarget];
   } else if (type === 'king') {
     var moveData = [position, initial, final, canCastle];
   } else {
@@ -190,8 +190,13 @@ function isValidKingPattern(position, initial, final, canCastle) {
   return false;
 }
 
-function isValidPawnPattern(position, initial, final, previousMoveFinal) {
-  // all pawn moves have to be upwards for white and downwards for black
+function isValidPawnPattern(position, initial, final, enPassantTarget) {
+  // --- EN-PASSANT ---
+  if (enPassantTarget !== null || arraysEqual(final, enPassantTarget)) {
+    return true;
+  }
+
+  // assumption: pawn moves are upwards for white and downwards for black
   const colDiff = final[0] - initial[0];
   const rowDiff = final[1] - initial[1];
 
@@ -202,26 +207,6 @@ function isValidPawnPattern(position, initial, final, previousMoveFinal) {
     return false;
   }
 
-  // --- EN-PASSANT ---
-  if (previousMoveFinal !== null) {
-    let previous_move_piece = position[previousMoveFinal[0]][previousMoveFinal[1]];
-    let previous_move_type = identifyPiece(previous_move_piece)[1];
-    if (previous_move_type == "pawn") {
-      if (arraysEqual(initial, [previousMoveFinal[0]-1, previousMoveFinal[1]])
-	  || arraysEqual(initial, [previousMoveFinal[0]+1, previousMoveFinal[1]])) {
-	// Our pawn started its move from next to an opponent's pawn who just moved there
-	// Our pawn can do an enpassant move.
-	//
-	// If we are white, a valid move lands above that pawn, if black below.
-	//
-	// Since we already checked the that the direction of the move is consistent
-	// with colour, we just need to see if we land in the same column as the opponent.
-	if (final[0] == previousMoveFinal[0]) {
-	  return true;
-	}
-      }
-    }
-  }
   // -------------------
 
   if (isEmpty(position, final)) {

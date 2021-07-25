@@ -254,7 +254,7 @@ function sketch (p) {
       // if mouse clicked or dragged 
       if (!arraysEqual(mousePos(), startPos)) {
         if (!awaitingPromotion &&
-            isLegal(startPos, endPos, game.strRep(), game.previousMoveFinal,
+            isLegal(startPos, endPos, game.strRep(), game.enPassantTarget(),
                     playerColor, game.canCastle[playerColor], game.activeColor)) {
           handleMove(startPos, endPos);
         }

@@ -57,6 +57,19 @@ export function numMovesPlayed() {
 
 function chessNotation(initial, final, iType, fType) {
   // Returns the FIDE notation for given move
+  
+  // castling notation
+  if (iType==='king') {
+   if (final[0]-initial[0]===2) {
+     // castling right/short/king-side
+     return '0-0';
+   } else if (final[0]-initial[0]===-2) {
+     // castling left/long/queen-side
+     return '0-0-0';
+   }
+  }
+  
+  // ordinary move
   const letter = {
     'king': 'K',
     'queen': 'Q',

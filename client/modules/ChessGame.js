@@ -117,13 +117,14 @@ export default class ChessGame {
       if (final[0]-initial[0]===2) {
 	// king moves two columns to the right: is castling right
 	// move right rook over to the left of king
-	this.move([7, baseRow[playerColor]], [5, baseRow[playerColor]]);
+	this.setPiece([5, baseRow[playerColor]], this.getPiece([7, baseRow[playerColor]]));
+	this.setPiece([7, baseRow[playerColor]], null);
       } else if (final[0]-initial[0]===-2) {
 	// king moves two columns to the left: castle left
 	// move left rook over to the right of the king
-	this.move([0, baseRow[playerColor]], [3, baseRow[playerColor]]);
+	this.setPiece([3, baseRow[playerColor]], this.getPiece([0, baseRow[playerColor]]));
+	this.setPiece([0, baseRow[playerColor]], null);
       }
-
       this.canCastleRight = false; 
       console.log(`${playerColor} cannot castle right anymore`)
       this.canCastleLeft = false;

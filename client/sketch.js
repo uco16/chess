@@ -70,7 +70,7 @@ function sketch (p) {
 
     if (verbose) {console.log(game.toFEN());}
     // check if this move from the opponent puts the player in checkmate
-    let playerCheckmated = isCheckmate(game.strRep(), playerColor, game.previousMoveFinal, 
+    let playerCheckmated = isCheckmate(game.strRep(), playerColor, game.enPassantTarget(), 
 				       game.canCastle[playerColor], game.activeColor);
     // add to move list
     addtoMoveList(initial, final, iType, fType, inCheck(game.strRep(), playerColor),
@@ -295,8 +295,9 @@ function sketch (p) {
     }
 
     // check if move left opponent in checkmate
-    let opponentCheckmated = isCheckmate(game.strRep(), opponentColor, game.previousMoveFinal, 
+    let opponentCheckmated = isCheckmate(game.strRep(), opponentColor, game.enPassantTarget(), 
 					 game.canCastle[opponentColor], game.activeColor);
+    console.log(opponentCheckmated);
     addtoMoveList(startPos, endPos, initialPieceType, finalPieceType, 
                   inCheck(game.strRep(), opponentColor), opponentCheckmated);
     if (opponentCheckmated) {

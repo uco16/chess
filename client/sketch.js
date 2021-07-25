@@ -92,6 +92,7 @@ function sketch (p) {
     drawBoard();
     game = new ChessGame(defaultFEN);
     drawUnselectedPieces();
+    
   }
 
   p.draw = () => {
@@ -195,9 +196,10 @@ function sketch (p) {
     
     if (0 <= col && col < 8 && 0 <= row && row < 8) {
       let pieceUnderMouse = game.getPiece(mousePos());
-      if (selectedPiece) { 
+      if (selectedPiece) {
+
         if (arraysEqual(mousePos(), selectedPiece.position)) {
-	  // user clicked back on starting square, no move is played
+	         // user clicked back on starting square, no move is played
           selectedPiece = null;
           drawBoard();
           drawUnselectedPieces();
@@ -205,11 +207,11 @@ function sketch (p) {
         }
       }
       else if (pieceUnderMouse != null && pieceUnderMouse.color == playerColor) {
-	// select piece if none already selected
-	selectedPiece = pieceUnderMouse;
+        // select piece if none already selected
+        selectedPiece = pieceUnderMouse;
       }
     }
-  }
+  } 
 
   p.mouseReleased = () => {
     if (selectedPiece) {
@@ -217,6 +219,7 @@ function sketch (p) {
       const endPos = mousePos();
       drawBoard();
       drawUnselectedPieces();
+
       // if mouse clicked or dragged 
       if (!arraysEqual(mousePos(), startPos)) {
         if (!awaitingPromotion &&
@@ -228,10 +231,16 @@ function sketch (p) {
         selectedPiece = null;
       }  
       else if (leftStartPos) {
-	drawPiece(selectedPiece);
+	      drawPiece(selectedPiece);
         selectedPiece = null;
       }
       leftStartPos = false;
+      
+      if (p.mouseButton === p.RIGHT) {
+        selectedPiece = null;
+        drawUnselectedPieces();
+        document.addEventListener('contextmenu', e => {e.preventDefault();}, {once: true});
+      }
     }
   }
 
@@ -255,7 +264,6 @@ function sketch (p) {
     } else {
       sendMove(startPos, endPos, initialPieceType, finalPieceType);  // send move to server
     }
-
     if (verbose) {console.log(game.toFEN());}
     addtoMoveList(startPos, endPos, initialPieceType, finalPieceType, 
                   inCheck(game.strRep(), opponentColor),

@@ -1263,6 +1263,7 @@ undefsafe	node_modules/undefsafe/lib/undefsafe.js	/^function undefsafe(obj, path
 unescapeBraces	node_modules/brace-expansion/index.js	/^function unescapeBraces(str) {$/;"	f
 unmask	node_modules/ws/lib/buffer-util.js	/^    unmask: _unmask$/;"	p	class:module.exports
 unsafe	node_modules/ini/ini.js	/^function unsafe (val, doUnesc) {$/;"	f	function:function.decode
+unselectPiece	client/sketch.js	/^  function unselectPiece() {$/;"	f	function:sketch
 up	client/modules/chesslogic.js	/^    'up': [0, 1],  \/\/ do not increment column, but increment row$/;"	p	class:export
 upgrade	node_modules/http-cache-semantics/index.js	/^    upgrade: true,$/;"	p	class:const
 upper	node_modules/picomatch/lib/constants.js	/^  upper: 'A-Z',$/;"	p	class:const

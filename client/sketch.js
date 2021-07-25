@@ -89,16 +89,14 @@ function sketch (p) {
 
   p.setup = () => {
     p.createCanvas(size, size);
-    drawBoard();
     game = new ChessGame(defaultFEN);
-    drawUnselectedPieces();
     
   }
 
   p.draw = () => {
+    drawBoard();
+    drawUnselectedPieces();
     if (selectedPiece !== null) {
-      drawBoard();
-      drawUnselectedPieces();
       dragPiece(selectedPiece);
     }
   }
@@ -188,6 +186,11 @@ function sketch (p) {
       p.text(rowLet, x, size - padding/2);
     }
   }
+
+  function unselectPiece() {
+    selectedPiece = null;
+    leftStartPos = false;
+  }
   
   p.mousePressed = () => {
     // mouse down selects/grabs piece of own colour
@@ -200,13 +203,15 @@ function sketch (p) {
 
         if (arraysEqual(mousePos(), selectedPiece.position)) {
 	         // user clicked back on starting square, no move is played
-          selectedPiece = null;
-          drawBoard();
-          drawUnselectedPieces();
-          leftStartPos = false;
+	  unselectPiece();
         }
+	// right click to cancel move
+	if (p.mouseButton === p.RIGHT) {
+	  document.addEventListener('contextmenu', e => {e.preventDefault();}, {once: true});
+	  unselectPiece();
+	}
       }
-      else if (pieceUnderMouse != null && pieceUnderMouse.color == playerColor) {
+      else if (p.mouseButton === p.LEFT && pieceUnderMouse != null && pieceUnderMouse.color == playerColor) {
         // select piece if none already selected
         selectedPiece = pieceUnderMouse;
       }
@@ -217,8 +222,6 @@ function sketch (p) {
     if (selectedPiece) {
       const startPos = selectedPiece.position;
       const endPos = mousePos();
-      drawBoard();
-      drawUnselectedPieces();
 
       // if mouse clicked or dragged 
       if (!arraysEqual(mousePos(), startPos)) {
@@ -227,20 +230,10 @@ function sketch (p) {
                     playerColor, game.canCastle[playerColor], game.activeColor)) {
           handleMove(startPos, endPos);
         }
-        drawPiece(selectedPiece);
-        selectedPiece = null;
+	unselectPiece();
       }  
       else if (leftStartPos) {
-	      drawPiece(selectedPiece);
-        selectedPiece = null;
-      }
-      leftStartPos = false;
-      
-      // right click to cancel move
-      if (p.mouseButton === p.RIGHT) {
-        selectedPiece = null;
-        drawUnselectedPieces();
-        document.addEventListener('contextmenu', e => {e.preventDefault();}, {once: true});
+	unselectPiece();
       }
     }
   }
@@ -279,17 +272,12 @@ function sketch (p) {
 
   function move(initial, final) {
     game.move(initial, final);
-    drawBoard();
-    drawUnselectedPieces();
-    drawPiece(game.getPiece(final));
     moveSound.play();
   }
 
   function promote(square, promotionOption) {
     if (verbose) {console.log('promote to', promotionOption);}
     game.promote(square, promotionOption);  
-    drawBoard();
-    drawUnselectedPieces();
   }
 
   function mousePos() {
@@ -305,8 +293,6 @@ function sketch (p) {
     sqs = boardsize / 8;
     pcs = sqs/1.5;
     p.resizeCanvas(size, size);
-    drawBoard();
-    drawUnselectedPieces();
   };
 
 

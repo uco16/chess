@@ -8,7 +8,7 @@
 #chessboard 	style.css	/^#chessboard {$/;"	i
 #endscreen 	style.css	/^  #endscreen {$/;"	i
 #endscreen .options 	style.css	/^  #endscreen .options {$/;"	i
-#endscreen input	style.css	/^  #endscreen input[type=button] {$/;"	i
+#endscreen input	style.css	/^  #endscreen input[type=button], .options button {$/;"	i
 #menu-dimming 	style.css	/^#menu-dimming {$/;"	i
 #menu-drawer 	style.css	/^#menu-drawer {$/;"	i
 #menu-drawer.drawn 	style.css	/^#menu-drawer.drawn {$/;"	i
@@ -38,6 +38,7 @@
 .option img 	style.css	/^  .option img {$/;"	c
 .option:hover 	style.css	/^  .option:hover {$/;"	c
 .options 	style.css	/^  .options {$/;"	c
+.options button 	style.css	/^  #endscreen input[type=button], .options button {$/;"	c
 .shutting + #menu-dimming 	style.css	/^.shutting + #menu-dimming {$/;"	c
 .tab 	style.css	/^.tab {$/;"	c
 .tab:hover 	style.css	/^.tab:hover {$/;"	c
@@ -205,6 +206,7 @@ abortConnection	node_modules/engine.io/lib/server.js	/^function abortConnection(
 abortHandshake	node_modules/ws/lib/websocket-server.js	/^function abortHandshake(socket, code, message, headers) {$/;"	f
 abortHandshake	node_modules/ws/lib/websocket.js	/^function abortHandshake(websocket, stream, message) {$/;"	f
 accept	node_modules/package-json/index.js	/^		accept: 'application\/vnd.npm.install-v1+json; q=1.0, application\/json; q=0.8, *\/*'$/;"	p	class:const
+acceptDraw	client/modules/resignAndDraw.js	/^function acceptDraw() {$/;"	f
 add	node_modules/nodemon/lib/rules/add.js	/^function add(rules, which, rule) {$/;"	f
 add	node_modules/nodemon/lib/rules/index.js	/^var add = require('.\/add');$/;"	v
 addEventListener	node_modules/ws/lib/websocket.js	/^WebSocket.prototype.addEventListener = addEventListener;$/;"	m	class:WebSocket
@@ -256,7 +258,7 @@ bus	node_modules/nodemon/lib/monitor/watch.js	/^var bus = utils.bus;$/;"	v
 bus	node_modules/nodemon/lib/nodemon.js	/^var bus = utils.bus;$/;"	v
 bus	node_modules/nodemon/lib/utils/log.js	/^var bus = require('.\/bus');$/;"	v
 bus.emit	node_modules/nodemon/lib/utils/bus.js	/^  bus.emit = function (event, data) {$/;"	f
-button	style.css	/^  #endscreen input[type=button] {$/;"	s
+button	style.css	/^  #endscreen input[type=button], .options button {$/;"	s
 button	style.css	/^input[type='button'] {$/;"	s
 byteArray	node_modules/engine.io/lib/parser-v3/utf8.js	/^var byteArray;$/;"	v
 byteCount	node_modules/engine.io/lib/parser-v3/utf8.js	/^var byteCount;$/;"	v
@@ -323,7 +325,6 @@ concat	node_modules/ws/lib/buffer-util.js	/^function concat(list, totalLength) {
 concatMap	node_modules/brace-expansion/index.js	/^var concatMap = require('concat-map');$/;"	v
 concatMap	node_modules/concat-map/example/map.js	/^var concatMap = require('..\/');$/;"	v
 concatMap	node_modules/concat-map/test/map.js	/^var concatMap = require('..\/');$/;"	v
-concludeGame	client/sketch.js	/^function concludeGame(gameOutcome) {$/;"	f
 config	node_modules/nodemon/lib/monitor/run.js	/^var config = require('..\/config');$/;"	v
 config	node_modules/nodemon/lib/monitor/watch.js	/^var config = require('..\/config');$/;"	v
 config	node_modules/nodemon/lib/nodemon.js	/^var config = require('.\/config');$/;"	v
@@ -450,13 +451,14 @@ dirty	node_modules/nodemon/lib/version.js	/^function dirty() {$/;"	f
 disable	node_modules/debug/src/common.js	/^	function disable() {$/;"	f	function:setup
 disable	node_modules/nodemon/node_modules/debug/src/common.js	/^  function disable() {$/;"	f	function:setup
 disable	node_modules/undefsafe/node_modules/debug/src/debug.js	/^function disable() {$/;"	f
+displayEndscreen	client/modules/concludeGame.js	/^function displayEndscreen(gameOutcome) {$/;"	f
 displayPromotion	client/modules/promotion.js	/^function displayPromotion(color, promoteTo) {$/;"	f
 distance	node_modules/color-convert/route.js	/^			distance: -1,$/;"	p	class:graph
 dot	node_modules/chokidar/lib/constants.js	/^exports.ANYMATCH_OPTS = {dot: true};$/;"	p	class:exports.ANYMATCH_OPTS
 dot	node_modules/nodemon/lib/monitor/match.js	/^    dot: true,$/;"	p	class:match.minimatchOpts
 dotSplit	node_modules/ini/ini.js	/^function dotSplit (str) {$/;"	f	function:function
 dragPiece	client/sketch.js	/^  function dragPiece(piece) {$/;"	f	function:sketch
-draw	client/modules/endscreen.js	/^  const outcomeMessages = {'win': 'You won!', 'loss': 'You lost.', 'draw': 'Draw.'};$/;"	p	class:const
+draw	client/modules/concludeGame.js	/^  const outcomeMessages = {'win': 'You won!', 'loss': 'You lost.', 'draw': 'Draw.'};$/;"	p	class:const
 drawBoard	client/sketch.js	/^  function drawBoard() {$/;"	f	function:sketch
 drawPiece	client/sketch.js	/^  function drawPiece(piece) {$/;"	f	function:sketch
 drawUnselectedPieces	client/sketch.js	/^  function drawUnselectedPieces() {$/;"	f	function:sketch
@@ -560,7 +562,6 @@ filterPatterns	node_modules/to-regex-range/index.js	/^function filterPatterns(ar
 fin	node_modules/ws/lib/sender.js	/^        fin: options.fin,$/;"	p
 findAppScript	node_modules/nodemon/lib/config/load.js	/^function findAppScript() {$/;"	f
 findPackage	node_modules/nodemon/lib/version.js	/^function findPackage(dir) {$/;"	f
-flex: 45	style.css	/^    flex: 45%;$/;"	s
 float	node_modules/boxen/index.js	/^		float: 'left',$/;"	p	class:options
 fmtLong	node_modules/ms/index.js	/^function fmtLong(ms) {$/;"	f
 fmtLong	node_modules/undefsafe/node_modules/ms/index.js	/^function fmtLong(ms) {$/;"	f
@@ -772,7 +773,7 @@ loose	node_modules/package-json/node_modules/semver/semver.js	/^      loose: !!o
 loose	node_modules/semver-diff/node_modules/semver/bin/semver.js	/^  var options = { loose: loose, includePrerelease: includePrerelease, rtl: rtl }$/;"	p	class:var.options
 loose	node_modules/semver-diff/node_modules/semver/semver.js	/^      loose: !!options,$/;"	p	class:options
 loose	node_modules/semver/semver.js	/^      loose: !!options,$/;"	p	class:options
-loss	client/modules/endscreen.js	/^  const outcomeMessages = {'win': 'You won!', 'loss': 'You lost.', 'draw': 'Draw.'};$/;"	p	class:const
+loss	client/modules/concludeGame.js	/^  const outcomeMessages = {'win': 'You won!', 'loss': 'You lost.', 'draw': 'Draw.'};$/;"	p	class:const
 lower	node_modules/picomatch/lib/constants.js	/^  lower: 'a-z',$/;"	p	class:const
 lstat	node_modules/chokidar/index.js	/^  const options = {type: EV_ALL, alwaysStat: true, lstat: true, ...opts};$/;"	p	class:const
 lte	node_modules/brace-expansion/index.js	/^function lte(i, y) {$/;"	f
@@ -786,7 +787,6 @@ makeRe	node_modules/minimatch/minimatch.js	/^Minimatch.prototype.makeRe = makeRe
 map	node_modules/engine.io/lib/parser-v3/index.js	/^function map(ary, each, done) {$/;"	f
 margin-left: 0.4em	style.css	/^    margin-left: 0.4em;$/;"	s
 margin: 0	style.css	/^  margin: 0;$/;"	s
-margin: 1	style.css	/^    margin: 1%;$/;"	s
 mask	node_modules/ws/lib/buffer-util.js	/^    mask: _mask,$/;"	p	class:module.exports
 match	node_modules/nodemon/lib/monitor/match.js	/^function match(files, monitor, ext) {$/;"	f
 match	node_modules/nodemon/lib/monitor/watch.js	/^var match = require('.\/match');$/;"	v
@@ -876,6 +876,7 @@ o	node_modules/negotiator/lib/encoding.js	/^  var priority = {o: -1, q: 0, s: 0}
 o	node_modules/negotiator/lib/language.js	/^  var priority = {o: -1, q: 0, s: 0};$/;"	p	class:getLanguagePriority.priority
 o	node_modules/negotiator/lib/mediaType.js	/^  var priority = {o: -1, q: 0, s: 0};$/;"	p	class:getMediaTypePriority.priority
 off	node_modules/component-emitter/index.js	/^Emitter.prototype.off =$/;"	m	class:Emitter
+offerDraw	client/modules/resignAndDraw.js	/^function offerDraw() {$/;"	f
 on	node_modules/component-emitter/index.js	/^  function on() {$/;"	c	class:Emitter.function
 on	node_modules/component-emitter/index.js	/^Emitter.prototype.on =$/;"	m	class:Emitter
 onBinaryPacketEncode	node_modules/engine.io/lib/parser-v3/index.js	/^  function onBinaryPacketEncode(packet) {$/;"	f	function:encodeOneBinaryPacket
@@ -1073,6 +1074,7 @@ reset	node_modules/imurmurhash/imurmurhash.js	/^    MurmurHash3.prototype.reset 
 reset	node_modules/nodemon/lib/config/index.js	/^function reset() {$/;"	f
 reset	node_modules/nodemon/lib/rules/index.js	/^  reset: function () { \/\/ just used for testing$/;"	m	class:module.exports
 resetWatchers	node_modules/nodemon/lib/monitor/watch.js	/^function resetWatchers() {$/;"	f
+resign	client/modules/resignAndDraw.js	/^function resign() {$/;"	f
 respond	node_modules/engine.io/lib/transports/polling.js	/^    function respond(data) {$/;"	f
 restart	node_modules/nodemon/lib/monitor/run.js	/^var restart = null;$/;"	v
 restartBus	node_modules/nodemon/lib/monitor/watch.js	/^function restartBus(matched) {$/;"	f
@@ -1266,7 +1268,7 @@ type	node_modules/picomatch/lib/parse.js	/^  const bos = { type: 'bos', value: '
 type	node_modules/socket.io-parser/dist/index.js	/^            type: Number(str.charAt(0)),$/;"	p	class:const
 type	node_modules/socket.io/dist/broadcast-operator.js	/^            type: socket_io_parser_1.PacketType.EVENT,$/;"	p	class:const
 type	node_modules/socket.io/dist/socket.js	/^            type: socket_io_parser_1.PacketType.EVENT,$/;"	p	class:const
-type	style.css	/^  #endscreen input[type=button] {$/;"	s
+type	style.css	/^  #endscreen input[type=button], .options button {$/;"	s
 type	style.css	/^input[type='button'] {$/;"	s
 typesMatch	node_modules/nodemon/lib/utils/merge.js	/^function typesMatch(a, b) {$/;"	f
 ucs2decode	node_modules/engine.io/lib/parser-v3/utf8.js	/^function ucs2decode(string) {$/;"	f
@@ -1333,7 +1335,7 @@ white	client/modules/ChessGame.js	/^const oppositeColor = {'white': 'black', 'bl
 white	client/modules/inCheck.js	/^const oppositeColor = {'white': 'black', 'black': 'white'};$/;"	p	class:const
 white	client/modules/isLegal.js	/^	'white': 1,$/;"	p	class:const
 whitespace	node_modules/ini/ini.js	/^      whitespace: false,$/;"	p	class:var.opt
-win	client/modules/endscreen.js	/^  const outcomeMessages = {'win': 'You won!', 'loss': 'You lost.', 'draw': 'Draw.'};$/;"	p	class:const
+win	client/modules/concludeGame.js	/^  const outcomeMessages = {'win': 'You won!', 'loss': 'You lost.', 'draw': 'Draw.'};$/;"	p	class:const
 withFileTypes	node_modules/readdirp/index.js	/^    this._rdOptions = { encoding: 'utf8', withFileTypes: this._isDirent };$/;"	p	class:_rdOptions
 word	node_modules/picomatch/lib/constants.js	/^  word: 'A-Za-z0-9_',$/;"	p	class:const
 wrapConversion	node_modules/color-convert/route.js	/^function wrapConversion(toModel, graph) {$/;"	f

@@ -9,7 +9,7 @@ const soundDir = '/client/sounds/';
 
 // chess positions
 const positions = require('./positions.json');
-const defaultPosition = positions['promotion'];
+const defaultPosition = positions['fool'];
 
 const hostname = '0.0.0.0';
 const port = 8000;
@@ -100,14 +100,14 @@ function match(socket1, socket2) {
   io.to(socket1.id).emit('match', 'white', defaultPosition);
   io.to(socket2.id).emit('match', 'black', defaultPosition);
 
-  // set up the communication of moves between the two players
-  socket1.on('move', (...args) => {
-    console.log(`Received move from ${socket1.id} and sending to ${socket2.id}.`);
-    io.to(socket2.id).emit('move', ...args);
+  // set up the communication of between players
+  socket1.onAny((eventName, ...args) => {
+    console.log(`${socket1.id} sends ${eventName} to ${socket2.id}.`);
+    io.to(socket2.id).emit(eventName, ...args);
   });
-  socket2.on('move', (...args) => {
-    console.log(`Received move from ${socket2.id} and sending to ${socket1.id}.`);
-    io.to(socket1.id).emit('move', ...args);
+  socket2.onAny((eventName, ...args) => {
+    console.log(`${socket2.id} sends ${eventName} to ${socket1.id}.`);
+    io.to(socket1.id).emit(eventName, ...args);
   });
 }
 

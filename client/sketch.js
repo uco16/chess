@@ -6,7 +6,8 @@ import {addtoMoveList} from './modules/movelist.js';
 import ChessGame from './modules/ChessGame.js';
 import inputPromotion from './modules/promotion.js';
 import {arraysEqual} from './modules/jslogic.js';
-import {displayEndscreen} from './modules/endscreen.js';
+import concludeGame from './modules/concludeGame.js';
+import {resignButton, drawButton, initializeDrawButton} from './modules/resignAndDraw.js';
 
 // debugging
 let verbose=true;
@@ -24,7 +25,6 @@ let playerColor;
 let opponentColor;
 let defaultFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 let awaitingPromotion = false;
-
 
 // Board colours
 const backcol = [204, 68, 0];
@@ -48,6 +48,15 @@ function sketch (p) {
   // io from socket.io not explicitly imported since we just include the script in index.html
   // explicitly importing and setting sketch.js to a module seems to break socket.io?
 
+  socket.on('resign', () => {
+    console.log('Opponent resigned, stopping sketch loop.');
+    p.noLoop();
+  });
+  socket.on('draw', () => {
+    console.log('The game ended in a draw. Stopping sketch loop.');
+    p.noLoop();
+  })
+
   // define what to do when opponent's move is received
   socket.on('move', (initial, final, iType, fType, promotionOption) => { 
     if (verbose) {console.log('received move', [initial, final], [iType, fType], promotionOption);}
@@ -68,6 +77,8 @@ function sketch (p) {
 		  playerCheckmated);
 
     if (playerCheckmated) {
+      console.log('stopping loop');
+      p.noLoop();
       concludeGame('loss');
     }
   });
@@ -99,12 +110,24 @@ function sketch (p) {
     drawBoard();
     game = new ChessGame(defaultFEN);
     drawUnselectedPieces();
+
+    // make resign and draw buttons stop the sketch
+    resignButton.addEventListener('click', () => {
+      console.log('resigned: stopping sketch loop');
+      p.noLoop();
+    });
+    drawButton.addEventListener('click', () => {
+      if (drawButton.textContent==='Accept Draw') {
+	console.log('accepted draw: stopping sketch loop');
+	p.noLoop();
+      }
+    });
   }
 
   p.draw = () => {
-    if (selectedPiece !== null) {
-      drawBoard();
-      drawUnselectedPieces();
+    drawBoard();
+    drawUnselectedPieces();
+    if (selectedPiece) {
       dragPiece(selectedPiece);
     }
   }
@@ -206,8 +229,8 @@ function sketch (p) {
         if (arraysEqual(mousePos(), selectedPiece.position)) {
 	  // user clicked back on starting square, no move is played
           selectedPiece = null;
-          drawBoard();
-          drawUnselectedPieces();
+          //drawBoard();
+          //drawUnselectedPieces();
           leftStartPos = false;
         }
       }
@@ -222,8 +245,8 @@ function sketch (p) {
     if (selectedPiece) {
       const startPos = selectedPiece.position;
       const endPos = mousePos();
-      drawBoard();
-      drawUnselectedPieces();
+      //drawBoard();
+      //drawUnselectedPieces();
       // if mouse clicked or dragged 
       if (!arraysEqual(mousePos(), startPos)) {
         if (!awaitingPromotion &&
@@ -231,11 +254,11 @@ function sketch (p) {
                     playerColor, game.canCastle[playerColor], game.activeColor)) {
           handleMove(startPos, endPos);
         }
-        drawPiece(selectedPiece);
+        //drawPiece(selectedPiece);
         selectedPiece = null;
       }  
       else if (leftStartPos) {
-	drawPiece(selectedPiece);
+	//drawPiece(selectedPiece);
         selectedPiece = null;
       }
       leftStartPos = false;
@@ -265,12 +288,20 @@ function sketch (p) {
 
     if (verbose) {console.log(game.toFEN());}
 
+    // if there is a draw offer, making a move rejects the draw offer
+    if (drawButton.textContent==='Accept Draw') {
+      socket.emit('drawReject');
+      initializeDrawButton();
+    }
+
     // check if move left opponent in checkmate
     let opponentCheckmated = isCheckmate(game.strRep(), opponentColor, game.previousMoveFinal, 
 					 game.canCastle[opponentColor], game.activeColor);
     addtoMoveList(startPos, endPos, initialPieceType, finalPieceType, 
                   inCheck(game.strRep(), opponentColor), opponentCheckmated);
     if (opponentCheckmated) {
+      console.log('stopping loop');
+      p.noLoop();
       concludeGame('win');
     }
   }
@@ -282,17 +313,17 @@ function sketch (p) {
 
   function move(initial, final) {
     game.move(initial, final);
-    drawBoard();
-    drawUnselectedPieces();
-    drawPiece(game.getPiece(final));
+    //drawBoard();
+    //drawUnselectedPieces();
+    //drawPiece(game.getPiece(final));
     moveSound.play();
   }
 
   function promote(square, promotionOption) {
     if (verbose) {console.log('promote to', promotionOption);}
     game.promote(square, promotionOption);  
-    drawBoard();
-    drawUnselectedPieces();
+    //drawBoard();
+    //drawUnselectedPieces();
   }
 
   function mousePos() {
@@ -308,8 +339,8 @@ function sketch (p) {
     sqs = boardsize / 8;
     pcs = sqs/1.5;
     p.resizeCanvas(size, size);
-    drawBoard();
-    drawUnselectedPieces();
+    //drawBoard();
+    //drawUnselectedPieces();
   };
 
 
@@ -345,11 +376,6 @@ function ColRowtoXY(col, row) {
     y = padding + row*sqs;
   }
   return [x, y];
-}
-
-function concludeGame(gameOutcome) {
-  // handle win/loss/draw
-  displayEndscreen(gameOutcome);
 }
 
 socket.on('match', (color, FEN) => {

@@ -1,10 +1,11 @@
-- win / lose / draw screen at the end: DONE
+- offer draw button (with: are you sure?)
+- position repeated three times: offer draw becomes "claim draw" (either just before making the move, or after the opponent has made the move)
+- fivefold repetition rule: mandatory draw
+- forfeit button (with: are you sure?)
 - mute button
 - copy URL link in win/lose screen, so you can save the game
-- position repeated three times: draw
-- offer draw button (with: are you sure?)
-- forfeit button (with: are you sure?)
 - looking for opponent
+- game mode selection on main page
 - timer
 - right click on drag to cancel the move
 - names and rating of you and opponent

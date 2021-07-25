@@ -1,4 +1,12 @@
-export function displayEndscreen(gameOutcome) {
+import {disableResignAndDrawButtons} from './resignAndDraw.js';
+
+export default function concludeGame(gameOutcome) {
+  // handle win/loss/draw
+  displayEndscreen(gameOutcome);
+  disableResignAndDrawButtons();
+}
+
+function displayEndscreen(gameOutcome) {
   let endscreen = document.getElementById("endscreen");
 
   let outcomeDisplay = endscreen.getElementsByTagName('h2')[0];
@@ -6,5 +14,4 @@ export function displayEndscreen(gameOutcome) {
   outcomeDisplay.textContent = outcomeMessages[gameOutcome];
 
   endscreen.style.display = "flex";
-
 }

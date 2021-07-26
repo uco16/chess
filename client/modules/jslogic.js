@@ -1,8 +1,8 @@
 export function arraysEqual(a, b) {
-  return Array.isArray(a) &&
-    Array.isArray(b) &&
-    a.length === b.length &&
-    a.every((val, index) => val === b[index]);
+  return (Array.isArray(a) &&
+	  Array.isArray(b) &&
+	  a.length === b.length &&
+	  a.every((val, index) => val === b[index]));
 }
 
 export function arraysAdd(a, b) {
@@ -38,11 +38,8 @@ export function copyMatrix(mx) {
 
 export function any(array, boolFunc) {
   // returns true iff boolFunc(x) is not null/0/''/false for all x in array
-  let ans = false;
   for (let i=0; i<array.length; i++) {
-    if (boolFunc(...array[i])) {
-      return true;
-    }
+    if (boolFunc(array[i])) { return true; }
   }
   return false;
 }

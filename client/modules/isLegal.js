@@ -1,7 +1,8 @@
-import { arraysEqual, copyMatrix, arraysAdd} from './jslogic.js';
+import { arraysEqual, copyMatrix, arraysAdd, any } from '/client/modules/jslogic.js';
 import { chessPieceTypes, findPieces, isPiece, isEmpty,
          identifyPiece, isInBoard, firstPiece } from './chesslogic.js';
 import inCheck from './inCheck.js';
+import {knightSquares} from '/client/modules/patterns.js';
 
 // Client-side script to determine whether a move is legal in the current position
 
@@ -83,6 +84,8 @@ function isValidPattern(position, initial, final, enPassantTarget, canCastle) {
     var moveData = [position, initial, final, enPassantTarget];
   } else if (type === 'king') {
     var moveData = [position, initial, final, canCastle];
+  } else if (type === 'knight') {
+    var moveData = [initial, final];
   } else {
     var moveData = [position, initial, final];
   }
@@ -98,10 +101,8 @@ function isValidQueenPattern(position, initial, final) {
   return isBishopMove || isRookMove;
 }
 
-function isValidKnightPattern(position, initial, final) {
-  const colDiff = Math.abs(final[0] - initial[0]);
-  const rowDiff = Math.abs(final[1] - initial[1]);
-  return (colDiff + rowDiff == 3) ;
+function isValidKnightPattern(initial, final) {
+  return any(knightSquares(initial), x => { return arraysEqual(x, final); });
 }
 
 function isValidRookPattern(position, initial, final) {

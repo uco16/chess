@@ -1,67 +1,51 @@
 // imports from custom client-side functions
-import isLegal from './modules/isLegal.js';
-import inCheck from './modules/inCheck.js';
-import isCheckmate from './modules/isCheckmate.js';
-import {addtoMoveList} from './modules/movelist.js';
-import ChessGame from './modules/ChessGame.js';
-import inputPromotion from './modules/promotion.js';
-import {arraysEqual} from './modules/jslogic.js';
-import concludeGame from './modules/concludeGame.js';
-import {resignButton, drawButton, initializeDrawButton} from './modules/resignAndDraw.js';
+import isLegal from '/client/modules/isLegal.js';
+import inCheck from '/client/modules/inCheck.js';
+import isCheckmate from '/client/modules/isCheckmate.js';
+import {addtoMoveList} from '/client/modules/movelist.js';
+import ChessGame from '/client/modules/ChessGame.js';
+import inputPromotion from '/client/modules/promotion.js';
+import {arraysEqual} from '/client/modules/jslogic.js';
+import concludeGame from '/client/modules/concludeGame.js';
+import {resignButton, drawButton, initializeDrawButton} from '/client/modules/resignAndDraw.js';
 
-// debugging
-let verbose=true;
+export default function chessSketch(playerColor, FEN) {
+  return (p) => {sketch(p, playerColor, FEN);};
+}
 
-// move sound
-const moveSound = new Audio('move.mp3');
-
-// default variables
-let size = document.getElementById('chessboard').clientWidth;
-let padding = size/16;  // width of the edge of the board
-let boardsize = size - 2 * padding;
-let sqs = boardsize / 8;
-let pcs = sqs/1.5;
-let playerColor;
-let opponentColor;
-let defaultFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-let awaitingPromotion = false;
-
-// Board colours
-const backcol = [204, 68, 0];
-const darkcol = [128, 64, 0];
-const lightcol = [255, 166, 77];
-
-// board lettering
-const letterCol = [133, 45, 1];
-const font = 'Times New Roman';
-
-// ----- main -------
-socket.on('match', (color, FEN) => {
-  playerColor = color;
-  opponentColor = {'white': 'black', 'black': 'white'}[playerColor];
-  defaultFEN = FEN;
-  if (verbose) {console.log("sketch: match, start game with colour " + playerColor);}
-  new p5(sketch, 'chessboard');
-
-  // if the game starts from a position where it is black's turn to move, 
-  // add one empty move (i.e. "1. ...") to the movelist
-  if (FEN.split(' ')[1]==='b') { addtoMoveList(); };
-});
-
-// only tell the server that you are ready for match AFTER you have defined what to do
-// when the server matches you
-socket.emit('readyForMatch');
-
-// auxiliary functions
-
-function sketch (p) {  
+function sketch (p, playerColor, FEN) {  
   // "instance mode" https://github.com/processing/p5.js/wiki/p5.js-overview#instantiation--namespace
+  
+  // debugging
+  let verbose=true;
+  
+  // default variables
+  let size = document.getElementById('chessboard').clientWidth;
+  let padding = size/16;  // width of the edge of the board
+  let boardsize = size - 2 * padding;
+  let sqs = boardsize / 8;
+  let pcs = sqs/1.5;
+  let awaitingPromotion = false;
+
+  let opponentColor = {'white':'black', 'black': 'white'}[playerColor]
   let selectedPiece = null;
   let pieceImages;
   let game;
   
   // has mouse left starting position?
   let leftStartPos = false
+  
+  // move sound
+  const moveSound = new Audio('move.mp3');
+
+  // Board colours
+  const backcol = [204, 68, 0];
+  const darkcol = [128, 64, 0];
+  const lightcol = [255, 166, 77];
+
+  // board lettering
+  const letterCol = [133, 45, 1];
+  const font = 'Times New Roman';
 
   // const socket = io();
   // io from socket.io not explicitly imported since we just include the script in index.html
@@ -126,7 +110,7 @@ function sketch (p) {
 
   p.setup = () => {
     p.createCanvas(size, size);
-    game = new ChessGame(defaultFEN);
+    game = new ChessGame(FEN);
 
     // make resign and draw buttons stop the sketch
     resignButton.addEventListener('click', () => {
@@ -175,7 +159,6 @@ function sketch (p) {
     p.image(pieceImg(piece), x+(sqs-pcs)/2, y+(sqs-pcs)/2, pcs, pcs);
   }
 
-  
   function dragPiece(piece) {
     let [x, y] = [p.mouseX - pcs/2, p.mouseY - pcs/1.6];
     p.image(pieceImg(piece), x, y, pcs, pcs);
@@ -359,33 +342,34 @@ function sketch (p) {
   //p.touchMoved = () => {
   //  return false;  // prevent default behaviour
   //}
+
+  function XYtoColRow(x, y) {
+    // transform x, y coordinates into col, row coordinates
+    // 
+    // x, y are computer graphics style, so y counts form the top
+    // whereas col, row counts from bottom left to top right
+    let col = Math.floor((x - padding)/sqs);
+    let row = Math.floor((y - padding)/sqs);
+    if (playerColor == 'white') {
+      row = 7 - row;
+    } else {
+      col = 7 - col;
+    }
+    return [col, row];
+  }
+
+  function ColRowtoXY(col, row) {
+    let x;
+    let y;
+    if (playerColor == 'white') {
+      x = padding + col*sqs;
+      y = padding + (7 - row)*sqs;
+    } else {
+      x = padding + (7-col)*sqs;
+      y = padding + row*sqs;
+    }
+    return [x, y];
+  }
 };
 
-function XYtoColRow(x, y) {
-  // transform x, y coordinates into col, row coordinates
-  // 
-  // x, y are computer graphics style, so y counts form the top
-  // whereas col, row counts from bottom left to top right
-  let col = Math.floor((x - padding)/sqs);
-  let row = Math.floor((y - padding)/sqs);
-  if (playerColor == 'white') {
-    row = 7 - row;
-  } else {
-    col = 7 - col;
-  }
-  return [col, row];
-}
-
-function ColRowtoXY(col, row) {
-  let x;
-  let y;
-  if (playerColor == 'white') {
-    x = padding + col*sqs;
-    y = padding + (7 - row)*sqs;
-  } else {
-    x = padding + (7-col)*sqs;
-    y = padding + row*sqs;
-  }
-  return [x, y];
-}
 

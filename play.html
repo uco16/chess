@@ -8,9 +8,21 @@
   </head>
 
   <body>
-    <script src="./client/modules/header.js"></script>
+    <script src="/client/modules/header.js"></script>
 
-    <div class="gamewindow">
+    <div id="lookingForOpponent">
+      <span>Waiting for Opponent</span>
+      <div class="pieces">
+	<img id='p1' src="/client/pieces/knight_left.png" class="spinner">
+	<img id='p2' src="/client/pieces/bishop_right.png" class="spinner">
+	<img id='p3' src="/client/pieces/king.png" class="spinner">
+	<img id='p4' src="/client/pieces/queen.png" class="spinner">
+	<img id='p5' src="/client/pieces/rook.png" class="spinner">
+	<img id='p6' src="/client/pieces/pawn.png" class="spinner">
+      </div>
+    </div>
+
+    <div id="gamewindow">
       <div id="chessboard">
 	<!-- sketch.js will draw inside here -->
 	<div id="endscreen">
@@ -77,7 +89,7 @@
      // });
     </script>
     <script src="client/modules/p5.js"></script>
-    <script src="client/sketch.js" type="module"></script>
+    <script src="client/modules/lookingForOpponent.js" type="module"></script>
     <script src="client/modules/resignAndDraw.js" type="module"></script>
   </body>
 </html>

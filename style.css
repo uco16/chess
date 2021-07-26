@@ -230,6 +230,74 @@ a, a:visited, .menu-item, .menu-item:visited {
 
 /* Play */
 
+#lookingForOpponent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2em;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.pieces {
+  position: relative;
+  --time-per-piece: 2s;
+  --num-pieces: 6;
+}
+.pieces img {
+  position: absolute;
+  transform: translate(-50%);
+}
+
+.spinner {
+  height: 1em;
+  width: 1em;
+
+  animation-name: pulse;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-duration: calc(var(--time-per-piece) * var(--num-pieces));
+
+
+  image-rendering: optimizequality;
+  opacity: 0;
+}
+
+#p2 {
+  animation-delay: calc(var(--time-per-piece)*1);
+}
+#p3 {
+  animation-delay: calc(var(--time-per-piece)*2);
+}
+#p4 {
+  animation-delay: calc(var(--time-per-piece)*3);
+}
+#p5 {
+  animation-delay: calc(var(--time-per-piece)*4);
+}
+#p6 {
+  animation-delay: calc(var(--time-per-piece)*5);
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0;
+  }
+  8.3% { /* this is 50%/num-pieces */
+    opacity: 1;
+  }
+  16.6% {  /* 100%/num-pieces*/
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 #chessboard {
   width: 100%;
 }
@@ -237,11 +305,15 @@ a, a:visited, .menu-item, .menu-item:visited {
   display: none;
 }
 
+#gamewindow {
+  display: none;
+}
+
 @media (min-width: 730px) {
   /* tablets, half-desktop */
 
-  .gamewindow {
-    display: flex;
+  #gamewindow {
+    /*display: flex; triggered by lookingForOpponent.js*/
     padding: 1em;
     align-items: flex-start;
     justify-content: center;
@@ -250,7 +322,7 @@ a, a:visited, .menu-item, .menu-item:visited {
   #chessboard {
     width: 75%;
     display: block;
-    max-width: 89vh;  /* ensure board size is smaller than screen size */
+    max-width: 89vh;
 
     position: relative; /* to place win/move window inside chess board */
   }

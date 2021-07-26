@@ -11,6 +11,12 @@ input[type='button'] {
   cursor: pointer;
 }
 
+.hp-title {
+  text-align: center;
+  font-size: 4em;
+  margin: 2em;
+}
+
 /* header */
 
 header {
@@ -41,7 +47,7 @@ header {
   .menu-icon {
     display: block;
   }
-  .hp-title {
+  header .hp-title {
     padding-left: 0;
   }
   .toolbar {
@@ -52,7 +58,7 @@ header {
   .menu-icon {
     display: none;
   }
-  .hp-title {
+  header .hp-title {
     padding-left: 30px;
   }
   .toolbar {
@@ -142,7 +148,7 @@ header {
   padding: 5px 0 5px 10px;
 }
 
-.hp-title {
+header .hp-title {
   margin-right: 1.5em;
   font-family: "TeX Gyre Schola", serif;
   font-size: 2em;
@@ -197,8 +203,7 @@ a, a:visited, .menu-item, .menu-item:visited {
   border: 1px solid #cecdcd;
   height: 20em;
   width: 15em;
-  margin: 6%;
-  margin-top: 20vh;
+  margin: 0 6%;
   border-radius: 30px;
 
   box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;

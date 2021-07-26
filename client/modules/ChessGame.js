@@ -1,6 +1,7 @@
 import {nullMatrix, arraysEqual} from './jslogic.js';
 import ChessPiece from './ChessPiece.js';
 import isLegal from './isLegal.js';
+import {matrixNotation} from '/client/modules/chesslogic.js';
 
 const defaultFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 const oppositeColor = {'white': 'black', 'black': 'white'};
@@ -77,19 +78,9 @@ export default class ChessGame {
     this.setPiece(initial, null);
 
     let targetPiece = this.getPiece(final);
-    // check for enpassant
-    if (this.previousMoveFinal !== null) {
-      let previous_move_piece = this.getPiece(previousMoveFinal);
-      if (previous_move_piece.type == "pawn") {
-	if (arraysEqual(initial, [previousMoveFinal[0]-1, previousMoveFinal[1]])
-	    || arraysEqual(initial, [previousMoveFinal[0]+1, previousMoveFinal[1]])) {
-	  if (final[0] == previousMoveFinal[0]) {
-	    // is enpassant
-	    targetPiece = previous_move_piece;
-	    this.setPiece(previousMoveFinal, null);
-	  }
-	}
-      }
+    if (piece.type === "pawn" && arraysEqual(this.enPassantTargetSquare(), final)) {
+      // en passant
+      targetPiece = this.getPiece([final[0], initial[1]]);
     }
     if (targetPiece) {
       //in the case of a capture, we need to remove the captured piece
@@ -229,6 +220,12 @@ export default class ChessGame {
     } else {
       return '-';
     }
+  }
+
+  enPassantTargetSquare() {
+    let enPassantAlgebraic = this.enPassantTarget();
+    if (enPassantAlgebraic === '-') {return null};
+    return matrixNotation(enPassantAlgebraic);
   }
 
   fullmoveNumber() {

@@ -121,6 +121,7 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     leaveQueue(socket);
+    //socket.broadcast.emit('resign');  // resign on disconnect
     console.log(`User ${socket.id} disconnected.`);
   });
 });

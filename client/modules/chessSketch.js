@@ -62,8 +62,6 @@ function sketch (p, playerColor, FEN) {
 
   // define what to do when opponent's move is received
   socket.on('move', (initial, final, iType, fType, promotionOption) => { 
-    if (verbose) {console.log('received move', [initial, final], [iType, fType], promotionOption);}
-
     // play and render move on board
     move(initial, final); 
     if (promotionOption) {
@@ -73,7 +71,7 @@ function sketch (p, playerColor, FEN) {
 
     if (verbose) {console.log(game.toFEN());}
     // check if this move from the opponent puts the player in checkmate
-    let playerCheckmated = isCheckmate(game.strRep(), playerColor, game.enPassantTarget(), 
+    let playerCheckmated = isCheckmate(game.strRep(), playerColor, game.enPassantTargetSquare(), 
 				       game.canCastle[playerColor], game.activeColor);
     // add to move list
     addtoMoveList(initial, final, iType, fType, inCheck(game.strRep(), playerColor),
@@ -256,7 +254,7 @@ function sketch (p, playerColor, FEN) {
       // if mouse clicked or dragged 
       if (!arraysEqual(mousePos(), startPos)) {
         if (!awaitingPromotion &&
-            isLegal(startPos, endPos, game.strRep(), game.enPassantTarget(),
+            isLegal(startPos, endPos, game.strRep(), game.enPassantTargetSquare(),
                     playerColor, game.canCastle[playerColor], game.activeColor)) {
           handleMove(startPos, endPos);
         }
@@ -297,7 +295,7 @@ function sketch (p, playerColor, FEN) {
     }
 
     // check if move left opponent in checkmate
-    let opponentCheckmated = isCheckmate(game.strRep(), opponentColor, game.enPassantTarget(), 
+    let opponentCheckmated = isCheckmate(game.strRep(), opponentColor, game.enPassantTargetSquare(), 
 					 game.canCastle[opponentColor], game.activeColor);
     addtoMoveList(startPos, endPos, initialPieceType, finalPieceType, 
                   inCheck(game.strRep(), opponentColor), opponentCheckmated);
@@ -309,7 +307,6 @@ function sketch (p, playerColor, FEN) {
   }
 
   function sendMove(initial, final, ...args) {
-    if (verbose) {console.log('sending move', [initial, final], args);}
     socket.emit('move', initial, final, ...args);
   }
 

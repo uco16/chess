@@ -11,6 +11,14 @@ export function algebraic(position) {
   return letter + number;
 }
 
+export function matrixNotation(algebraic) {
+  // returns the matrix notation for a given algebraic notation
+  // algebraic is a string such as 'a1', ie one letter and one number
+  let column = algebraic.charCodeAt(0) - 97;
+  let row = algebraic[1]-1;
+  return [column, row];
+}
+
 export function findPieces(position, color, type) {
   // finds all squares with pieces of specified type and color on it
   if (typeof type === 'undefined') {  // return all 'color' pieces when type not specified

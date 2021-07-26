@@ -14,7 +14,7 @@ export default function isLegal(startPos, endPos, pieces, enPassantTarget,
   // can only move on your own turn (or before start of game)
   // canCastle: dictionary of form {'left': boolean, 'right': boolean}
 
-  let verbose = false;
+  let verbose = true;
   if (activeColor!==playerColor) {
     if (verbose) {console.log("Not your turn.");}
     return false;
@@ -192,7 +192,7 @@ function isValidKingPattern(position, initial, final, canCastle) {
 
 function isValidPawnPattern(position, initial, final, enPassantTarget) {
   // --- EN-PASSANT ---
-  if (enPassantTarget !== null || arraysEqual(final, enPassantTarget)) {
+  if (enPassantTarget !== null && arraysEqual(final, enPassantTarget)) {
     return true;
   }
 

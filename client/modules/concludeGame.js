@@ -2,8 +2,8 @@ import {disableResignAndDrawButtons} from './resignAndDraw.js';
 
 export default function concludeGame(gameOutcome) {
   // handle win/loss/draw
-  displayEndscreen(gameOutcome);
   disableResignAndDrawButtons();
+  displayEndscreen(gameOutcome);
 }
 
 function displayEndscreen(gameOutcome) {

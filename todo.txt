@@ -1,4 +1,3 @@
-- add "are you sure?" to draw/resign buttons
 - position repeated three times: offer draw becomes "claim draw" (either just before making the move, or after the opponent has made the move)
 - fivefold repetition rule: mandatory draw
 - mute button
@@ -20,3 +19,4 @@
 - add some more FEN strings
 - devise some test cases
 - write script to move .js file and change all import statements in other js files
+- add "are you sure?" to draw/resign buttons

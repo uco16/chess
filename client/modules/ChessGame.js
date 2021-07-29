@@ -33,6 +33,14 @@ export default class ChessGame {
 
     const colors = {'w': 'white', 'b': 'black'};
     this.activeColor = colors[activeColorFirst];
+
+    // 3-fold repetition draw rule: store number of repCount of positions
+    this.repCount = {};
+    this.repCountUp();
+    this.isDraw = false;
+
+    // to stop the drawing when game is over
+    this.ended = false;
   }
 
   createPiece(pos, color, type) {
@@ -130,12 +138,39 @@ export default class ChessGame {
 	console.log(`${playerColor} cannot castle right anymore`)
       }
     }
+
+    this.repCountUp();
+  }
+
+  promotionRequired() {
+    // check if there is a pawn on the final ranks
+    for (let col=0; col<8; col++)
+    {
+      if (  (!this.isEmpty([col, 0]) && this.getPiece([col, 0]).type==="pawn") 
+	 || (!this.isEmpty([col, 7]) && this.getPiece([col, 7]).type==="pawn") )
+	return true;
+    }
+    return false;
+  }
+
+  repCountUp() {
+    // keep track of position for repetition draw rule
+    // only save position if no pawn is about to promote
+    if (!this.promotionRequired())
+    {
+      let relevantFenPart = [this.piecePlacement(), this.activeColor[0], this.castlingAvailability(),
+            this.enPassantTarget()].join(' ');
+      this.repCount[relevantFenPart] = (this.repCount[relevantFenPart] || 0) + 1
+      if (this.repCount[relevantFenPart] === 3)
+	this.isDraw = true;
+    }
   }
 
   promote(coordinates, promotionChoice) {
     let pawnColor = this.getPiece(coordinates).color;
     this.deletePiece(coordinates);  // delete the pawn that is at 'coordinates'
     this.createPiece(coordinates, pawnColor, promotionChoice);
+    this.repCountUp();
   }
 
   strRep() {
@@ -169,9 +204,8 @@ export default class ChessGame {
     for (let row=7; row >= 0; row--) {
       let counter = 0;
       for (let col=0; col < 8; col++) {
-	if (this.isEmpty([col, row])) {
-	  counter++;
-	} else {
+	if (this.isEmpty([col, row])) { counter++; }
+	else {
 	  if (counter>0) {
 	    // append the number ${counter} to the string
 	    piece_placement += counter;
@@ -186,8 +220,8 @@ export default class ChessGame {
       }
       // end of the row, append ${counter} to string
       if (counter > 0) {piece_placement += counter;}
-      // append a '/' to indicate end of row
-      piece_placement += '/';
+      // append a '/' to indicate end of row, except in the last row
+      if (row > 0) { piece_placement += '/'; }
     }
     return piece_placement;
   }

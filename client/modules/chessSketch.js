@@ -54,10 +54,12 @@ function sketch (p, playerColor, FEN) {
   socket.on('resign', () => {
     if (verbose) {console.log('Opponent resigned, stopping sketch loop.');};
     p.noLoop();
+    game.ended = true;
   });
   socket.on('draw', () => {
     if (verbose) {console.log('The game ended in a draw. Stopping sketch loop.');};
     p.noLoop();
+    game.ended = true;
   })
 
   // define what to do when opponent's move is received
@@ -69,7 +71,15 @@ function sketch (p, playerColor, FEN) {
       promote(final, promotionOption);
     }
 
-    if (verbose) {console.log(game.toFEN());}
+    if (verbose) {
+      console.log(game.toFEN());
+    }
+    if (game.isDraw)
+    {
+      p.noLoop();
+      game.ended = true;
+      concludeGame('draw');
+    }
     // check if this move from the opponent puts the player in checkmate
     let playerCheckmated = isCheckmate(game.strRep(), playerColor, game.enPassantTargetSquare(), 
 				       game.canCastle[playerColor], game.activeColor);
@@ -80,6 +90,7 @@ function sketch (p, playerColor, FEN) {
     if (playerCheckmated) {
       if (verbose) {console.log('stopping loop');};
       p.noLoop();
+      game.ended = true;
       concludeGame('loss');
     }
   });
@@ -114,11 +125,13 @@ function sketch (p, playerColor, FEN) {
     resignButton.addEventListener('click', () => {
       if (verbose) {console.log('resigned: stopping sketch loop');};
       p.noLoop();
+      game.ended = true;
     });
     drawButton.addEventListener('click', () => {
       if (drawButton.textContent==='Accept Draw') {
 	if (verbose) {console.log('accepted draw: stopping sketch loop');};
 	p.noLoop();
+	game.ended = true;
       }
     });
   }
@@ -222,27 +235,29 @@ function sketch (p, playerColor, FEN) {
   }
   
   p.mousePressed = () => {
-    // mouse down selects/grabs piece of own colour
-    let col, row;
-    [col, row] = mousePos();
-    
-    if (0 <= col && col < 8 && 0 <= row && row < 8) {
-      let pieceUnderMouse = game.getPiece(mousePos());
-      if (selectedPiece) {
-
-        if (arraysEqual(mousePos(), selectedPiece.position)) {
-	  // user clicked back on starting square, no move is played
-	  unselectPiece();
-        }
-	// right click to cancel move
-	if (p.mouseButton === p.RIGHT) {
-	  document.addEventListener('contextmenu', e => {e.preventDefault();}, {once: true});
-	  unselectPiece();
+    if (!game.ended)
+    {
+      // mouse down selects/grabs piece of own colour
+      let col, row;
+      [col, row] = mousePos();
+      
+      if (0 <= col && col < 8 && 0 <= row && row < 8) {
+	let pieceUnderMouse = game.getPiece(mousePos());
+	if (selectedPiece) {
+	  if (arraysEqual(mousePos(), selectedPiece.position)) {
+	    // user clicked back on starting square, no move is played
+	    unselectPiece();
+	  }
+	  // right click to cancel move
+	  if (p.mouseButton === p.RIGHT) {
+	    document.addEventListener('contextmenu', e => {e.preventDefault();}, {once: true});
+	    unselectPiece();
+	  }
 	}
-      }
-      else if (p.mouseButton === p.LEFT && pieceUnderMouse != null && pieceUnderMouse.color == playerColor) {
-        // select piece if none already selected
-        selectedPiece = pieceUnderMouse;
+	else if (p.mouseButton === p.LEFT && pieceUnderMouse != null && pieceUnderMouse.color == playerColor) {
+	  // select piece if none already selected
+	  selectedPiece = pieceUnderMouse;
+	}
       }
     }
   } 
@@ -286,7 +301,15 @@ function sketch (p, playerColor, FEN) {
     } else {
       sendMove(startPos, endPos, initialPieceType, finalPieceType);  // send move to server
     }
-    if (verbose) {console.log(game.toFEN());}
+    if (verbose) {
+      console.log(game.toFEN());
+    }
+    if (game.isDraw)
+    {
+      p.noLoop();
+      game.ended = true;
+      concludeGame('draw');
+    }
 
     // if there is a draw offer, making a move rejects the draw offer
     if (drawButton.textContent==='Accept Draw') {
@@ -302,6 +325,7 @@ function sketch (p, playerColor, FEN) {
     if (opponentCheckmated) {
       if (verbose) {console.log('stopping loop');};
       p.noLoop();
+      game.ended = true;
       concludeGame('win');
     }
   }

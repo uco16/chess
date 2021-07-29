@@ -87,10 +87,13 @@ function joinQueue(socket) {
     // someone is waiting in queue
     let opponent = queue.pop();  // get someone from the queue
     match(opponent, socket);  // create a match between them
+    
+    // don't need to leave queue on disconnect if you are not in queue anymore
+    opponent.off('disconnect', () => { leaveQueue(opponent); }); 
   } else { 
     // no one is in queue
     queue.push(socket); // add socket to queue
-    // console.log(`User ${socket.id} joined queue.`);
+    socket.on('disconnect', () => { leaveQueue(socket); });
   }
 }
 
@@ -109,6 +112,14 @@ function match(socket1, socket2) {
     console.log(`${socket2.id} sends ${eventName} to ${socket1.id}.`);
     io.to(socket1.id).emit(eventName, ...args);
   });
+  socket1.on('disconnect', () => {
+    console.log(`User ${socket1.id} disconnected. Automatic resign.`);
+    io.to(socket2.id).emit('resign');  // auto resign on disconnect
+  });
+  socket2.on('disconnect', () => {
+    console.log(`User ${socket2.id} disconnected. Automatic resign.`);
+    io.to(socket1.id).emit('resign');  // auto resign on disconnect
+  });
 }
 
 io.on('connection', (socket) => {
@@ -120,8 +131,6 @@ io.on('connection', (socket) => {
   socket.on('readyForMatch', () => { joinQueue(socket); });
 
   socket.on('disconnect', () => {
-    leaveQueue(socket);
-    //socket.broadcast.emit('resign');  // resign on disconnect
     console.log(`User ${socket.id} disconnected.`);
   });
 });

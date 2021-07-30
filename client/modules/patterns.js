@@ -15,10 +15,11 @@ export function knightSquares(position) {
 }
 
 function kingSquares(position) {
+  // returns array of all squares that a king can move to from 'position'
   let squares = [];
   for (let i=-1; i<=1; i++) {
     for (let j=-1; j<=1; j++) {
-      let square = arraysAdd(position, [i, j]);
+      squares.push(arraysAdd(position, [i, j]));
     }
   }
   return squares.filter(sq => isInBoard(sq));
@@ -43,7 +44,7 @@ export function accessibleSquares(piecePos, pieceType, pieceColor) {
     return kingSquares(piecePos);
   }
   if (pieceType==='pawn') {
-    return pawnSquares(piecePos, pieceType, pieceColor)
+    return pawnSquares(piecePos, pieceColor)
   }
   if (pieceType==='knight') {
     return knightSquares(piecePos);

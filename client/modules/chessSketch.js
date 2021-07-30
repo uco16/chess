@@ -38,7 +38,7 @@ function sketch(p, playerColor, FEN) {
   const font = 'Times New Roman';
 
   // options to be toggled settings
-  let highlightsAreActive = false;
+  let highlightsAreActive = true;
 
   // global variables
   let awaitingPromotion = false;
@@ -87,11 +87,11 @@ function sketch(p, playerColor, FEN) {
       concludeGame('draw');
     }
     
-    // add to move list
+    let isCheckmateNow = playerIsCheckmated(playerColor);
     addtoMoveList(initial, final, iType, fType, inCheck(game.strRep(), playerColor),
-		  playerIsCheckmated(playerColor));
+		  isCheckmateNow);
 
-    if (playerIsCheckmated(playerColor)) {
+    if (isCheckmateNow) {
       if (verbose) { console.log('stopping loop'); };
       p.noLoop();
       game.ended = true;
@@ -239,14 +239,12 @@ function sketch(p, playerColor, FEN) {
 
   function unselectPiece() {
     highlightedSquares = highlightedSquares.filter(square => !arraysEqual(square,selectedPiece.position));
-    
-    console.log(highlightedSquares[0] === selectedPiece.position);
     selectedPiece = null;
     leftStartPos = false;
   }
 
   p.mousePressed = () => {
-    if (game.ended || !isInBoard(mousePos()) && playerColor !== game.activeColor)
+    if (game.ended || !isInBoard(mousePos()) || playerColor !== game.activeColor)
       return false;
 
     // mouse down selects/grabs piece of own colour
@@ -278,9 +276,9 @@ function sketch(p, playerColor, FEN) {
     const endPos = mousePos();
     // if mouse clicked or dragged 
     if (!arraysEqual(startPos, endPos)) {
-      if (isValidMove(startPos, endPos))
-	      handleMove(startPos, endPos);
       unselectPiece();
+      if (isValidMove(startPos, endPos))
+	handleMove(startPos, endPos);
     }  
     else if (leftStartPos) {
       unselectPiece();
@@ -435,8 +433,6 @@ function sketch(p, playerColor, FEN) {
     }
     return [x, y];
   }
-
-
 };
 
 

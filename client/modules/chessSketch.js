@@ -20,25 +20,13 @@ function sketch (p, playerColor, FEN) {
   // debugging
   let verbose=true;
   
-  // default variables
+  // board and piece size
   let size = document.getElementById('chessboard').clientWidth;
   let padding = size/16;  // width of the edge of the board
   let boardsize = size - 2 * padding;
   let sqs = boardsize / 8;
   let pcs = sqs/1.5;
-  let awaitingPromotion = false;
-
-  let opponentColor = {'white':'black', 'black': 'white'}[playerColor]
-  let selectedPiece = null;
-  let pieceImages;
-  let game;
   
-  // has mouse left starting position?
-  let leftStartPos = false
-  
-  // move sound
-  const moveSound = new Audio('move.mp3');
-
   // Board colours
   const backcol = [204, 68, 0];
   const darkcol = [128, 64, 0];
@@ -48,7 +36,19 @@ function sketch (p, playerColor, FEN) {
   const letterCol = [133, 45, 1];
   const font = 'Times New Roman';
 
-  // const socket = io();
+
+  // global variables
+  let awaitingPromotion = false;
+  let opponentColor = {'white':'black', 'black': 'white'}[playerColor]
+  let selectedPiece = null;
+  let pieceImages;
+  let game;
+  let leftStartPos = false;
+  
+  // move sound
+  const moveSound = new Audio('move.mp3');
+
+  // socket: communication with other player and server
   // io from socket.io not explicitly imported since we just include the script in index.html
   // explicitly importing and setting sketch.js to a module seems to break socket.io?
 
@@ -57,6 +57,7 @@ function sketch (p, playerColor, FEN) {
     p.noLoop();
     game.ended = true;
   });
+
   socket.on('draw', () => {
     if (verbose) {console.log('The game ended in a draw. Stopping sketch loop.');};
     p.noLoop();
@@ -67,26 +68,28 @@ function sketch (p, playerColor, FEN) {
   socket.on('move', (initial, final, iType, fType, promotionOption) => { 
     // play and render move on board
     move(initial, final); 
-    if (promotionOption) {
+
+    if (promotionOption)
+    {
       // promoting pawn is currently on 'final' square
       promote(final, promotionOption);
     }
 
-    if (verbose) { console.log(game.toFEN()); }
+    if (verbose) 
+      console.log(game.toFEN());
+
     if (game.isDraw)
     {
       p.noLoop();
       game.ended = true;
       concludeGame('draw');
     }
-    // check if this move from the opponent puts the player in checkmate
-    let playerCheckmated = isCheckmate(game.strRep(), playerColor, game.enPassantTargetSquare(), 
-				       game.canCastle[playerColor], game.activeColor);
+
     // add to move list
     addtoMoveList(initial, final, iType, fType, inCheck(game.strRep(), playerColor),
-		  playerCheckmated);
+		  playerIsCheckmated(playerColor));
 
-    if (playerCheckmated) {
+    if (playerIsCheckmated(playerColor)) {
       if (verbose) {console.log('stopping loop');};
       p.noLoop();
       game.ended = true;
@@ -145,7 +148,7 @@ function sketch (p, playerColor, FEN) {
 
   function drawUnselectedPieces() {
     // draw board with pieces, except selected Piece
-    for (let i = 0 ; i < game.activePieces.length; i++) {
+    for (let i = 0; i < game.activePieces.length; i++) {
       if (game.activePieces[i] != selectedPiece) {
 	drawPiece(game.activePieces[i]);
       }
@@ -154,13 +157,13 @@ function sketch (p, playerColor, FEN) {
 
   function pieceImg(piece) {
     let orientation = '';
-    if (piece.type==='knight' || piece.type==='bishop') {
+    if (piece.type==='knight' || piece.type==='bishop')
       orientation = '_left';
-    }
+    
     let color = '';
-    if (piece.color==='white') {
+    if (piece.color==='white')
       color = '_white';
-    }
+    
     return pieceImages[piece.type + orientation + color];
   }
 
@@ -176,25 +179,26 @@ function sketch (p, playerColor, FEN) {
     // check if mouse has left starting position, 
     // i.e. if current mouse position is different from the position where the
     // selected piece was picked up
-    if (!arraysEqual(mousePos(), selectedPiece.position)) {
+    if (!arraysEqual(mousePos(), selectedPiece.position))
       leftStartPos = true;
-    }
   }
 
   function drawBoard() {
     // draw the board without pieces
-    p.background(...backcol);
+
+    // border
     p.strokeWeight(0);
+    p.background(...backcol);
+
+    // light squares
     p.fill(...lightcol);
     p.square(padding, padding, boardsize)
+
+    // dark squares
     p.fill(...darkcol);
-    let row;
-    let col;
-    for (col = 0; col < 8; col++) {
-      for (row = 0; row < 8; row++) {
-	if ((row + col) % 2 === 0) {
-	  p.square(...ColRowtoXY(col, row), sqs);
-	}
+    for (let row = 0; row < 8; row++) {
+      for (let col = row%2; col < 8; col+=2) {
+	p.square(...ColRowtoXY(col, row), sqs);
       }
     }
     // add numbers and letters to border
@@ -216,7 +220,7 @@ function sketch (p, playerColor, FEN) {
         x = padding + (7 - colNum + 0.5) * sqs;
       }
       
-      p.textAlign(p.CENTER , p.CENTER)
+      p.textAlign(p.CENTER , p.CENTER);
       // label columns with numbers
       p.text((8 - colNum).toString(), padding/2, x);
       p.text((8 - colNum).toString(), size - padding/2, x);
@@ -246,6 +250,7 @@ function sketch (p, playerColor, FEN) {
       }
       // right click to cancel move
       if (p.mouseButton === p.RIGHT) {
+	// make sure context menu does not pop up
 	document.addEventListener('contextmenu', e => {e.preventDefault();}, {once: true});
 	unselectPiece();
       }
@@ -257,18 +262,19 @@ function sketch (p, playerColor, FEN) {
   } 
 
   p.mouseReleased = () => {
-    if (selectedPiece) {
-      const startPos = selectedPiece.position;
-      const endPos = mousePos();
-      // if mouse clicked or dragged 
-      if (!arraysEqual(mousePos(), startPos)) {
-	if (isValidMove(startPos, endPos))
-          handleMove(startPos, endPos);
-	unselectPiece();
-      }  
-      else if (leftStartPos) {
-	unselectPiece();
-      }
+    if (!selectedPiece)
+      return false
+
+    const startPos = selectedPiece.position;
+    const endPos = mousePos();
+    // if mouse clicked or dragged 
+    if (!arraysEqual(startPos, endPos)) {
+      if (isValidMove(startPos, endPos))
+	handleMove(startPos, endPos);
+      unselectPiece();
+    }  
+    else if (leftStartPos) {
+      unselectPiece();
     }
   }
   
@@ -301,6 +307,12 @@ function sketch (p, playerColor, FEN) {
     
   }
 
+  function playerIsCheckmated(playerColor) {
+    return isCheckmate(game.strRep(), playerColor, game.enPassantTargetSquare(), 
+                       game.canCastle[playerColor], game.activeColor);
+  }
+
+
   async function handleMove(startPos, endPos) {
     let initialPieceType = game.getPiece(startPos).type;
     let finalPieceType;
@@ -321,7 +333,9 @@ function sketch (p, playerColor, FEN) {
     } else {
       sendMove(startPos, endPos, initialPieceType, finalPieceType);  // send move to server
     }
+
     if (verbose) { console.log(game.toFEN()); }
+
     if (game.isDraw)
     {
       p.noLoop();
@@ -336,8 +350,7 @@ function sketch (p, playerColor, FEN) {
     }
 
     // check if move left opponent in checkmate
-    let opponentCheckmated = isCheckmate(game.strRep(), opponentColor, game.enPassantTargetSquare(), 
-					 game.canCastle[opponentColor], game.activeColor);
+    let opponentCheckmated = playerIsCheckmated(opponentColor);
     addtoMoveList(startPos, endPos, initialPieceType, finalPieceType, 
                   inCheck(game.strRep(), opponentColor), opponentCheckmated);
     if (opponentCheckmated) {

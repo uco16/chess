@@ -14,7 +14,8 @@ input[type='button'] {
 .hp-title {
   text-align: center;
   font-size: 4em;
-  margin: 2em;
+  margin-top: 15vh;
+  margin-bottom: 8vh;
 }
 
 /* header */
@@ -40,6 +41,13 @@ header {
   height: 64px;
 }
 
+header .hp-title {
+  font-family: "TeX Gyre Schola", serif;
+  font-size: 2em;
+  font-weight: bold;
+  margin: 0;
+}
+
 /* Header Content Selection: 
  * for small screens: drop-down icon
  * for large screens: toolbar */
@@ -60,6 +68,7 @@ header {
   }
   header .hp-title {
     padding-left: 30px;
+    margin-right: 1.5em;
   }
   .toolbar {
     display: flex;
@@ -148,13 +157,6 @@ header {
   padding: 5px 0 5px 10px;
 }
 
-header .hp-title {
-  margin-right: 1.5em;
-  font-family: "TeX Gyre Schola", serif;
-  font-size: 2em;
-  font-weight: bold;
-}
-
 a, a:visited, .menu-item, .menu-item:visited {
   text-decoration: none;
   color: black;
@@ -202,6 +204,7 @@ a, a:visited, .menu-item, .menu-item:visited {
 .tile {
   border: 1px solid #cecdcd;
   height: 20em;
+  max-height: 50vh;
   width: 15em;
   margin: 0 6%;
   border-radius: 30px;
@@ -213,6 +216,7 @@ a, a:visited, .menu-item, .menu-item:visited {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  text-align: center;
 
   position: relative;
 }
@@ -241,6 +245,7 @@ a, a:visited, .menu-item, .menu-item:visited {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
 }
 
 .pieces {
@@ -300,6 +305,7 @@ a, a:visited, .menu-item, .menu-item:visited {
 
 #chessboard {
   width: 100%;
+  position: relative; /* to place win/move window inside chess board */
 }
 .movewindow {
   display: none;
@@ -309,12 +315,62 @@ a, a:visited, .menu-item, .menu-item:visited {
   display: none;
 }
 
+#promotion .options, #promotion {
+  display: none;
+}
+
+#endscreen {
+  position: absolute;
+  margin: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  background: white;
+  padding: 1em;
+  border: solid 2px brown;
+
+  display: none;
+  /* display: flex; will be toggled with javascript */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#endscreen .options {
+  flex-wrap: wrap;
+}
+
+.options {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.5em;
+}
+
+#endscreen input[type=button], .options button {
+  flex: 45%;
+  margin: 1%;
+}
+
+#gamewindow {
+  /*display: flex; triggered by lookingForOpponent.js*/
+  flex-direction: column;
+  align-items: center;
+}
+
+h2 {
+  font-size: 1.5em;
+  text-transform: capitalize;
+}
+
+
 @media (min-width: 730px) {
   /* tablets, half-desktop */
 
   #gamewindow {
     /*display: flex; triggered by lookingForOpponent.js*/
     padding: 1em;
+    flex-direction: row;
     align-items: flex-start;
     justify-content: center;
   }
@@ -323,8 +379,6 @@ a, a:visited, .menu-item, .menu-item:visited {
     width: 75%;
     display: block;
     max-width: 89vh;
-
-    position: relative; /* to place win/move window inside chess board */
   }
 
   .asideboard {
@@ -345,11 +399,6 @@ a, a:visited, .menu-item, .menu-item:visited {
     margin-bottom: 1em;
   }
 
-  h2 {
-    font-size: 1.5em;
-    text-transform: capitalize;
-  }
-
   .asideboard h2 {
     padding-bottom: 0.1em;
     border-bottom: 2px solid brown;
@@ -362,12 +411,7 @@ a, a:visited, .menu-item, .menu-item:visited {
     margin-top: 0.5em;
   }
 
-  #promotion .options {
-    display: none;
-  }
-
   #promotion {
-    display: none;
     margin-top: 1em;
   }
 

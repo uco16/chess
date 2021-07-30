@@ -1,4 +1,5 @@
 // imports from custom client-side functions
+import {isInBoard} from '/client/modules/chesslogic.js';
 import isLegal from '/client/modules/isLegal.js';
 import inCheck from '/client/modules/inCheck.js';
 import isCheckmate from '/client/modules/isCheckmate.js';
@@ -71,9 +72,7 @@ function sketch (p, playerColor, FEN) {
       promote(final, promotionOption);
     }
 
-    if (verbose) {
-      console.log(game.toFEN());
-    }
+    if (verbose) { console.log(game.toFEN()); }
     if (game.isDraw)
     {
       p.noLoop();
@@ -235,30 +234,25 @@ function sketch (p, playerColor, FEN) {
   }
   
   p.mousePressed = () => {
-    if (!game.ended)
-    {
-      // mouse down selects/grabs piece of own colour
-      let col, row;
-      [col, row] = mousePos();
-      
-      if (0 <= col && col < 8 && 0 <= row && row < 8) {
-	let pieceUnderMouse = game.getPiece(mousePos());
-	if (selectedPiece) {
-	  if (arraysEqual(mousePos(), selectedPiece.position)) {
-	    // user clicked back on starting square, no move is played
-	    unselectPiece();
-	  }
-	  // right click to cancel move
-	  if (p.mouseButton === p.RIGHT) {
-	    document.addEventListener('contextmenu', e => {e.preventDefault();}, {once: true});
-	    unselectPiece();
-	  }
-	}
-	else if (p.mouseButton === p.LEFT && pieceUnderMouse != null && pieceUnderMouse.color == playerColor) {
-	  // select piece if none already selected
-	  selectedPiece = pieceUnderMouse;
-	}
+    if (game.ended || !isInBoard(mousePos()))
+      return false;
+
+    // mouse down selects/grabs piece of own colour
+    let pieceUnderMouse = game.getPiece(mousePos());
+    if (selectedPiece) {
+      if (arraysEqual(mousePos(), selectedPiece.position)) {
+	// user clicked back on starting square, no move is played
+	unselectPiece();
       }
+      // right click to cancel move
+      if (p.mouseButton === p.RIGHT) {
+	document.addEventListener('contextmenu', e => {e.preventDefault();}, {once: true});
+	unselectPiece();
+      }
+    }
+    else if (p.mouseButton === p.LEFT && pieceUnderMouse != null && pieceUnderMouse.color == playerColor) {
+      // select piece if none already selected
+      selectedPiece = pieceUnderMouse;
     }
   } 
 
@@ -268,17 +262,43 @@ function sketch (p, playerColor, FEN) {
       const endPos = mousePos();
       // if mouse clicked or dragged 
       if (!arraysEqual(mousePos(), startPos)) {
-        if (!awaitingPromotion &&
-            isLegal(startPos, endPos, game.strRep(), game.enPassantTargetSquare(),
-                    playerColor, game.canCastle[playerColor], game.activeColor)) {
+	if (isValidMove(startPos, endPos))
           handleMove(startPos, endPos);
-        }
 	unselectPiece();
       }  
       else if (leftStartPos) {
 	unselectPiece();
       }
     }
+  }
+  
+  // mobile versions of mousePressed and mouseReleased
+  p.touchStarted = () => {
+    if (game.ended)
+      return false;
+
+    if (isInBoard(mousePos()))
+      selectedPiece = game.getPiece(mousePos());
+
+    return false;  // prevent default behaviour and treat touch like mouse
+  }
+
+  p.touchEnded = () => {
+    if (game.ended || !selectedPiece)
+      return false;
+
+    if (isValidMove(selectedPiece.position, mousePos()))
+	handleMove(selectedPiece.position, mousePos());
+
+    selectedPiece = null;
+    return false;
+  }
+
+  function isValidMove(startPos, endPos) {
+   return !arraysEqual(startPos, endPos) && !awaitingPromotion 
+	   && isLegal(startPos, endPos, game.strRep(), game.enPassantTargetSquare(),
+		      playerColor, game.canCastle[playerColor], game.activeColor)
+    
   }
 
   async function handleMove(startPos, endPos) {
@@ -301,9 +321,7 @@ function sketch (p, playerColor, FEN) {
     } else {
       sendMove(startPos, endPos, initialPieceType, finalPieceType);  // send move to server
     }
-    if (verbose) {
-      console.log(game.toFEN());
-    }
+    if (verbose) { console.log(game.toFEN()); }
     if (game.isDraw)
     {
       p.noLoop();
@@ -358,11 +376,6 @@ function sketch (p, playerColor, FEN) {
     pcs = sqs/1.5;
     p.resizeCanvas(size, size);
   };
-
-  // mobile device behaviour
-  //p.touchMoved = () => {
-  //  return false;  // prevent default behaviour
-  //}
 
   function XYtoColRow(x, y) {
     // transform x, y coordinates into col, row coordinates

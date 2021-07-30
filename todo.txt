@@ -1,10 +1,9 @@
-- position repeated three times: offer draw becomes "claim draw" (either just before making the move, or after the opponent has made the move)
-- fivefold repetition rule: mandatory draw
+- make last move visible (optional)
+- show possible moves when picking up a piece (optional)
+- use arrow keys / click on move list to go back to a previous position
 - mute button
 - copy URL link in win/lose screen, so you can save the game
-- game mode selection on main page
 - timer
-- right click on drag to cancel the move
 - names and rating of you and opponent
 - name of the one who is due to move is glowing
 - "choose name" link up with data base, check if name is already taken, if so then prompt for sign in
@@ -20,3 +19,5 @@
 - devise some test cases
 - write script to move .js file and change all import statements in other js files
 - add "are you sure?" to draw/resign buttons
+- game mode selection on main page
+

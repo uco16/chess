@@ -1,4 +1,5 @@
 // imports from custom client-side functions
+import {isInBoard} from '/client/modules/chesslogic.js';
 import isLegal from '/client/modules/isLegal.js';
 import inCheck from '/client/modules/inCheck.js';
 import isCheckmate from '/client/modules/isCheckmate.js';
@@ -19,25 +20,13 @@ function sketch(p, playerColor, FEN) {
   // debugging
   let verbose = true;
 
-  // default variables
+  // board and piece size
   let size = document.getElementById('chessboard').clientWidth;
   let padding = size / 16;  // width of the edge of the board
   let boardsize = size - 2 * padding;
   let sqs = boardsize / 8;
   let pcs = sqs / 1.5;
-  let awaitingPromotion = false;
-
-  let opponentColor = { 'white': 'black', 'black': 'white' }[playerColor]
-  let selectedPiece = null;
-  let pieceImages;
-  let game;
-
-  // has mouse left starting position?
-  let leftStartPos = false;
-
-  // move sound
-  const moveSound = new Audio('move.mp3');
-
+  
   // Board colours
   const backcol = [204, 68, 0];
   const darkcol = [128, 64, 0];
@@ -51,8 +40,19 @@ function sketch(p, playerColor, FEN) {
   // options to be toggled settings
   let highlightsAreActive = false;
 
+  // global variables
+  let awaitingPromotion = false;
+  let opponentColor = {'white':'black', 'black': 'white'}[playerColor]
+  let selectedPiece = null;
+  let pieceImages;
+  let game;
+  let leftStartPos = false;
+  let highlightedSquares = [];
   
-  // const socket = io();
+  // move sound
+  const moveSound = new Audio('move.mp3');
+
+  // socket: communication with other player and server
   // io from socket.io not explicitly imported since we just include the script in index.html
   // explicitly importing and setting sketch.js to a module seems to break socket.io?
 
@@ -61,6 +61,7 @@ function sketch(p, playerColor, FEN) {
     p.noLoop();
     game.ended = true;
   });
+
   socket.on('draw', () => {
     if (verbose) { console.log('The game ended in a draw. Stopping sketch loop.'); };
     p.noLoop();
@@ -71,27 +72,26 @@ function sketch(p, playerColor, FEN) {
   socket.on('move', (initial, final, iType, fType, promotionOption) => {
     // play and render move on board
     move(initial, final);
+    
     if (promotionOption) {
       // promoting pawn is currently on 'final' square
       promote(final, promotionOption);
     }
 
-    if (verbose) {
+    if (verbose) 
       console.log(game.toFEN());
-    }
+
     if (game.isDraw) {
       p.noLoop();
       game.ended = true;
       concludeGame('draw');
     }
-    // check if this move from the opponent puts the player in checkmate
-    let playerCheckmated = isCheckmate(game.strRep(), playerColor, game.enPassantTargetSquare(),
-      game.canCastle[playerColor], game.activeColor);
+    
     // add to move list
     addtoMoveList(initial, final, iType, fType, inCheck(game.strRep(), playerColor),
-      playerCheckmated);
+		  playerIsCheckmated(playerColor));
 
-    if (playerCheckmated) {
+    if (playerIsCheckmated(playerColor)) {
       if (verbose) { console.log('stopping loop'); };
       p.noLoop();
       game.ended = true;
@@ -162,13 +162,13 @@ function sketch(p, playerColor, FEN) {
 
   function pieceImg(piece) {
     let orientation = '';
-    if (piece.type === 'knight' || piece.type === 'bishop') {
+    if (piece.type === 'knight' || piece.type === 'bishop')
       orientation = '_left';
-    }
+    
     let color = '';
-    if (piece.color === 'white') {
+    if (piece.color === 'white')
       color = '_white';
-    }
+    
     return pieceImages[piece.type + orientation + color];
   }
 
@@ -184,25 +184,26 @@ function sketch(p, playerColor, FEN) {
     // check if mouse has left starting position, 
     // i.e. if current mouse position is different from the position where the
     // selected piece was picked up
-    if (!arraysEqual(mousePos(), selectedPiece.position)) {
+    if (!arraysEqual(mousePos(), selectedPiece.position))
       leftStartPos = true;
-    }
   }
 
   function drawBoard() {
     // draw the board without pieces
-    p.background(...backcol);
+
+    // border
     p.strokeWeight(0);
+    p.background(...backcol);
+
+    // light squares
     p.fill(...lightcol);
     p.square(padding, padding, boardsize)
+
+    // dark squares
     p.fill(...darkcol);
-    let row;
-    let col;
-    for (col = 0; col < 8; col++) {
-      for (row = 0; row < 8; row++) {
-        if ((row + col) % 2 === 0) {
-          p.square(...ColRowtoXY(col, row), sqs);
-        }
+    for (let row = 0; row < 8; row++) {
+      for (let col = row%2; col < 8; col+=2) {
+	      p.square(...ColRowtoXY(col, row), sqs);
       }
     }
     // add numbers and letters to border
@@ -224,7 +225,7 @@ function sketch(p, playerColor, FEN) {
         x = padding + (7 - colNum + 0.5) * sqs;
       }
 
-      p.textAlign(p.CENTER, p.CENTER)
+      p.textAlign(p.CENTER , p.CENTER);
       // label columns with numbers
       p.text((8 - colNum).toString(), padding / 2, x);
       p.text((8 - colNum).toString(), size - padding / 2, x);
@@ -245,53 +246,69 @@ function sketch(p, playerColor, FEN) {
   }
 
   p.mousePressed = () => {
-    if (!game.ended && playerColor === game.activeColor) {
-      // mouse down selects/grabs piece of own colour
-      let col, row;
-      [col, row] = mousePos();
-      if (0 <= col && col < 8 && 0 <= row && row < 8) {
-        let pieceUnderMouse = game.getPiece(mousePos());
-        if (selectedPiece) {
-          if (arraysEqual(mousePos(), selectedPiece.position)) {
-            // user clicked back on starting square, no move is played
-            unselectPiece();
-          }
-          // right click to cancel move
-          if (p.mouseButton === p.RIGHT) {
-            document.addEventListener('contextmenu', e => { e.preventDefault(); }, { once: true });
-            unselectPiece();
-          }
-        }
-        else if (p.mouseButton === p.LEFT && pieceUnderMouse != null && pieceUnderMouse.color == playerColor) {
-          // select piece if none already selected
-          selectedPiece = pieceUnderMouse;
-          highlightedSquares.push(mousePos());
-        }
+    if (game.ended || !isInBoard(mousePos()) && playerColor !== game.activeColor)
+      return false;
+
+    // mouse down selects/grabs piece of own colour
+    let pieceUnderMouse = game.getPiece(mousePos());
+    if (selectedPiece) {
+      if (arraysEqual(mousePos(), selectedPiece.position)) {
+        // user clicked back on starting square, no move is played
+        unselectPiece();
       }
+      // right click to cancel move
+      if (p.mouseButton === p.RIGHT) {
+        // make sure context menu does not pop up
+        document.addEventListener('contextmenu', e => {e.preventDefault();}, {once: true});
+        unselectPiece();
+      }
+    }
+    else if (p.mouseButton === p.LEFT && pieceUnderMouse != null && pieceUnderMouse.color == playerColor) {
+      // select piece if none already selected
+      selectedPiece = pieceUnderMouse;
+      highlightedSquares.push(mousePos());
     }
   }
 
   p.mouseReleased = () => {
-    if (selectedPiece) {
-      const startPos = selectedPiece.position;
-      const endPos = mousePos();
-      // if mouse clicked or dragged 
-      if (!arraysEqual(mousePos(), startPos)) {
-        unselectPiece();
-        if (!awaitingPromotion &&
-          isLegal(startPos, endPos, game.strRep(), game.enPassantTargetSquare(),
-            playerColor, game.canCastle[playerColor], game.activeColor)) {
-          handleMove(startPos, endPos);
-        }
-      }
-      else if (leftStartPos) {
-        unselectPiece();
-      }
+    if (!selectedPiece)
+      return false
+
+    const startPos = selectedPiece.position;
+    const endPos = mousePos();
+    // if mouse clicked or dragged 
+    if (!arraysEqual(startPos, endPos)) {
+      if (isValidMove(startPos, endPos))
+	      handleMove(startPos, endPos);
+      unselectPiece();
+    }  
+    else if (leftStartPos) {
+      unselectPiece();
     }
   }
+  
+  // mobile versions of mousePressed and mouseReleased
+  p.touchStarted = () => {
+    if (game.ended)
+      return false;
 
-  let highlightedSquares = [];
+    if (isInBoard(mousePos()))
+      selectedPiece = game.getPiece(mousePos());
 
+    return false;  // prevent default behaviour and treat touch like mouse
+  }
+
+  p.touchEnded = () => {
+    if (game.ended || !selectedPiece)
+      return false;
+
+    if (isValidMove(selectedPiece.position, mousePos()))
+	    handleMove(selectedPiece.position, mousePos());
+
+    selectedPiece = null;
+    return false;
+  }
+  
   function drawHighlightedSquares() {
     for (let [col, row] of highlightedSquares) { 
       p.fill(...highlightCol);
@@ -299,15 +316,18 @@ function sketch(p, playerColor, FEN) {
     }
   }
 
-  function highlightMove() {
-    let [col, row] = mousePos();
-    if (0 <= col && col < 8 && 0 <= row && row < 8) {
-      let pieceUnderMouse = game.getPiece(mousePos());
-      if (pieceUnderMouse !== null) {
-        highlightedSquares.push(mousePos());
-      }
-    }
+  function isValidMove(startPos, endPos) {
+   return !arraysEqual(startPos, endPos) && !awaitingPromotion 
+	   && isLegal(startPos, endPos, game.strRep(), game.enPassantTargetSquare(),
+		      playerColor, game.canCastle[playerColor], game.activeColor)
+    
   }
+
+  function playerIsCheckmated(playerColor) {
+    return isCheckmate(game.strRep(), playerColor, game.enPassantTargetSquare(), 
+                       game.canCastle[playerColor], game.activeColor);
+  }
+
 
   async function handleMove(startPos, endPos) {
     let initialPieceType = game.getPiece(startPos).type;
@@ -329,9 +349,10 @@ function sketch(p, playerColor, FEN) {
     } else {
       sendMove(startPos, endPos, initialPieceType, finalPieceType);  // send move to server
     }
-    if (verbose) {
+    
+    if (verbose) 
       console.log(game.toFEN());
-    }
+   
     if (game.isDraw) {
       p.noLoop();
       game.ended = true;
@@ -345,10 +366,10 @@ function sketch(p, playerColor, FEN) {
     }
 
     // check if move left opponent in checkmate
-    let opponentCheckmated = isCheckmate(game.strRep(), opponentColor, game.enPassantTargetSquare(),
-      game.canCastle[opponentColor], game.activeColor);
-      addtoMoveList(startPos, endPos, initialPieceType, finalPieceType,
-      inCheck(game.strRep(), opponentColor), opponentCheckmated);
+    let opponentCheckmated = playerIsCheckmated(opponentColor);
+    addtoMoveList(startPos, endPos, initialPieceType, finalPieceType, 
+                  inCheck(game.strRep(), opponentColor), opponentCheckmated);
+
     if (opponentCheckmated) {
       if (verbose) { console.log('stopping loop'); };
       p.noLoop();
@@ -386,11 +407,6 @@ function sketch(p, playerColor, FEN) {
     pcs = sqs / 1.5;
     p.resizeCanvas(size, size);
   };
-
-  // mobile device behaviour
-  //p.touchMoved = () => {
-  //  return false;  // prevent default behaviour
-  //}
 
   function XYtoColRow(x, y) {
     // transform x, y coordinates into col, row coordinates

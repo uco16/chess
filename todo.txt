@@ -1,4 +1,3 @@
-- make last move visible (optional)
 - show possible moves when picking up a piece (optional)
 - use arrow keys / click on move list to go back to a previous position
 - mute button

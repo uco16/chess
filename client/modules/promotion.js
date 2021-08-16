@@ -1,9 +1,16 @@
 export default function inputPromotion(playerColor) {
   // Display an input field for the user to select the promotion piece.
   // After user input, hide that input field and return the input.
-  return new Promise(promoteTo => {
-    displayPromotion(playerColor, promoteTo);
-  });
+
+  if (!!localStorage.getItem("autoPromoteToQueen")) {
+    return "queen";
+  }
+  else
+  {
+    return new Promise(promoteTo => {
+      displayPromotion(playerColor, promoteTo);
+    });
+  }
 }
 
 function displayPromotion(color, promoteTo) {

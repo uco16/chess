@@ -17,7 +17,8 @@ document.write(`
     <a class="tab">About</a>
     <a class="tab" href="/play">New Game</a>
     <input type="textbox" id="name_selector" placeholder="Choose Name">
-    <img src="./client/icons/settings.png" alt="settings" width="32px" height="32px">
+    <img id="settings" src="./client/icons/settings.png" alt="settings" width="32px" height="32px">
+    <script src="/client/modules/settings.js"></script>
   </nav>
   </div>
 </header>

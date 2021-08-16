@@ -16,7 +16,7 @@ socket.on('match', (color, FEN) => {
 socket.emit('readyForMatch');
 
 function startMatch(playerColor, FEN) {
-  if (verbose) {console.log("sketch: match, start game with colour " + playerColor);}
+  if (verbose) {console.log("match, start game with colour " + playerColor);}
   new p5(chessSketch(playerColor, FEN), 'chessboard');
 
   // if the game starts from a position where it is black's turn to move, 

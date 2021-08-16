@@ -37,9 +37,6 @@ function sketch(p, playerColor, FEN) {
   const letterCol = [133, 45, 1];
   const font = 'Times New Roman';
 
-  // options to be toggled settings
-  let highlightsAreActive = true;
-
   // global variables
   let awaitingPromotion = false;
   let opponentColor = {'white':'black', 'black': 'white'}[playerColor]
@@ -142,7 +139,7 @@ function sketch(p, playerColor, FEN) {
 
   p.draw = () => {
     drawBoard();
-    if (highlightsAreActive) {
+    if (!!localStorage.getItem("highlightsAreActive")) {
       drawHighlightedSquares();
     }
     drawUnselectedPieces();

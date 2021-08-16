@@ -380,7 +380,9 @@ function sketch(p, playerColor, FEN) {
   function move(initial, final) {
     game.move(initial, final);
     highlightedSquares = [initial, final];
-    moveSound.play();
+
+    if (!!localStorage.getItem("playSoundOnMove"))
+      moveSound.play();
   }
 
   function promote(square, promotionOption) {

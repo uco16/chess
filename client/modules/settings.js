@@ -62,7 +62,8 @@ function createClosingButton(element_to_be_removed) {
 
 let setting_options = { 
   'highlightsAreActive': 'highlight last move', 
-  'autoPromoteToQueen': 'always promote to queen'
+  'autoPromoteToQueen': 'always promote to queen',
+  'playSoundOnMove': 'play sound on move'
 };
 
 document.getElementById('settings').addEventListener('click', toggleSettings);

@@ -66,7 +66,10 @@ function sketch(p, playerColor, FEN) {
   })
 
   // define what to do when opponent's move is received
-  socket.on('move', (initial, final, iType, fType, promotionOption) => {
+  socket.on('move', (initial, final, promotionOption) => {
+    let iType = !!game.getPiece(initial)  ? game.getPiece(initial).type : 'empty';
+    let fType = !!game.getPiece(final)	  ? game.getPiece(final).type	: 'empty';
+
     // play and render move on board
     move(initial, final);
     
@@ -85,11 +88,12 @@ function sketch(p, playerColor, FEN) {
     }
     
     let isCheckmateNow = playerIsCheckmated(playerColor);
-    addtoMoveList(initial, final, iType, fType, inCheck(game.strRep(), playerColor),
+    addtoMoveList(initial, final, iType, fType, 
+		  inCheck(game.strRep(), playerColor),
 		  isCheckmateNow);
 
     if (isCheckmateNow) {
-      if (verbose) { console.log('stopping loop'); };
+      if (verbose) { console.log('stopping loop'); }
       p.noLoop();
       game.ended = true;
       concludeGame('loss');

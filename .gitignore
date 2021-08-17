@@ -1,3 +1,6 @@
+# ignore anything that is in a folder called 'private'
+private/
+
 # ignore vim-related files
 *.swp
 tags

@@ -3,18 +3,21 @@ const { spawn, exec } = require('child_process');
 module.exports = class Engine {
   constructor() {
     console.log("Initialising Engine");
+
     this.Arborist = spawn("./engine/Arborist.out");
+
     this.Arborist.stdout.on('data', (data) => {
-      //console.log(`stdout: ${data}`);
-      if (data.toString().substring(0,9)==='best move')
+      let dstr = data.toString();
+      //console.log(`stdout: ` + dstr);
+      if (dstr.substring(0,9)==='best move')
       {
-	let dstr = data.toString();
 	let long_move = dstr.substring(10, 14);
 	let [initial, final] = matrixMove(long_move);
 	this.emit('move', initial, final);
 	this.move(initial, final);
       }
     });
+
     this.Arborist.stderr.on('data', (data) => {
       console.log(`stderr: ${data}`);
     });
@@ -48,7 +51,7 @@ module.exports = class Engine {
   }
 
   startThinking() {
-    let depth = 5;
+    let depth = 4;
     this.Arborist.stdin.write(`go ${depth}\n`);
   }
 
@@ -56,7 +59,6 @@ module.exports = class Engine {
     let longMove = algebraic(initial) + algebraic(final);
     this.Arborist.stdin.write(`moves ${longMove}\n`);
   }
-
 }
 
 function algebraic(square) {

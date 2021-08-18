@@ -10,11 +10,11 @@ import { arraysEqual } from '/client/modules/jslogic.js';
 import concludeGame from '/client/modules/concludeGame.js';
 import { resignButton, drawButton, initializeDrawButton } from '/client/modules/resignAndDraw.js';
 
-export default function chessSketch(playerColor, FEN) {
-  return (p) => { sketch(p, playerColor, FEN); };
+export default function chessSketch(matchData) {
+  return (p) => { sketch(p, matchData); };
 }
 
-function sketch(p, playerColor, FEN) {
+function sketch(p, matchData) {
   // "instance mode" https://github.com/processing/p5.js/wiki/p5.js-overview#instantiation--namespace
 
   // debugging
@@ -39,7 +39,8 @@ function sketch(p, playerColor, FEN) {
 
   // global variables
   let awaitingPromotion = false;
-  let opponentColor = {'white':'black', 'black': 'white'}[playerColor]
+  let playerColor = !!matchData.playerColor ? matchData.playerColor : 'white';
+  let opponentColor = {'white':'black', 'black': 'white'}[playerColor];
   let selectedPiece = null;
   let pieceImages;
   let game;
@@ -52,53 +53,6 @@ function sketch(p, playerColor, FEN) {
   // socket: communication with other player and server
   // io from socket.io not explicitly imported since we just include the script in index.html
   // explicitly importing and setting sketch.js to a module seems to break socket.io?
-
-  socket.on('resign', () => {
-    if (verbose) { console.log('Opponent resigned, stopping sketch loop.'); };
-    p.noLoop();
-    game.ended = true;
-  });
-
-  socket.on('draw', () => {
-    if (verbose) { console.log('The game ended in a draw. Stopping sketch loop.'); };
-    p.noLoop();
-    game.ended = true;
-  })
-
-  // define what to do when opponent's move is received
-  socket.on('move', (initial, final, promotionOption) => {
-    let iType = !!game.getPiece(initial)  ? game.getPiece(initial).type : 'empty';
-    let fType = !!game.getPiece(final)	  ? game.getPiece(final).type	: 'empty';
-
-    // play and render move on board
-    move(initial, final);
-    
-    if (promotionOption) {
-      // promoting pawn is currently on 'final' square
-      promote(final, promotionOption);
-    }
-
-    if (verbose) 
-      console.log(game.toFEN());
-
-    if (game.isDraw) {
-      p.noLoop();
-      game.ended = true;
-      concludeGame('draw');
-    }
-    
-    let isCheckmateNow = playerIsCheckmated(playerColor);
-    addtoMoveList(initial, final, iType, fType, 
-		  inCheck(game.strRep(), playerColor),
-		  isCheckmateNow);
-
-    if (isCheckmateNow) {
-      if (verbose) { console.log('stopping loop'); }
-      p.noLoop();
-      game.ended = true;
-      concludeGame('loss');
-    }
-  });
 
   p.preload = () => {
     // load images before doing anything else
@@ -124,7 +78,7 @@ function sketch(p, playerColor, FEN) {
 
   p.setup = () => {
     p.createCanvas(size, size);
-    game = new ChessGame(FEN);
+    game = new ChessGame(matchData.position);
 
     // make resign and draw buttons stop the sketch
     resignButton.addEventListener('click', () => {
@@ -139,6 +93,52 @@ function sketch(p, playerColor, FEN) {
         game.ended = true;
       }
     });
+
+    socket.on('resign', () => {
+      if (verbose) { console.log('Opponent resigned, stopping sketch loop.'); };
+      p.noLoop();
+      game.ended = true;
+    });
+
+    socket.on('draw', () => {
+      if (verbose) { console.log('The game ended in a draw. Stopping sketch loop.'); };
+      p.noLoop();
+      game.ended = true;
+    })
+
+    // define what to do when opponent's move is received (or move from computer)
+    socket.on('move', (initial, final, promotionOption) => {
+      let iType = !!game.getPiece(initial)  ? game.getPiece(initial).type : 'empty';
+      let fType = !!game.getPiece(final)	  ? game.getPiece(final).type	: 'empty';
+
+      // play and render move on board
+      move(initial, final);
+      
+      if (promotionOption)
+	promote(final, promotionOption);
+
+      if (verbose) 
+	console.log(game.toFEN());
+
+      if (game.isDraw) {
+	p.noLoop();
+	game.ended = true;
+	concludeGame('draw');
+      }
+      
+      let isCheckmateNow = playerIsCheckmated(game.activeColor);
+      addtoMoveList(initial, final, iType, fType, 
+		    inCheck(game.strRep(), playerColor),
+		    isCheckmateNow);
+
+      if (isCheckmateNow) {
+	if (verbose) { console.log('stopping loop'); }
+	p.noLoop();
+	game.ended = true;
+	concludeGame('loss');
+      }
+    });
+
   }
 
   p.draw = () => {
@@ -244,8 +244,12 @@ function sketch(p, playerColor, FEN) {
     leftStartPos = false;
   }
 
+  function canMove() {
+    return (!game.ended && matchData.role==='player')
+  }
+
   p.mousePressed = () => {
-    if (game.ended || !isInBoard(mousePos()) || playerColor !== game.activeColor)
+    if (!canMove() || !isInBoard(mousePos()) || playerColor !== game.activeColor)
       return false;
 
     // mouse down selects/grabs piece of own colour
@@ -288,7 +292,7 @@ function sketch(p, playerColor, FEN) {
   
   // mobile versions of mousePressed and mouseReleased
   p.touchStarted = () => {
-    if (game.ended)
+    if (!canMove())
       return false;
 
     if (isInBoard(mousePos()))
@@ -298,7 +302,7 @@ function sketch(p, playerColor, FEN) {
   }
 
   p.touchEnded = () => {
-    if (game.ended || !selectedPiece)
+    if (!canMove() || !selectedPiece)
       return false;
 
     if (isValidMove(selectedPiece.position, mousePos()))
@@ -342,11 +346,11 @@ function sketch(p, playerColor, FEN) {
     if (initialPieceType === 'pawn' && (endPos[1] === 0 || endPos[1] === 7)) {
       awaitingPromotion = true;  // blocks further moves being done
       const promotionResult = await inputPromotion(playerColor);
-      sendMove(startPos, endPos, initialPieceType, finalPieceType, promotionResult);
+      sendMove(startPos, endPos, promotionResult);
       awaitingPromotion = false;
       promote(endPos, promotionResult);
     } else {
-      sendMove(startPos, endPos, initialPieceType, finalPieceType);  // send move to server
+      sendMove(startPos, endPos);  // send move to server
     }
     
     if (verbose) 

@@ -14,6 +14,9 @@ const htmlDir	= '/client/html/';
 const positions = require('./positions.json');
 const defaultPosition = positions['initial'];
 
+// engine matching
+const engineTesting = true;
+
 const hostname = '0.0.0.0';
 const port = process.env.PORT || 8000;
 
@@ -115,12 +118,15 @@ function match(socket1, socket2) {
   });
 
   // send start of match information to players
-  io.to(socket1.id).emit('match', 'white', defaultPosition);
-  io.to(socket2.id).emit('match', 'black', defaultPosition);
+  io.to(socket1.id).emit('match', {'role': 'player', 
+				   'playerColor': 'white',
+				   'position': defaultPosition});
+  io.to(socket2.id).emit('match', {'role': 'player', 
+				   'playerColor': 'black',
+				   'position': defaultPosition});
 }
 
 let engineMatchCounter = 1;
-
 function engineMatch(socket) {
   console.log("Match between engine and " + socket.id);
   const engine = new Engine();
@@ -139,9 +145,44 @@ function engineMatch(socket) {
   })
 
   engine.newGame(engineColor, defaultPosition);
+
+  let matchData = {
+    'role': 'player',
+    'playerColor': playerColor,
+    'position': defaultPosition
+  }
+  io.to(socket.id).emit('match', playerColor, defaultPosition);
+
   if (engineColor==='white')
     engine.startThinking();
-  io.to(socket.id).emit('match', playerColor, defaultPosition);
+}
+
+function engineVsEngine(socket) {
+  console.log(`${socket.id} started watching an engine match`);
+  const engine1 = new Engine();
+  const engine2 = new Engine();
+
+  engine2.on('move', (initial, final) => {
+    io.to(socket.id).emit('move', initial, final);
+    engine1.move(initial, final);
+    engine1.startThinking();
+  });
+  engine1.on('move', (initial, final) => {
+    io.to(socket.id).emit('move', initial, final);
+    engine2.move(initial, final);
+    engine2.startThinking();
+  });
+
+  engine1.newGame('white', defaultPosition);
+  engine2.newGame('black', defaultPosition);
+
+  let matchData = {
+    'role': 'spectator',
+    'position': defaultPosition
+  }
+  io.to(socket.id).emit('match', matchData)
+
+  engine1.startThinking();
 }
 
 // --- main ----
@@ -159,7 +200,12 @@ io.on('connection', (socket) => {
   // (i.e. when client-side defined what to do when match is received)
   socket.on('readyForMatch', (gameMode) => { 
     if (gameMode==="computer")
-      engineMatch(socket);
+    {
+      if (engineTesting)
+	engineVsEngine(socket);
+      else
+	engineMatch(socket);
+    }
     else
       joinQueue(socket); 
   });

@@ -6,6 +6,7 @@
 :root {
   --transition-time: 0.4s;
   --header-height: 64px;
+  --accent-color: brown;
 }
 
 input[type='button'] {
@@ -329,7 +330,7 @@ a, a:visited, .menu-item, .menu-item:visited {
 
   background: white;
   padding: 1em;
-  border: solid 2px brown;
+  border: solid 2px var(--accent-color);
 
   display: none;
   /* display: flex; will be toggled with javascript */
@@ -388,7 +389,7 @@ h2 {
   .window {
     width: 10rem;
     background-color: #ebebe0;
-    border: 2px solid brown;
+    border: 2px solid var(--accent-color);
     min-height: 2em;
     padding: 0.5em 1em;
   }
@@ -401,7 +402,7 @@ h2 {
 
   .asideboard h2 {
     padding-bottom: 0.1em;
-    border-bottom: 2px solid brown;
+    border-bottom: 2px solid var(--accent-color);
     text-align: center;
   }
 
@@ -428,7 +429,7 @@ h2 {
   }
 
   .option:hover {
-    border: 2px solid brown;
+    border: 2px solid var(--accent-color);
     box-sizing: border-box;
   }
   
@@ -458,7 +459,7 @@ h2 {
 
     background: white;
     padding: 1em;
-    border: solid 2px brown;
+    border: solid 2px var(--accent-color);
 
     display: none;
     /* display: flex; will be toggled with javascript */
@@ -486,14 +487,20 @@ h2 {
     padding-right: 1.5em;
   }
 
-  #settings_dialog label {
+  #settings_dialog .setting {
     display: flex;
     flex-direction: row-reverse;
     justify-content: flex-end;
+    align-items: center;
+
+    -webkit-user-select: none; /* Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
   }
 
-  #settings_dialog label input {
-    margin-right: 0.4em;
+  .setting .slider {
+    margin-right: 0.5em;
   }
 }
 
@@ -509,7 +516,7 @@ h2 {
 .closer div {
   width: 100%;
   height: 15%;
-  background: brown;
+  background: var(--accent-color);
   position: absolute;
   top: 50%;
   left: 50%;
@@ -521,3 +528,45 @@ h2 {
 .closer div:nth-child(2) {
   transform: translate(-50%, -50%) rotate(45deg);
 }
+
+
+/* toggle switch */
+
+label.switch {
+  --switch-width: 30px;
+  display: block;
+}
+
+label.switch input[type=checkbox] {
+  display: none;
+}
+
+.slider {
+  height: 16px;
+  width: var(--switch-width);
+  background: grey;
+  border-radius: 1em;
+  display: flex;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+input[type=checkbox]:checked + .slider {
+  background: var(--accent-color);
+}
+
+.slider::before {
+  content: "";
+  display: block;
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  background: white;
+  transition: transform 0.2s;
+  transform: translateX(1px);
+}
+
+input[type=checkbox]:checked + .slider::before {
+  transform: translateX(var(--switch-width)) translateX(-14px) translateX(-1px);
+}
+/* ----- */

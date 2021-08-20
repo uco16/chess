@@ -3,43 +3,57 @@
 function toggleSettings() {
   let settings = document.getElementById('settings_dialog');
   if (!settings)
-    openSettings();
+    document.body.appendChild(createSettingsDialog());
   else
     settings.remove();
 }
 
-function openSettings() {
-  let settings = createSettingsDialog();
-  document.body.appendChild(settings);
+function createCheckbox(option) {
+  let checkbox = document.createElement("input");
+  checkbox.setAttribute("type", "checkbox");
+  checkbox.checked = !!localStorage.getItem(option);
+  checkbox.addEventListener('change', (e) => {
+    if (e.currentTarget.checked)
+      localStorage.setItem(option, "on");
+    else
+      localStorage.removeItem(option);
+  });
+  return checkbox;
 }
 
+function div(classList, id) {
+  let element = document.createElement('div');
+  element.classList = classList;
+  if (id)
+    element.id = id;
+  return element;
+}
+
+function toggle_switch(option, text) {
+  let toggle = document.createElement("label");
+  toggle.classList.add("switch");
+  if (text)
+    toggle.textContent=text;
+  let checkbox = createCheckbox(option);
+  let slider = div(["slider"]);
+  toggle.appendChild(checkbox);
+  toggle.appendChild(slider);
+  return toggle;
+}
 
 function appendSettingOptions(settings) {
   for (let option of Object.keys(setting_options)) {
-    let checkbox = document.createElement("input");
-    checkbox.setAttribute("type", "checkbox");
-    checkbox.checked = !!localStorage.getItem(option);
-    checkbox.addEventListener('change', (e) => {
-      if (e.currentTarget.checked)
-	localStorage.setItem(option, "on");
-      else
-	localStorage.removeItem(option);
-    });
 
-    let optionLabel = setting_options[option];
-    let label = document.createElement("label");
-    label.textContent = optionLabel;
-    label.appendChild(checkbox);
+    let text = setting_options[option];
+    let toggle = toggle_switch(option, text);
+    toggle.classList.add("setting");
 
-    settings.appendChild(label);
+    settings.appendChild(toggle);
   }
 }
 
 function createSettingsDialog() {
-  let settings = document.createElement("div");
-  settings.id = "settings_dialog";
-  settings.classList.add("window");
-
+  let settings = div(["window"], "settings_dialog");
   appendSettingOptions(settings);
 
   let closingButton = createClosingButton(settings);

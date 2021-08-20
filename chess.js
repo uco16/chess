@@ -159,22 +159,24 @@ function engineMatch(socket) {
 
 function engineVsEngine(socket) {
   console.log(`${socket.id} started watching an engine match`);
-  const engine1 = new Engine();
-  const engine2 = new Engine();
+  const white_engine = new Engine();
+  const black_engine = new Engine();
 
-  engine2.on('move', (initial, final) => {
+  white_engine.on('move', (initial, final) => {
+    console.log(`White engine move: [${initial}, ${final}]`);
     io.to(socket.id).emit('move', initial, final);
-    engine1.move(initial, final);
-    engine1.startThinking();
+    black_engine.move(initial, final);
+    black_engine.startThinking();
   });
-  engine1.on('move', (initial, final) => {
+  black_engine.on('move', (initial, final) => {
+    console.log(`Black engine move: [${initial}, ${final}]`);
     io.to(socket.id).emit('move', initial, final);
-    engine2.move(initial, final);
-    engine2.startThinking();
+    white_engine.move(initial, final);
+    white_engine.startThinking();
   });
 
-  engine1.newGame('white', defaultPosition);
-  engine2.newGame('black', defaultPosition);
+  white_engine.newGame('white', defaultPosition);
+  black_engine.newGame('black', defaultPosition);
 
   let matchData = {
     'role': 'spectator',
@@ -182,7 +184,10 @@ function engineVsEngine(socket) {
   }
   io.to(socket.id).emit('match', matchData)
 
-  engine1.startThinking();
+  if (defaultPosition.split(' ')[1]==='w')
+    white_engine.startThinking();
+  else
+    black_engine.startThinking();
 }
 
 // --- main ----

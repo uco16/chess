@@ -2,16 +2,19 @@ const { spawn, exec } = require('child_process');
 
 module.exports = class Engine {
   constructor() {
-    console.log("Initialising Engine");
+    this.verbose = false;
+    if (this.verbose)
+      console.log("Initialising Engine");
 
     this.Arborist = spawn("./engine/Arborist.out");
 
     this.Arborist.stdout.on('data', (data) => {
       let dstr = data.toString();
-      //console.log(`stdout: ` + dstr);
+      if (this.verbose)
+	console.log(`stdout: ` + dstr);
       if (dstr.substring(0,9)==='best move')
       {
-	let long_move = dstr.substring(10, 14);
+	let long_move = dstr.substring(11, 15);
 	let [initial, final] = matrixMove(long_move);
 	this.emit('move', initial, final);
 	this.move(initial, final);
@@ -50,8 +53,7 @@ module.exports = class Engine {
     this.Arborist.stdin.write(`position fen ${fen}\n`);
   }
 
-  startThinking() {
-    let depth = 4;
+  startThinking(depth=8) {
     this.Arborist.stdin.write(`go ${depth}\n`);
   }
 

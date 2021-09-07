@@ -1,8 +1,8 @@
 const { spawn, exec } = require('child_process');
 
 module.exports = class Engine {
-  constructor() {
-    this.verbose = false;
+  constructor(verbose=true) {
+    this.verbose = verbose;
     if (this.verbose)
       console.log("Initialising Engine");
 
@@ -35,6 +35,11 @@ module.exports = class Engine {
     this.emitFuncs['any'].push(func);
   }
 
+  resetEvents() {
+    for (let funcName of Object.keys(this.emitFuncs))
+      this.emitFuncs[funcName] = [() => {}];
+  }
+
   on(eventName, func) {
     if (this.emitFuncs.hasOwnProperty(eventName))
       this.emitFuncs[eventName].push(func);
@@ -53,13 +58,19 @@ module.exports = class Engine {
     this.Arborist.stdin.write(`position fen ${fen}\n`);
   }
 
-  startThinking(depth=8) {
+  startThinking() {
+    let depth = 5;
     this.Arborist.stdin.write(`go ${depth}\n`);
   }
 
   move(initial, final) {
     let longMove = algebraic(initial) + algebraic(final);
     this.Arborist.stdin.write(`moves ${longMove}\n`);
+  }
+
+  exit() {
+    this.resetEvents();
+    this.Arborist.stdin.write(`exit\n`);
   }
 }
 

@@ -3,9 +3,11 @@
 
 import chessSketch from '/client/modules/chessSketch.js';
 import {addtoMoveList} from '/client/modules/movelist.js';
+import ChessGame from '/client/modules/ChessGame.js';
 
 function startMatch(matchData) {
-  new p5(chessSketch(matchData), 'chessboard');
+  let game = new ChessGame(matchData.position);
+  new p5(chessSketch(matchData, game), 'chessboard');
 
   // if the game starts from a position where it is black's turn to move, 
   // add one empty move (i.e. "1. ...") to the movelist

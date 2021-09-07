@@ -159,20 +159,30 @@ function engineMatch(socket) {
 
 function engineVsEngine(socket) {
   console.log(`${socket.id} started watching an engine match`);
-  const white_engine = new Engine();
-  const black_engine = new Engine();
+  let white_engine = new Engine();
+  let black_engine = new Engine();
 
   white_engine.on('move', (initial, final) => {
     console.log(`White engine move: [${initial}, ${final}]`);
-    io.to(socket.id).emit('move', initial, final);
-    black_engine.move(initial, final);
-    black_engine.startThinking();
+    if (socket.connected) {
+      io.to(socket.id).emit('move', initial, final);
+      black_engine.move(initial, final);
+      black_engine.startThinking();
+    } else {
+      white_engine.exit();
+      black_engine.exit();
+    }
   });
   black_engine.on('move', (initial, final) => {
     console.log(`Black engine move: [${initial}, ${final}]`);
-    io.to(socket.id).emit('move', initial, final);
-    white_engine.move(initial, final);
-    white_engine.startThinking();
+    if (socket.connected) {
+      io.to(socket.id).emit('move', initial, final);
+      white_engine.move(initial, final);
+      white_engine.startThinking();
+    } else {
+      white_engine.exit();
+      black_engine.exit();
+    }
   });
 
   white_engine.newGame('white', defaultPosition);
@@ -181,13 +191,15 @@ function engineVsEngine(socket) {
   let matchData = {
     'role': 'spectator',
     'position': defaultPosition
-  }
-  io.to(socket.id).emit('match', matchData)
+  };
+  io.to(socket.id).emit('match', matchData);
 
-  if (defaultPosition.split(' ')[1]==='w')
-    white_engine.startThinking();
-  else
-    black_engine.startThinking();
+  socket.on('readyToWatch', () => {
+    if (defaultPosition.split(' ')[1]==='w')
+      white_engine.startThinking();
+    else
+      black_engine.startThinking();
+  });
 }
 
 // --- main ----

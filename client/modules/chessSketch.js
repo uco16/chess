@@ -4,17 +4,16 @@ import isLegal from '/client/modules/isLegal.js';
 import inCheck from '/client/modules/inCheck.js';
 import isCheckmate from '/client/modules/isCheckmate.js';
 import { addtoMoveList } from '/client/modules/movelist.js';
-import ChessGame from '/client/modules/ChessGame.js';
 import inputPromotion from '/client/modules/promotion.js';
 import { arraysEqual } from '/client/modules/jslogic.js';
 import concludeGame from '/client/modules/concludeGame.js';
 import { resignButton, drawButton, initializeDrawButton } from '/client/modules/resignAndDraw.js';
 
-export default function chessSketch(matchData) {
-  return (p) => { sketch(p, matchData); };
+export default function chessSketch(matchData, game) {
+  return (p) => { sketch(p, matchData, game); };
 }
 
-function sketch(p, matchData) {
+function sketch(p, matchData, game) {
   // "instance mode" https://github.com/processing/p5.js/wiki/p5.js-overview#instantiation--namespace
 
   // debugging
@@ -43,7 +42,6 @@ function sketch(p, matchData) {
   let opponentColor = {'white':'black', 'black': 'white'}[playerColor];
   let selectedPiece = null;
   let pieceImages;
-  let game;
   let leftStartPos = false;
   let highlightedSquares = [];
   
@@ -78,7 +76,6 @@ function sketch(p, matchData) {
 
   p.setup = () => {
     p.createCanvas(size, size);
-    game = new ChessGame(matchData.position);
 
     // make resign and draw buttons stop the sketch
     resignButton.addEventListener('click', () => {
@@ -109,7 +106,7 @@ function sketch(p, matchData) {
     // define what to do when opponent's move is received (or move from computer)
     socket.on('move', (initial, final, promotionOption) => {
       let iType = !!game.getPiece(initial)  ? game.getPiece(initial).type : 'empty';
-      let fType = !!game.getPiece(final)	  ? game.getPiece(final).type	: 'empty';
+      let fType = !!game.getPiece(final)    ? game.getPiece(final).type	: 'empty';
 
       // play and render move on board
       move(initial, final);
@@ -139,6 +136,7 @@ function sketch(p, matchData) {
       }
     });
 
+    socket.emit("readyToWatch");
   }
 
   p.draw = () => {

@@ -15,7 +15,7 @@ const positions = require('./positions.json');
 const defaultPosition = positions['initial'];
 
 // engine matching
-const engineTesting = true;
+const engineTesting = false;
 
 const hostname = '0.0.0.0';
 const port = process.env.PORT || 8000;
@@ -127,7 +127,7 @@ function match(socket1, socket2) {
 }
 
 let engineMatchCounter = 1;
-function engineMatch(socket) {
+function engineMatch(socket, depth=5) {
   console.log("Match between engine and " + socket.id);
   const engine = new Engine();
 
@@ -137,12 +137,12 @@ function engineMatch(socket) {
   socket.on('move', (initial, final) => {
     console.log(`${socket.id} sends move [${initial}, ${final}] to engine.`);
     engine.move(initial, final);
-    engine.startThinking();
+    engine.startThinking(depth);
   });
   engine.on('move', (initial, final) => {
     console.log(`Engine sends move [${initial}, ${final}] to ${socket.id}.`);
     io.to(socket.id).emit('move', initial, final);
-  })
+  });
 
   engine.newGame(engineColor, defaultPosition);
 
@@ -150,11 +150,11 @@ function engineMatch(socket) {
     'role': 'player',
     'playerColor': playerColor,
     'position': defaultPosition
-  }
-  io.to(socket.id).emit('match', playerColor, defaultPosition);
+  };
+  io.to(socket.id).emit('match', matchData);
 
-  if (engineColor==='white')
-    engine.startThinking();
+  if (defaultPosition.split(' ')[1]===engineColor[0])
+    engine.startThinking(depth);
 }
 
 function engineVsEngine(socket) {
@@ -162,12 +162,14 @@ function engineVsEngine(socket) {
   let white_engine = new Engine();
   let black_engine = new Engine();
 
+  let depth = 5;
+
   white_engine.on('move', (initial, final) => {
     console.log(`White engine move: [${initial}, ${final}]`);
     if (socket.connected) {
       io.to(socket.id).emit('move', initial, final);
       black_engine.move(initial, final);
-      black_engine.startThinking();
+      black_engine.startThinking(depth);
     } else {
       white_engine.exit();
       black_engine.exit();
@@ -178,7 +180,7 @@ function engineVsEngine(socket) {
     if (socket.connected) {
       io.to(socket.id).emit('move', initial, final);
       white_engine.move(initial, final);
-      white_engine.startThinking();
+      white_engine.startThinking(depth);
     } else {
       white_engine.exit();
       black_engine.exit();
@@ -196,9 +198,9 @@ function engineVsEngine(socket) {
 
   socket.on('readyToWatch', () => {
     if (defaultPosition.split(' ')[1]==='w')
-      white_engine.startThinking();
+      white_engine.startThinking(depth);
     else
-      black_engine.startThinking();
+      black_engine.startThinking(depth);
   });
 }
 

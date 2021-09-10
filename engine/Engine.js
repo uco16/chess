@@ -1,7 +1,7 @@
 const { spawn, exec } = require('child_process');
 
 module.exports = class Engine {
-  constructor(verbose=true) {
+  constructor(verbose=false) {
     this.verbose = verbose;
     if (this.verbose)
       console.log("Initialising Engine");
@@ -58,8 +58,7 @@ module.exports = class Engine {
     this.Arborist.stdin.write(`position fen ${fen}\n`);
   }
 
-  startThinking() {
-    let depth = 5;
+  startThinking(depth=5) {
     this.Arborist.stdin.write(`go ${depth}\n`);
   }
 

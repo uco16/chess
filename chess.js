@@ -3,23 +3,22 @@ const path = require('path');
 const fs = require('fs');
 const httpServer = require('http').createServer(handleRequest);
 const io = require('socket.io')(httpServer);
+const { exec } = require('child_process');
+const Engine = require('./engine/Engine.js');
 
-// client sounds directory
-const soundDir = '/client/sounds/';
+// client file directories
+const soundDir	= '/client/sounds/';
+const htmlDir	= '/client/html/';
 
 // chess positions
 const positions = require('./positions.json');
 const defaultPosition = positions['initial'];
 
+// engine matching
+const engineTesting = false;
+
 const hostname = '0.0.0.0';
 const port = process.env.PORT || 8000;
-
-// --- main ----
-httpServer.listen(port, hostname, () => {
-  console.log(`Starting httpServer, listening at http://${hostname}:${port}.`);
-});
-// -------------
-
 
 function handleRequest(req, res) {
   let verbose = false;
@@ -54,6 +53,9 @@ function handleRequest(req, res) {
     // serve audio files from default sound directory
     pathname = soundDir + pathname.substring(1);
   }
+  else if (contentType==='text/html') {
+    pathname = htmlDir + pathname.substring(1);
+  }
 
   if (verbose) {console.log('served pathname:', pathname);}
 
@@ -73,9 +75,6 @@ function handleRequest(req, res) {
     }
   );
 }
-
-// --- socket.io ---
-let queue = [];	    // sockets waiting for opponents
 
 function leaveQueue(socket) {
   queue = queue.filter((client) => {return client != socket});
@@ -100,9 +99,6 @@ function joinQueue(socket) {
 function match(socket1, socket2) {
   console.log("Match between " + socket1.id + " and " + socket2.id);
 
-  io.to(socket1.id).emit('match', 'white', defaultPosition);
-  io.to(socket2.id).emit('match', 'black', defaultPosition);
-
   // set up the communication of between players
   socket1.onAny((eventName, ...args) => {
     console.log(`${socket1.id} sends ${eventName} to ${socket2.id}.`);
@@ -120,7 +116,100 @@ function match(socket1, socket2) {
     console.log(`User ${socket2.id} disconnected. Automatic resign.`);
     io.to(socket1.id).emit('resign');  // auto resign on disconnect
   });
+
+  // send start of match information to players
+  io.to(socket1.id).emit('match', {'role': 'player', 
+				   'playerColor': 'white',
+				   'position': defaultPosition});
+  io.to(socket2.id).emit('match', {'role': 'player', 
+				   'playerColor': 'black',
+				   'position': defaultPosition});
 }
+
+let engineMatchCounter = 1;
+function engineMatch(socket, depth=5) {
+  console.log("Match between engine and " + socket.id);
+  const engine = new Engine();
+
+  let playerColor = ['white', 'black'][(++engineMatchCounter)%2];
+  let engineColor = {'white': 'black', 'black': 'white'}[playerColor];
+  
+  socket.on('move', (initial, final) => {
+    console.log(`${socket.id} sends move [${initial}, ${final}] to engine.`);
+    engine.move(initial, final);
+    engine.startThinking(depth);
+  });
+  engine.on('move', (initial, final) => {
+    console.log(`Engine sends move [${initial}, ${final}] to ${socket.id}.`);
+    io.to(socket.id).emit('move', initial, final);
+  });
+
+  engine.newGame(engineColor, defaultPosition);
+
+  let matchData = {
+    'role': 'player',
+    'playerColor': playerColor,
+    'position': defaultPosition
+  };
+  io.to(socket.id).emit('match', matchData);
+
+  if (defaultPosition.split(' ')[1]===engineColor[0])
+    engine.startThinking(depth);
+}
+
+function engineVsEngine(socket) {
+  console.log(`${socket.id} started watching an engine match`);
+  let white_engine = new Engine();
+  let black_engine = new Engine();
+
+  let depth = 5;
+
+  white_engine.on('move', (initial, final) => {
+    console.log(`White engine move: [${initial}, ${final}]`);
+    if (socket.connected) {
+      io.to(socket.id).emit('move', initial, final);
+      black_engine.move(initial, final);
+      black_engine.startThinking(depth);
+    } else {
+      white_engine.exit();
+      black_engine.exit();
+    }
+  });
+  black_engine.on('move', (initial, final) => {
+    console.log(`Black engine move: [${initial}, ${final}]`);
+    if (socket.connected) {
+      io.to(socket.id).emit('move', initial, final);
+      white_engine.move(initial, final);
+      white_engine.startThinking(depth);
+    } else {
+      white_engine.exit();
+      black_engine.exit();
+    }
+  });
+
+  white_engine.newGame('white', defaultPosition);
+  black_engine.newGame('black', defaultPosition);
+
+  let matchData = {
+    'role': 'spectator',
+    'position': defaultPosition
+  };
+  io.to(socket.id).emit('match', matchData);
+
+  socket.on('readyToWatch', () => {
+    if (defaultPosition.split(' ')[1]==='w')
+      white_engine.startThinking(depth);
+    else
+      black_engine.startThinking(depth);
+  });
+}
+
+// --- main ----
+httpServer.listen(port, hostname, () => {
+  console.log(`Starting httpServer, listening at http://${hostname}:${port}.`);
+});
+
+let queue = [];	    // sockets waiting for opponents
 
 io.on('connection', (socket) => {
   // socket is a reference for the current client
@@ -128,7 +217,17 @@ io.on('connection', (socket) => {
 
   // only join queue when socket is ready for match
   // (i.e. when client-side defined what to do when match is received)
-  socket.on('readyForMatch', () => { joinQueue(socket); });
+  socket.on('readyForMatch', (gameMode) => { 
+    if (gameMode==="computer")
+    {
+      if (engineTesting)
+	engineVsEngine(socket);
+      else
+	engineMatch(socket);
+    }
+    else
+      joinQueue(socket); 
+  });
 
   socket.on('disconnect', () => {
     console.log(`User ${socket.id} disconnected.`);

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Chess | Computer</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="icon" type="image/png" href="client/pieces/knight_left.png">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  </head>
+
+  <body>
+    <script src="/client/modules/header.js"></script>
+
+    <div id="lookingForOpponent">
+      <span>Loading Chess Engine</span>
+      <div class="pieces">
+	<img id='p1' src="/client/pieces/knight_left.png" class="spinner">
+	<img id='p2' src="/client/pieces/bishop_right.png" class="spinner">
+	<img id='p3' src="/client/pieces/king.png" class="spinner">
+	<img id='p4' src="/client/pieces/queen.png" class="spinner">
+	<img id='p5' src="/client/pieces/rook.png" class="spinner">
+	<img id='p6' src="/client/pieces/pawn.png" class="spinner">
+      </div>
+    </div>
+
+    <div id="gamewindow">
+      <div id="chessboard">
+	<!-- sketch.js will draw inside here -->
+	<div id="endscreen">
+	  <h2>
+	    <!-- endscreen.js will display outcome here -->
+	  </h2>
+	  <div class="options">
+	    <input type="button" value="Rematch" disabled>
+	    <input type="button" value="Analyse" disabled>
+	    <input type="button" onclick="window.location.href='/play'" value="Find new opponent">
+	    <input type="button" onclick="window.location.href='/'" value="Back to menu">
+	  </div>
+	</div>
+      </div>
+      <div id="asideboard" class="asideboard">
+	<div class="movewindow window">
+	  <h2>Moves</h2>
+	  <ol id="moves"></ol>
+	</div>
+	<div class="options">
+	  <button>Resign</button>
+	  <button>Offer Draw</button>
+	</div>
+	<div class="window" id="promotion">
+	  <h2>Promotion</h2>
+	  <div class="options white">
+	    <div class="option">
+	      <img src="client/pieces/queen_white.png" alt="queen">
+	    </div>
+	    <div class="option">
+	      <img src="client/pieces/knight_left_white.png" alt="knight">
+	    </div>
+	    <div class="option">
+	      <img src="client/pieces/rook_white.png" alt="rook">
+	    </div>
+	    <div class="option">
+	      <img src="client/pieces/bishop_left_white.png" alt="bishop">
+	    </div>
+	  </div>
+	  <div class="options black">
+	    <div class="option">
+	      <img src="client/pieces/queen.png" alt="queen">
+	    </div>
+	    <div class="option">
+	      <img src="client/pieces/knight_left.png" alt="knight">
+	    </div>
+	    <div class="option">
+	      <img src="client/pieces/rook.png" alt="rook">
+	    </div>
+	    <div class="option">
+	      <img src="client/pieces/bishop_left.png" alt="bishop">
+	    </div>
+	  </div>
+	</div>
+      </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+    </script>
+    <script src="client/modules/p5.js"></script>
+    <script src="client/modules/lookingForOpponent.js" type="module"></script>
+    <script src="client/modules/resignAndDraw.js" type="module"></script>
+  </body>
+</html>

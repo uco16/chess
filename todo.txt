@@ -1,6 +1,6 @@
+- add UCI chess engine support
 - show possible moves when picking up a piece (optional)
 - use arrow keys / click on move list to go back to a previous position
-- mute button
 - copy URL link in win/lose screen, so you can save the game
 - timer
 - names and rating of you and opponent

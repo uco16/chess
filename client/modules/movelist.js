@@ -90,7 +90,3 @@ function chessNotation(initial, final, iType, fType) {
   let type = letter[iType];
   return type + capture + destination;
 }
-
-//socket.on('match', (color) => {
-//  clearMoveList();
-//});

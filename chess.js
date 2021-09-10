@@ -153,8 +153,11 @@ function engineMatch(socket, depth=5) {
   };
   io.to(socket.id).emit('match', matchData);
 
-  if (defaultPosition.split(' ')[1]===engineColor[0])
-    engine.startThinking(depth);
+  // wait with thinking about / sending moves until the user can receive them
+  socket.on('readyForMoves', () => {
+    if (defaultPosition.split(' ')[1]===engineColor[0])
+      engine.startThinking(depth);
+  });
 }
 
 function engineVsEngine(socket) {
@@ -196,7 +199,7 @@ function engineVsEngine(socket) {
   };
   io.to(socket.id).emit('match', matchData);
 
-  socket.on('readyToWatch', () => {
+  socket.on('readyForMoves', () => {
     if (defaultPosition.split(' ')[1]==='w')
       white_engine.startThinking(depth);
     else

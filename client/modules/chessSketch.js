@@ -136,7 +136,7 @@ function sketch(p, matchData, game) {
       }
     });
 
-    socket.emit("readyToWatch");
+    socket.emit("readyForMoves");
   }
 
   p.draw = () => {
